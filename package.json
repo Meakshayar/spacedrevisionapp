@@ -1,0 +1,8 @@
+{
+  "name": "psc-exam-prep",
+  "version": "1.0.0",
+  "description": "PSC Exam Preparation App",
+  "dependencies": {
+    "mongodb": "^4.17.0"
+  }
+}
