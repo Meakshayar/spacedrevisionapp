@@ -3,3103 +3,1023 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSC Exam Prep - Gamified</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <title>Quiz Master</title>
     <style>
         :root {
-            --primary-color: #8e44ad;
-            --secondary-color: #3498db;
-            --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --warning-color: #f39c12;
-            --light-color: #ffffff;
-            --dark-color: #2c3e50;
-            --bg-color: #34495e;
-            --font-family: 'Poppins', sans-serif;
-            --border-radius: 12px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, #1d2b64, #f8cdda);
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--dark-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        /* Full-screen practice override */
-        body.practice-active {
-            padding: 0;
-            align-items: flex-start; 
-        }
-        body.practice-active .container, body.practice-active #adminPanel {
-            max-width: 100%;
-            width: 100%;
-            min-height: 100vh;
-            border-radius: 0;
-            box-shadow: none;
-            background: rgba(255, 255, 255, 1);
-            backdrop-filter: none;
-            padding: 0; 
-        }
-        body.practice-active header,
-        body.practice-active nav {
-            display: none; 
-        }
-        body.practice-active main {
-            padding: 0 !important;
-        }
-       
-        #practiceSessionView {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* MODIFIED: Aligned content to top */
-            height: 100vh;
-            padding: 20px;
-            position: relative;
-            padding-top: 60px; 
-        }
-        #practiceOptions {
-            margin: 20px 0;
-            overflow-y: auto;
-            flex: 1; /* ADDED: Makes this div take available space */
-            min-height: 0; /* ADDED: Critical for scrolling in flexbox */
-        }
-
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
         }
         
-        .container, #adminPanel {
-            width: 100%;
-            max-width: 1000px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            padding: 0 20px;
         }
-
-        /* Admin login button style removed from here */
         
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-color: var(--primary);
             color: white;
-            padding: 20px 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        /* --- NEW DROPDOWN STYLES --- */
-        .header-menu {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .menu-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-        .menu-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-        .dropdown-content button {
-            color: var(--dark-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: none;
-            margin: 0;
-            border-radius: 0;
-            box-shadow: none;
-        }
-        .dropdown-content button:hover {
-            background-color: #f1f1f1;
-            transform: none;
-        }
-        .show {
-            display: block;
-        }
-        /* --- END DROPDOWN STYLES --- */
-
-        /* PlayerPFP styles removed */
-
-        .player-stats {
-            margin-top: 15px;
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer; /* Added to show stats modal */
-        }
-        .player-stats p { margin-bottom: 5px; font-weight: 600; }
-        .xp-bar {
-            width: 100%;
-            height: 10px;
-            background-color: rgba(255,255,255,0.3);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .xp-bar-fill {
-            height: 100%;
-            background-color: var(--warning-color);
-            width: 0%;
-            transition: width 0.5s ease-in-out;
-            border-radius: 5px;
-        }
-
-        nav {
-            display: flex;
-            background: var(--dark-color);
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        nav button {
-            background: none;
-            border: none;
-            color: var(--light-color);
-            padding: 15px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: var(--font-family);
-            transition: all 0.3s;
-            font-weight: 600;
-            position: relative;
-            flex-grow: 1; 
-        }
-        nav button:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        nav button.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .revision-badge {
-            position: absolute; 
-            top: 5px; 
-            right: 5px; 
-            background-color: var(--danger-color); 
-            color: white; 
-            border-radius: 50%; 
-            padding: 2px 6px; 
-            font-size: 10px; 
-            font-weight: bold;
-            z-index: 10;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .tab-content { display: none; padding: 30px; min-height: 400px; animation: fadeIn 0.5s; }
-        .tab-content.active { display: block; }
-        .view-stage { animation: fadeIn 0.5s; }
-        .view-stage.hidden { display: none !important; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .form-group { margin-bottom: 20px; }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            margin-top: 5px;
-            transition: all 0.3s;
-            font-family: var(--font-family);
-        }
-        
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 8px rgba(142, 68, 173, 0.3);
-            outline: none;
-        }
-
-        button {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin: 5px;
-        }
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-        button:active {
-            transform: translateY(-1px) scale(0.98);
-        }
-        button:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-success { background: linear-gradient(135deg, var(--success-color), #27ae60); }
-        .btn-danger { background: linear-gradient(135deg, var(--danger-color), #c0392b); }
-        .btn-warning { background: linear-gradient(135deg, var(--warning-color), #d35400); }
-        
-        .timer {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.2em;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(135deg, var(--warning-color), #d35400);
-            padding: 8px 15px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        .option {
-            background: white;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid #eee;
-            margin: 10px 0;
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        .option:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-        
-        .option.correct {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-            border-color: #27ae60;
-            transform: scale(1.03);
-            animation: pulse 0.5s;
-        }
-        
-        .option.wrong {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            border-color: #c0392b;
-            animation: shake 0.5s;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1.03); }
-            50% { transform: scale(1.06); }
-            100% { transform: scale(1.03); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .score {
-            text-align: center; font-size: 24px; margin: 20px 0; padding: 15px;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white; border-radius: var(--border-radius);
-        }
-        
-        .leaderboard-table {
-            width: 100%; border-collapse: collapse; margin-top: 20px;
-        }
-        .leaderboard-table th, .leaderboard-table td {
-            padding: 12px; text-align: left; border-bottom: 1px solid #ddd;
-        }
-        .leaderboard-table th { background-color: #f2f2f2; font-weight: bold; }
-        .leaderboard-table tr {
-            opacity: 0;
-            animation: slideInRow 0.4s ease-out forwards;
-        }
-        .leaderboard-table tr:nth-child(odd) { background-color: #fdfdfd; }
-        .leaderboard-table tr:hover { background-color: #f1f1f1; }
-        .leaderboard-table .winner { 
-            background-color: #fffbe6;
-            font-weight: bold;
-        }
-        .leaderboard-table .current-player-highlight {
-            background-color: #e8dff5 !important;
-            font-weight: bold;
-            border-left: 4px solid var(--primary-color);
-            border-right: 4px solid var(--primary-color);
-        }
-        @keyframes slideInRow {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .leaderboard-win-loss {
-            color: var(--success-color);
-        }
-        .leaderboard-win-loss .loss {
-            color: var(--danger-color);
-        }
-
-
-        .history-item, .question-set { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: var(--border-radius); border-left: 4px solid var(--secondary-color);}
-        
-        .history-correct { color: var(--secondary-color); font-weight: bold; }
-        .wrong-answer { color: var(--danger-color); font-weight: bold; }
-        .correct-answer { color: var(--success-color); font-weight: bold; }
-
-        .hidden { display: none !important; }
-
-        /* Custom Modal */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background-color: #fefefe; margin: auto; padding: 30px; border: 1px solid #888;
-            width: 90%; max-width: 500px; border-radius: var(--border-radius);
-            box-shadow: var(--shadow); text-align: center; animation: slideIn 0.5s;
-        }
-        .modal-content.large {
-            max-width: 800px;
-        }
-        .modal-body {
-            max-height: 60vh;
-            overflow-y: auto;
-            text-align: left;
-            margin-top: 20px;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        #confetti-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1001; pointer-events: none;
-        }
-        
-        /* --- NEW STATS MODAL STYLES --- */
-        #statsModalContent {
-            text-align: left;
-        }
-        #statsModalContent h2 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            border: 1px solid #eee;
-        }
-        .stat-card h4 {
-            margin: 0 0 5px 0;
-            color: var(--dark-color);
-            font-size: 1em;
-        }
-        .stat-card p {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        .stat-card .correct { color: var(--success-color); }
-        .stat-card .wrong { color: var(--danger-color); }
-        /* --- END STATS MODAL STYLES --- */
-
-
-        .dashboard-card {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        /* Quote styling */
-        .quote-container {
-            background: rgba(0,0,0,0.1);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: var(--border-radius);
-            border-left: 5px solid var(--warning-color);
-        }
-        .quote-container p {
-            font-style: italic;
-            font-size: 1.1em;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .avatar-selection {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .avatar-selection img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.2s ease;
-            background-color: #eee;
-        }
-        .avatar-selection img:hover {
-            transform: scale(1.1);
-        }
-        .avatar-selection img.selected {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(142, 68, 173, 0.7);
-            transform: scale(1.1);
-        }
-
-        /* --- CALENDAR STYLES (SHARED) --- */
-        .calendar-container {
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        .calendar-header {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
-        #calendarMonthYear, #attendanceCalendarMonthYear, #adminAttendanceCalendarMonthYear {
-            font-size: 1.5em;
-            font-weight: 600;
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            min-width: 400px;
-        }
-        .calendar-day, .calendar-day-header {
-            padding: 8px;
-            text-align: center;
-            border-radius: 8px;
-            aspect-ratio: 1 / 1;
+        
+        .user-info {
             display: flex;
             align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Login/Register Form */
+        .auth-container {
+            display: flex;
             justify-content: center;
-            flex-direction: column;
-            font-size: 12px;
-            position: relative;
+            align-items: center;
+            min-height: 80vh;
         }
-        .calendar-day-header {
-            font-weight: bold;
-            background-color: #f2f2f2;
+        
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
         }
-        .calendar-day.empty {
-            background-color: transparent;
+        
+        .form-group {
+            margin-bottom: 15px;
         }
-        .calendar-day.today {
-            background-color: var(--secondary-color);
-            color: white;
-            font-weight: bold;
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
         }
-        .calendar-day.has-revision::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            border: 1px solid white;
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
             cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
-        .calendar-day.present.has-revision::after {
-             right: auto;
-             left: 4px;
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 500;
         }
-
-        .calendar-day.has-revision {
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Question Card */
+        .question-card {
+            margin-bottom: 20px;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .option {
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .revision-cal-badge {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: var(--danger-color);
+        
+        .option:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .option.selected {
+            background-color: var(--primary);
             color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            line-height: 18px;
+            border-color: var(--primary);
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
             text-align: center;
+            margin: 10px 0;
+            color: var(--primary);
         }
-        .calendar-day.present {
-            background-color: var(--success-color);
-            color: white;
+        
+        /* Admin Panel */
+        .admin-panel {
+            margin-top: 20px;
+        }
+        
+        .textarea-control {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        /* Leaderboard */
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .leaderboard-item:first-child {
+            background-color: gold;
             font-weight: bold;
         }
-        /* --- END CALENDAR STYLES --- */
-
-        /* --- RESPONSIVE ADJUSTMENTS --- */
-        @media screen and (max-width: 600px) {
-            body { padding: 5px; }
-            .container, #adminPanel { padding: 0; border-radius: 0; }
-            nav button { font-size: 12px; padding: 12px 5px; }
-            .tab-content { padding: 15px; }
-
-            #practiceQuestion {
-                font-size: 1.1em;
-                margin-bottom: 15px;
-            }
-            .option {
-                font-size: 14px;
-                padding: 12px;
-            }
-            #practiceSessionView {
-                padding: 15px;
-                padding-top: 55px;
-            }
-            button {
-                padding: 10px 18px;
-                font-size: 14px;
-            }
-            .calendar-day, .calendar-day-header {
-                font-size: 11px;
-                padding: 5px;
-            }
-            .calendar-grid {
-                gap: 2px;
-            }
+        
+        .leaderboard-item:nth-child(2) {
+            background-color: silver;
         }
-
+        
+        .leaderboard-item:nth-child(3) {
+            background-color: #cd7f32; /* bronze */
+        }
+        
+        /* Backlog */
+        .backlog-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <canvas id="confetti-canvas"></canvas>
-
-    <div class="container">
-        <header>
-            <div class="header-menu">
-                <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <button onclick="switchTab('help')">How it Works</button>
-                    <button onclick="logout()" class="btn-danger">Switch User / Logout</button>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Quiz Master</div>
+                <div class="user-info">
+                    <span id="username-display"></span>
+                    <button id="logout-btn" class="btn btn-secondary hidden">Logout</button>
                 </div>
             </div>
+        </div>
+    </header>
 
-            <h1>PSC Exam Prep</h1>
-            <p>Level Up Your Knowledge</p>
-            <div id="playerStats" class.player-stats hidden" onclick="showPlayerStatsModal()">
-                <p id="playerNameDisplay"></p>
-                <p>Title: <span id="playerTitle"></span> (<span id="playerXP">0</span> / <span id="xpToNextLevel">500</span> XP)</p>
-                <div class="xp-bar">
-                    <div id="xpBarFill" class="xp-bar-fill"></div>
+    <main class="container">
+        <!-- Login/Register Section -->
+        <section id="auth-section" class="auth-container">
+            <div class="auth-form card">
+                <h2>Welcome to Quiz Master</h2>
+                <p>Please login or create a new account</p>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password">
+                </div>
+                
+                <div class="form-group">
+                    <button id="login-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Login</button>
+                    <button id="register-btn" class="btn btn-secondary" style="width: 100%;">Create Account</button>
+                </div>
+                
+                <div id="admin-login-toggle" style="text-align: center; margin-top: 15px;">
+                    <a href="#" id="toggle-admin">Admin Login</a>
+                </div>
+                
+                <div id="admin-login" class="hidden">
+                    <div class="form-group">
+                        <label for="admin-password">Admin Password</label>
+                        <input type="password" id="admin-password" class="form-control" placeholder="Enter admin password">
+                    </div>
+                    <button id="admin-login-btn" class="btn btn-warning" style="width: 100%;">Admin Login</button>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <nav id="tab-nav">
-            <button onclick="switchTab('practice')" class="active">Practice</button>
-            <button onclick="switchTab('revision')">Revision Plan</button>
-            <button onclick="switchTab('backlog')">Backlog</button>
-            <button onclick="switchTab('leaderboard')">Leaderboard</button>
-            <button onclick="switchTab('history')">My History</button>
-            <button onclick="switchTab('attendance')">Attendance</button>
-        </nav>
-        
-        <main>
-            <div id="practice" class="tab-content active">
-                <div id="welcomeView" class="view-stage">
-                    <div class="dashboard-card">
-                        <h2 id="welcomeMessage">Select or create a player to begin!</h2>
-                        <div class="quote-container">
-                             <p id="motivationalQuote"></p>
+        <!-- Main App Section (Hidden initially) -->
+        <section id="app-section" class="hidden">
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <div class="tab active" data-tab="practice">Practice</div>
+                <div class="tab" data-tab="revision">Revision</div>
+                <div class="tab" data-tab="backlog">Backlog</div>
+                <div class="tab" data-tab="leaderboard">Leaderboard</div>
+                <div class="tab" data-tab="admin" id="admin-tab" class="hidden">Admin</div>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="practice-tab" class="tab-content active">
+                <div class="card">
+                    <h2>Practice Questions</h2>
+                    <p>Practice questions don't earn XP but help you learn.</p>
+                    <button id="start-practice" class="btn btn-primary">Start Practice Session</button>
+                </div>
+                
+                <div id="practice-session" class="hidden">
+                    <div class="card question-card">
+                        <div class="question-text" id="practice-question-text">Question text will appear here</div>
+                        <div class="options-container" id="practice-options">
+                            <!-- Options will be populated by JavaScript -->
                         </div>
+                        <div class="timer" id="practice-timer">10</div>
+                        <button id="practice-next" class="btn btn-primary hidden">Next Question</button>
                     </div>
-                    <div class="player-selector" style="padding: 20px;">
-                        <label>Select an Existing Player:</label>
-                        <select id="playerSelect" onchange="handlePlayerSelection()" class="styled-select" style="margin-bottom:10px;"></select>
-                        <hr style="margin: 20px 0;">
-                        <h4>Or Create a New Player:</h4>
-                        <input type="text" id="newPlayerName" placeholder="Enter new player name" class="styled-input">
-                        <button onclick="createPlayer()">Create Player</button>
-                    </div>
+                </div>
+            </div>
 
-                    <div style="text-align: center; padding: 10px 0 20px 0; border-top: 1px solid #eee; margin-top: 20px;">
-                        <button id="adminLoginBtn" onclick="handleAdminLogin()" class="btn-warning" style="background: #7f8c8d;">Admin Login</button>
+            <div id="revision-tab" class="tab-content">
+                <div class="card">
+                    <h2>Revision Questions</h2>
+                    <p>Answer revision questions to earn XP. These appear automatically based on your learning schedule.</p>
+                    <div id="revision-info">
+                        <p>You have <span id="due-count">0</span> questions due for revision.</p>
+                        <button id="start-revision" class="btn btn-success">Start Revision Session</button>
                     </div>
                 </div>
                 
-                <div id="practiceSetupView" class="view-stage hidden">
-                    <h2 id="setupWelcome">Welcome, Player!</h2>
-                    <div class="quote-container" style="background: #f8f9fa; border-left-color: var(--primary-color); margin: 15px 0;">
-                        <p id="motivationalQuoteLoggedIn" style="color: var(--dark-color); text-shadow: none;"></p>
+                <div id="revision-session" class="hidden">
+                    <div class="card question-card">
+                        <div class="question-text" id="revision-question-text">Question text will appear here</div>
+                        <div class="options-container" id="revision-options">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                        <div class="timer" id="revision-timer">10</div>
+                        <button id="revision-next" class="btn btn-primary hidden">Next Question</button>
                     </div>
-                    <hr style="margin: 20px 0;">
-                    <h2>Start Practice</h2>
-                    <div class="form-group">
-                        <label>1. Select Subject:</label>
-                        <select id="subjectSelect" onchange="updatePracticeSetSelect(this.value)"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>2. Select Question Set:</label>
-                        <select id="practiceSetSelect"></select>
-                    </div>
-                    <button onclick="startPracticeWrapper()" id="startPracticeBtn" disabled>Start Practice</button>
                 </div>
+            </div>
 
-                <div id="practiceSessionView" class="view-stage hidden">
-                    <div class="timer" id="practiceTimer">00:00</div>
+            <div id="backlog-tab" class="tab-content">
+                <div class="card">
+                    <h2>Backlog Questions</h2>
+                    <p>These are questions you missed or haven't answered yet.</p>
+                    <div id="backlog-list">
+                        <!-- Backlog items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="leaderboard-tab" class="tab-content">
+                <div class="card">
+                    <h2>Leaderboard</h2>
+                    <p>Top performers based on XP earned.</p>
+                    <div id="leaderboard-list">
+                        <!-- Leaderboard items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-tab-content" class="tab-content">
+                <div class="card admin-panel">
+                    <h2>Admin Panel</h2>
+                    <p>Upload questions in bulk using the format: question|optionA|optionB|optionC|optionD|rightanswercode</p>
                     
-                    <div id="practiceQuestion" style="font-size: 1.3em; margin-bottom: 20px; font-weight: bold; text-align: center;"></div>
-                    <div id="practiceOptions"></div>
-                    <div class="score" id="practiceScore" style="margin-top: 20px;">Score: 0</div>
-                    <div style="text-align: center; margin-top: 10px;">
-                        <button onclick="skipQuestion()" class="btn-warning" id="skipQuestionBtn">Skip Now</button>
-                        <button onclick="endPractice()" class="btn-danger" id="endPracticeBtn">End Practice</button>
-                        <button id="reportQuestionBtn" onclick="reportCurrentQuestion()" class="btn-warning" style="background: #e67e22; margin-top: 20px;">Report Question</button>
-                    </div>
-                    <div id="nextQuestionContainer" class="hidden" style="text-align: center; margin-top: 15px;">
-                        <button onclick="proceedToNextQuestion()" class="btn-success">Next Question</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="revision" class="tab-content">
-                <h2>Revision Plan (Due Today)</h2>
-                <div style="background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: white; padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
-                    <h3>Spaced Repetition</h3>
-                    <p id="revisionSuccessInfo"></p>
-                </div>
-                <p id="revisionUserPrompt" style="margin-bottom: 15px; color: var(--danger-color); font-weight: 600;" class="hidden">Please select a player on the Practice tab to view your personalized revision plan.</p>
-                
-                <p>This page shows items due for revision today. Missed items from previous days can be found in the 'Backlog' tab.</p>
-                <div id="dueTodayList" style="margin-top: 20px;"></div>
-            </div>
-            
-            <div id="backlog" class="tab-content">
-                <h2>Full Revision Backlog</h2>
-                <p>This tab shows all previously missed revision items. You can only complete one revision per question set per day.</p>
-                <div id="fullBacklogList" style="margin-top: 20px;"></div>
-            </div>
-
-            <div id="leaderboard" class="tab-content">
-                <h2>Leaderboards</h2>
-                <hr style="margin: 20px 0;">
-                <h3>Today's Revision Ranking</h3>
-                <p>Ranking based on total marks earned in revision sessions today.</p>
-                <div style="overflow-x: auto;">
-                    <table class="leaderboard-table">
-                        <thead><tr><th>Rank</th><th>Player</th><th>Today's Score</th></tr></thead>
-                        <tbody id="todayLeaderboardTableBody"></tbody>
-                    </table>
-                </div>
-                <hr style="margin: 30px 0;">
-                <h3>Total XP Ranking</h3>
-                <p>Ranking based on total Experience Points (XP). Ties are broken by total correct answers.</p>
-                <div style="overflow-x: auto;">
-                    <table class="leaderboard-table">
-                        <thead><tr><th>Rank</th><th>Player</th><th>Total XP</th><th>Streak</th><th>Title</th></tr></thead>
-                        <tbody id="xpLeaderboardTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="history" class="tab-content">
-                <h2>My Practice History</h2>
-                <p id="historyPrompt">Showing your latest attempt for each question set.</p>
-                <div id="historyControls" class="hidden" style="margin-bottom: 15px;">
-                    <button onclick="showQuestionAnalysis()">Analyze Question Timings</button>
-                </div>
-                <div id="historyList"></div>
-                <div id="questionAnalysisView" class="hidden" style="margin-top: 20px;"></div>
-            </div>
-            
-            <div id="attendance" class="tab-content">
-                <h2>My Attendance & Revisions</h2>
-                <p>Your attendance is marked when you complete a session. Dots indicate days with due revisions.</p>
-                 <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
-                    <p>Legend:</p>
-                    <div style="display:flex; align-items:center; gap: 5px;"><div style="width:15px; height:15px; background:var(--success-color); border-radius:4px;"></div> Present</div>
-                    <div style="display:flex; align-items:center; gap: 5px;"><div style="width:15px; height:15px; position:relative; background:#eee; border-radius:4px;"><span style="position:absolute; bottom:1px; right:1px; width:6px; height:6px; background:var(--primary-color); border-radius:50%;"></span></div> Revision Due</div>
-                </div>
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="prevAttendanceMonthBtn">&lt; Prev</button>
-                        <h3 id="attendanceCalendarMonthYear"></h3>
-                        <button id="nextAttendanceMonthBtn">Next &gt;</button>
-                    </div>
-                    <div id="attendanceCalendarBody" class="calendar-grid"></div>
-                </div>
-            </div>
-
-            <div id="help" class="tab-content">
-                <h2>How This App Helps Students (PSC Exam Prep)</h2>
-                 <div class="dashboard-card" style="background: linear-gradient(135deg, #2c3e50, #95a5a6);">
-                    <h3>New Gamified XP System</h3>
-                    <p>Earn XP for correct answers and build up daily streaks for massive bonuses! Maintain your streak to climb the ranks from Stone ⚫ to Diamond 💎. But be careful, missing days will break your streak and may even cost you XP!</p>
-                </div>
-                <div class="dashboard-card" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
-                    <h3>Spaced Repetition System (SRS) & Backlog</h3>
-                    <p>The <strong>Revision Plan</strong> tab shows items due for revision today, based on a scientifically proven Spaced Repetition System. If you miss a revision, it moves to the <strong>Backlog</strong> tab, which contains a complete list of all past-due items, allowing you to catch up at your own pace.</p>
-                </div>
-                <div class="dashboard-card" style="background: linear-gradient(135deg, #e67e22, #d35400);">
-                    <h3>Focus & Efficiency</h3>
-                    <p>The time-bound practice mode simulates exam conditions, helping you improve speed and accuracy. The full-screen exam mode helps you focus without distractions.</p>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <div id="adminPanel" class="hidden">
-        <header>
-            <h1>Admin Panel</h1>
-            <p id="adminWelcome"></p>
-            <button onclick="adminLogout()" class="btn-danger" style="position: absolute; top: 20px; right: 20px;">Logout</button>
-        </header>
-
-        <nav id="admin-tab-nav">
-            <button onclick="switchAdminTab('adminQuestionSets')" class="active">Question Sets</button>
-            <button onclick="switchAdminTab('adminPlayerHistory')">Player History</button>
-            <button onclick="switchAdminTab('adminBacklogManager')">Manage Backlogs</button>
-            <button onclick="switchAdminTab('adminAttendance')">Attendance Register</button>
-            <button onclick="switchAdminTab('adminSystem')">System</button>
-        </nav>
-
-        <main>
-            <div id="adminQuestionSets" class="tab-content active">
-                <h2>Manage Question Sets</h2>
-                <div id="addQuestionsContent" style="background: #f0f4f8; padding: 20px; border-radius: var(--border-radius); margin-bottom: 30px; border: 1px solid #ddd;">
-                    <h3>Bulk Import Questions</h3>
                     <div class="form-group">
-                        <label>Set Category (for timer):</label>
-                        <select id="setCategory">
-                            <option value="gk">GK (10s Practice / 10s Revision)</option>
-                            <option value="math">Math (45s Practice / 45s Revision)</option>
-                        </select>
+                        <label for="bulk-questions">Bulk Questions</label>
+                        <textarea id="bulk-questions" class="textarea-control" placeholder="Enter questions in format:
+What is 2+2?|3|4|5|6|B
+Capital of France?|London|Berlin|Paris|Madrid|C"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Set Upload Date:</label>
-                        <input type="date" id="setUploadDate">
-                    </div>
-                     <div class="form-group">
-                        <label>Subject (e.g., History, Math, GK):</label>
-                        <input type="text" id="setSubject" placeholder="Enter Subject for this set">
-                    </div>
-                    <div class="form-group">
-                        <label>Select Target Set:</label>
-                        <select id="bulkSetSelect" onchange="toggleNewBulkSetName()"></select>
-                    </div>
-                    <div class="form-group" id="newBulkSetNameGroup" style="display:none;">
-                        <label>New Set Name:</label>
-                        <input type="text" id="bulkSetName" placeholder="Enter name for the new question set" />
-                    </div>
-                    <div class="form-group">
-                        <label>Paste questions (Format: Question | Opt1 | Opt2 | Opt3 | Opt4 | CorrectLetter):</label>
-                        <textarea id="bulkQuestions" rows="6"></textarea>
-                    </div>
-                    <button onclick="importBulkQuestions()">Import Questions</button>
-                </div>
-                <div id="savedSets" style="margin-top: 30px;">
-                    <h3>Your Question Sets</h3>
-                    <div id="setsList"></div>
+                    
+                    <button id="upload-questions" class="btn btn-primary">Upload Questions</button>
+                    
+                    <div id="upload-result" class="hidden" style="margin-top: 15px;"></div>
                 </div>
             </div>
-            
-            <div id="adminPlayerHistory" class="tab-content">
-                <h2>View Player History</h2>
-                <div class="form-group">
-                    <label for="historyPlayerSelect">Select Player:</label>
-                    <select id="historyPlayerSelect" onchange="renderAdminPlayerHistory(this.value)"></select>
-                </div>
-                <div id="adminHistoryList"></div>
-            </div>
+        </section>
+    </main>
 
-            <div id="adminBacklogManager" class="tab-content">
-                <h2>Manage Player Backlogs</h2>
-                 <div class="form-group">
-                    <label for="backlogPlayerSelect">Select Player:</label>
-                    <select id="backlogPlayerSelect" onchange="renderAdminBacklogManager(this.value)"></select>
-                </div>
-                <div id="adminBacklogList"></div>
-            </div>
-
-            <div id="adminAttendance" class="tab-content">
-                <h2>Player Attendance & Revision Register</h2>
-                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
-                    <p>Legend:</p>
-                    <div style="display:flex; align-items:center; gap: 5px;"><div style="width:15px; height:15px; background:var(--success-color); border-radius:4px;"></div> Present</div>
-                    <div style="display:flex; align-items:center; gap: 5px;"><div style="width:15px; height:15px; position:relative; background:#eee; border-radius:4px;"><span style="position:absolute; bottom:1px; right:1px; width:6px; height:6px; background:var(--primary-color); border-radius:50%;"></span></div> Revision Due</div>
-                </div>
-                <div class="form-group">
-                    <label for="attendancePlayerSelect">Select Player:</label>
-                    <select id="attendancePlayerSelect" onchange="renderAdminAttendanceCalendar(this.value)"></select>
-                </div>
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="adminPrevAttendanceMonthBtn">&lt; Prev</button>
-                        <h3 id="adminAttendanceCalendarMonthYear"></h3>
-                        <button id="adminNextAttendanceMonthBtn">Next &gt;</button>
-                    </div>
-                    <div id="adminAttendanceCalendarBody" class="calendar-grid"></div>
-                </div>
-            </div>
-
-            <div id="adminSystem" class="tab-content">
-                <h2>System Management</h2>
-                <h3>Data Management</h3>
-                <button onclick="exportData()">Export Data</button>
-                <button onclick="importData()">Import Data</button>
-                <button onclick="clearAllData()" class="btn-danger">Clear All Data</button>
-                <hr style="margin: 20px 0;">
-                <h3>User Management</h3>
-                <div class="form-group">
-                    <label for="passwordUserSelect">Select User to Manage Password:</label>
-                    <select id="passwordUserSelect"></select>
-                    <input type="text" id="newUserPassword" placeholder="Enter new password" style="margin-top: 10px;">
-                    <button onclick="updateUserPassword()" class="btn-success">Set/Update Password</button>
-                </div>
-                <hr style="margin: 20px 0;">
-                <div class="form-group" style="border-top: 1px solid #ddd; padding-top: 20px;">
-                    <label for="playerToRemoveSelect">Remove a Player:</label>
-                    <select id="playerToRemoveSelect"></select>
-                    <button onclick="removePlayer()" class="btn-danger">Remove Selected Player</button>
-                </div>
-                <div class="form-group" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
-                    <label for="playerToClearHistorySelect">Clear Full History for a Player:</label>
-                    <select id="playerToClearHistorySelect"></select>
-                    <button onclick="clearPlayerHistory()" class="btn-danger">Clear Player History</button>
-                </div>
-                <hr style="margin: 20px 0;">
-                <h4>Leaderboard & Progress Management</h4>
-                <button onclick="resetAllXP()" class="btn-danger">Clear All Player XP & Streaks</button>
-                <button onclick="resetRevisionProgress()" class="btn-danger">Clear All Revision Progress</button>
-                 <hr style="margin: 20px 0;">
-                <h3>Reported Questions</h3>
-                <button id="showReportedQuestionsBtn">View Reported Questions</button>
-            </div>
-            
-            <div id="editQuestionsSection" class="hidden" style="margin-top: 20px;">
-                <button id="backToSetListBtn" class="btn-warning">&larr; Back to Set Management</button>
-                <h3 id="editQuestionsTitle" style="margin-top: 15px;">Edit Questions in Set: </h3>
-                <div class="form-group">
-                    <label for="editSetSubject">Subject:</label>
-                    <input type="text" id="editSetSubject" onchange="updateSetSubject()">
-                </div>
-                <div class="form-group">
-                    <label for="editSetCategory">Set Category:</label>
-                    <select id="editSetCategory" onchange="updateSetCategory()">
-                        <option value="gk">GK</option>
-                        <option value="math">Math</option>
-                    </select>
-                </div>
-                <div id="questionsToEditList" style="margin-top: 15px;"></div>
-                <div id="questionEditForm" class="hidden" style="border: 1px solid #ddd; padding: 20px; border-radius: var(--border-radius); margin-top: 20px;">
-                    <h4>Editing Question <span id="currentQuestionIndexDisplay"></span></h4>
-                    <div class="form-group">
-                        <label>Question Text:</label>
-                        <textarea id="editQuestionText" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Options (one per line):</label>
-                        <textarea id="editQuestionOptions" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Correct Answer:</label>
-                        <select id="editCorrectAnswer">
-                            <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option>
-                        </select>
-                    </div>
-                    <button onclick="saveEditedQuestion()" class="btn-success">Save Changes</button>
-                    <button onclick="cancelQuestionEdit()">Cancel</button>
-                    <button onclick="deleteCurrentEditedQuestion()" class="btn-danger" style="margin-top: 10px;">Delete This Question</button>
-                </div>
-            </div>
-            <div id="reportedQuestionsSection" class="hidden" style="margin-top: 20px;">
-                <button id="backToAdminSystemBtn">&larr; Back to System</button>
-                <h2 style="margin-top: 15px;">Reported Questions for Review</h2>
-                <div id="reportedQuestionsList"></div>
-            </div>
-        </main>
-    </div>
-
-    <div id="resultsModal" class="modal"><div class="modal-content"><h2 id="modalTitle"></h2><p id="modalScore"></p><p id="modalTime"></p><p id="modalXPGained"></p><button onclick="closeModal('resultsModal')">Close</button></div></div>
-    <div id="passwordModal" class="modal"><div class="modal-content"><h3 id="passwordModalTitle"></h3><p id="passwordModalPrompt"></p><input type="password" id="passwordInput"><div id="passwordConfirmGroup" class="hidden" style="margin-top:10px;"><input type="password" id="passwordConfirmInput" placeholder="Confirm Password"></div><button id="passwordSubmitBtn"></button><button onclick="closeModal('passwordModal')" class="btn-danger">Cancel</button></div></div>
-    <div id="viewDetailsModal" class="modal"><div class="modal-content large" id="viewDetailsModalContent" style="text-align: left; max-height: 80vh; overflow-y: auto;"></div></div>
-    <div id="wrongAnswersModal" class="modal"><div class="modal-content large"><h2>Questions You Missed</h2><div id="wrongAnswersBody" class="modal-body"></div><button onclick="closeModal('wrongAnswersModal')" style="margin-top: 20px;">Close</button></div></div>
-    <div id="avatarModal" class="modal"><div class="modal-content"><h3>Choose Your Avatar</h3><div id="modalAvatarSelection" class="avatar-selection"></div><button onclick="confirmAvatar()" class="btn-success">Confirm and Start</button></div></div>
-    <div id="statsModal" class="modal"><div id="statsModalContent" class="modal-content"><h2>Player Statistics</h2><div class="stat-grid"><div class="stat-card"><h4>Title</h4><p id="statsTitle">_</p></div><div class="stat-card"><h4>Total XP</h4><p id="statsXP">_</p></div><div class="stat-card"><h4>Current Streak</h4><p id="statsStreak">_</p></div><div class="stat-card"><h4>Total Correct</h4><p id="statsCorrect" class="correct">_</p></div></div><button onclick="closeModal('statsModal')">Close</button></div></div>
-    <div id="adminAuthModal" class="modal"><div class="modal-content"><h3 id="adminModalTitle">Admin Login</h3><p id="adminModalPrompt"></p><div class="form-group"><input type="text" id="adminUsername" placeholder="Username"></div><div class="form-group"><input type="password" id="adminPassword" placeholder="Password"></div><div id="adminPasswordConfirmGroup" class="hidden" style="margin-top:10px;"><input type="password" id="adminPasswordConfirm" placeholder="Confirm Password"></div><button id="adminSubmitBtn"></button><button onclick="closeModal('adminAuthModal')" class="btn-danger">Cancel</button></div></div>
-
+    <div id="notification-area"></div>
 
     <script>
-        // --- GITHUB API CONSTANTS ---
-        const GITHUB_USERNAME = "Meakshayar";
-        const REPO_NAME = "spacedrevisionapp";
-        const GITHUB_PAT = "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"; 
-        const DATA_FILE_PATH = "data/data.json";
-        const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${DATA_FILE_PATH}`;
-        const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${DATA_FILE_PATH}`; // Assuming 'main' branch
-
-        // --- HARDCODED ADMIN ---
-        const ADMIN_USER = '';
-        const ADMIN_PASS = '2525';
+        // Configuration
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwLFX3znQKUeLb59CzCsTfRGQveZ-aS-fJ2_YlNvBbcrO2qg8rP9kLBHRDYYdsINlXEsQ/exec';
         
-        // --- CONSTANTS ---
-        const MIN_SCORE_FOR_REVISION_SUCCESS = 70; 
-        const revisionIntervals = [1, 3, 7, 14, 30, 60, 90];
-        const DESTRUCTIVE_ACTION_PASSWORD = "2525";
+        // App state
+        let currentUser = null;
+        let isAdmin = false;
+        let allQuestions = [];
+        let dueRevisions = [];
+        let practiceQuestions = [];
+        let currentQuestionIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 10;
+        let currentSessionType = null; // 'practice' or 'revision'
         
-        // --- GAMIFICATION & LEVELING SYSTEM ---
-        const LEVEL_CONFIG = [
-            { minXp: 0, title: "Stone ⚫", nextLevelXp: 500 },
-            { minXp: 500, title: "Iron ⚙️", nextLevelXp: 1500 },
-            { minXp: 1500, title: "Bronze 🥉", nextLevelXp: 3500 },
-            { minXp: 3500, title: "Silver 🥈", nextLevelXp: 6000 },
-            { minXp: 6000, title: "Gold 🥇", nextLevelXp: 9000 },
-            { minXp: 9000, title: "Platinum 💠", nextLevelXp: 12000 },
-            { minXp: 12000, title: "Diamond 💎", nextLevelXp: Infinity }
-        ];
-
-        const quotes = [
-            "The secret to getting ahead is getting started.", 
-            "Believe you can and you're halfway there.", 
-            "Success is the sum of small efforts, repeated day in and day out.",
-            "The mind is everything. What you think you become.",
-            "Strive for progress, not perfection."
-        ];
-        let audioCtx;
-
-        // --- GITHUB & APP STATE ---
-        // These variables are populated by fetchSharedData()
-        let questionSets = {};
-        let practiceHistory = {};
-        let revisionProgress = {};
-        let playerProfiles = {};
-        let reportedQuestions = [];
-        let dailyRevisionScores = {};
+        // DOM Elements
+        const authSection = document.getElementById('auth-section');
+        const appSection = document.getElementById('app-section');
+        const usernameDisplay = document.getElementById('username-display');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const adminLoginToggle = document.getElementById('toggle-admin');
+        const adminLogin = document.getElementById('admin-login');
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const adminPassword = document.getElementById('admin-password');
+        const adminTab = document.getElementById('admin-tab');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
         
-        let isSaving = false; // Lock to prevent concurrent saves
-        let isAdminLoggedIn = false;
-        
-        // --- SESSION STATE ---
-        let currentSet = [], currentQuestionIndex = 0, score = 0, timer, timeElapsed = 0, currentPlayerName = '', currentAttempt = null, totalTimeLimit = 0, isRevisionMode = false, currentRevisionKey = null;
-        let practiceInProgress = false;
-
-        let currentEditingSet = null;
-        let currentEditingIndex = -1; 
-        let editingFromReport = { active: false, reportId: null };
-
-        let selectedAvatarUrl = null;
-        let pendingPlayerName = null;
-        
-        let analyzedQuestionsBySet = {}; 
-        
-        let currentAttendanceCalendarDate = new Date();
-        let currentAdminAttendanceDate = new Date();
-
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', init);
-
-        async function init() {
-            // Set up static content
-            populateAvatars();
-            setDailyQuote();
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                isAdmin = localStorage.getItem('isAdmin') === 'true';
+                showApp();
+            }
             
-            document.getElementById('revisionSuccessInfo').textContent = `Revision tasks remain here until successfully completed (>= ${MIN_SCORE_FOR_REVISION_SUCCESS}% for question sets).`;
-            document.getElementById('setUploadDate').value = new Date().toISOString().split('T')[0];
-
-            // Set up all event listeners
-            document.getElementById('backToSetListBtn').addEventListener('click', () => {
-                if (editingFromReport.active) {
-                    returnToReportedQuestionsView();
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load initial data if user is logged in
+            if (currentUser) {
+                loadInitialData();
+            }
+        });
+        
+        function setupEventListeners() {
+            // Auth buttons
+            loginBtn.addEventListener('click', handleLogin);
+            registerBtn.addEventListener('click', handleRegister);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Admin login
+            adminLoginToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                adminLogin.classList.toggle('hidden');
+            });
+            
+            adminLoginBtn.addEventListener('click', handleAdminLogin);
+            
+            // Tab navigation
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Practice session
+            document.getElementById('start-practice').addEventListener('click', startPracticeSession);
+            document.getElementById('practice-next').addEventListener('click', nextPracticeQuestion);
+            
+            // Revision session
+            document.getElementById('start-revision').addEventListener('click', startRevisionSession);
+            document.getElementById('revision-next').addEventListener('click', nextRevisionQuestion);
+            
+            // Admin functions
+            document.getElementById('upload-questions').addEventListener('click', uploadBulkQuestions);
+        }
+        
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showNotification('Please enter both username and password', 'error');
+                return;
+            }
+            
+            // Simple hash function for demo purposes
+            const passwordHash = simpleHash(password);
+            
+            callAPI('login', { username, password_hash: passwordHash })
+                .then(response => {
+                    if (response.ok) {
+                        currentUser = { username };
+                        isAdmin = false;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        localStorage.setItem('isAdmin', 'false');
+                        showApp();
+                        loadInitialData();
+                        showNotification('Login successful!', 'success');
+                    } else {
+                        showNotification(response.error || 'Login failed', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                    showNotification('Login failed. Please try again.', 'error');
+                });
+        }
+        
+        function handleRegister() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showNotification('Please enter both username and password', 'error');
+                return;
+            }
+            
+            // Simple hash function for demo purposes
+            const passwordHash = simpleHash(password);
+            
+            callAPI('createUser', { username, password_hash: passwordHash })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('Account created successfully! Please login.', 'success');
+                        document.getElementById('username').value = '';
+                        document.getElementById('password').value = '';
+                    } else {
+                        showNotification(response.error || 'Registration failed', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Registration error:', error);
+                    showNotification('Registration failed. Please try again.', 'error');
+                });
+        }
+        
+        function handleAdminLogin() {
+            const adminPass = adminPassword.value;
+            
+            // For demo purposes, using a simple password check
+            // In a real app, you would have a more secure admin authentication
+            if (adminPass === 'admin123') {
+                isAdmin = true;
+                localStorage.setItem('isAdmin', 'true');
+                adminTab.classList.remove('hidden');
+                showNotification('Admin login successful!', 'success');
+                switchTab('admin');
+            } else {
+                showNotification('Invalid admin password', 'error');
+            }
+        }
+        
+        function handleLogout() {
+            currentUser = null;
+            isAdmin = false;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAdmin');
+            showAuth();
+            showNotification('Logged out successfully', 'success');
+        }
+        
+        function showAuth() {
+            authSection.classList.remove('hidden');
+            appSection.classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('admin-password').value = '';
+            adminLogin.classList.add('hidden');
+        }
+        
+        function showApp() {
+            authSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            usernameDisplay.textContent = currentUser.username;
+            logoutBtn.classList.remove('hidden');
+            
+            if (isAdmin) {
+                adminTab.classList.remove('hidden');
+            }
+        }
+        
+        function switchTab(tabId) {
+            // Update active tab
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
                 } else {
-                    document.getElementById('editQuestionsSection').classList.add('hidden');
-                    document.getElementById('adminQuestionSets').classList.remove('hidden');
-                    currentEditingSet = null;
+                    tab.classList.remove('active');
                 }
             });
             
-            document.getElementById('showReportedQuestionsBtn').addEventListener('click', () => {
-                document.getElementById('adminSystem').classList.add('hidden');
-                document.getElementById('reportedQuestionsSection').classList.remove('hidden');
-                document.getElementById('adminPanel').querySelector('main').appendChild(document.getElementById('reportedQuestionsSection'));
-                renderReportedQuestions();
-            });
-
-            document.getElementById('backToAdminSystemBtn').addEventListener('click', () => {
-                 document.getElementById('reportedQuestionsSection').classList.add('hidden');
-                 document.getElementById('adminSystem').classList.remove('hidden');
+            // Show active tab content
+            tabContents.forEach(content => {
+                if (content.id === `${tabId}-tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
             });
             
-             // Attendance calendar navigation
-            document.getElementById('prevAttendanceMonthBtn').addEventListener('click', () => {
-                currentAttendanceCalendarDate.setMonth(currentAttendanceCalendarDate.getMonth() - 1);
-                renderAttendanceCalendar(currentAttendanceCalendarDate.getFullYear(), currentAttendanceCalendarDate.getMonth());
-            });
-            document.getElementById('nextAttendanceMonthBtn').addEventListener('click', () => {
-                currentAttendanceCalendarDate.setMonth(currentAttendanceCalendarDate.getMonth() + 1);
-                renderAttendanceCalendar(currentAttendanceCalendarDate.getFullYear(), currentAttendanceCalendarDate.getMonth());
-            });
+            // Load specific data if needed
+            if (tabId === 'leaderboard') {
+                loadLeaderboard();
+            } else if (tabId === 'backlog') {
+                loadBacklog();
+            } else if (tabId === 'revision') {
+                loadDueRevisions();
+            }
+        }
+        
+        function loadInitialData() {
+            // Load all questions
+            callAPI('getQuestions')
+                .then(response => {
+                    if (response.ok) {
+                        allQuestions = response.rows;
+                        practiceQuestions = [...allQuestions]; // Copy for practice
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading questions:', error);
+                });
             
-             // Admin Attendance calendar navigation
-            document.getElementById('adminPrevAttendanceMonthBtn').addEventListener('click', () => {
-                currentAdminAttendanceDate.setMonth(currentAdminAttendanceDate.getMonth() - 1);
-                const selectedPlayer = document.getElementById('attendancePlayerSelect').value;
-                renderAdminAttendanceCalendar(selectedPlayer);
-            });
-            document.getElementById('adminNextAttendanceMonthBtn').addEventListener('click', () => {
-                currentAdminAttendanceDate.setMonth(currentAdminAttendanceDate.getMonth() + 1);
-                const selectedPlayer = document.getElementById('attendancePlayerSelect').value;
-                renderAdminAttendanceCalendar(selectedPlayer);
-            });
-
-            // Window click for dropdown
-            window.onclick = function(event) {
-                if (!event.target.matches('.menu-btn')) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    for (var i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
+            // Load due revisions
+            loadDueRevisions();
+            
+            // Load leaderboard
+            loadLeaderboard();
+        }
+        
+        function loadDueRevisions() {
+            callAPI('getDueRevisions')
+                .then(response => {
+                    if (response.ok) {
+                        dueRevisions = response.due;
+                        document.getElementById('due-count').textContent = dueRevisions.length;
+                        
+                        if (dueRevisions.length === 0) {
+                            document.getElementById('start-revision').disabled = true;
+                        } else {
+                            document.getElementById('start-revision').disabled = false;
                         }
                     }
-                }
-            }
-
-            // Show loading notification
-            showNotification("Loading latest data...", "warning");
-
-            // Fetch all shared data from GitHub
-            await fetchSharedData();
-            
-            // Data is loaded (or failed, state is empty), populate the UI
-            loadQuestionSets();
-            updatePlayerSelects();
-            renderRevisionPage();
-            renderBacklogPage();
-            
-            // Always show welcome screen
-            switchPracticeView('welcomeView');
-            
-            // Show loaded notification (will overwrite the loading one)
-            showNotification("Data loaded!", "success");
-        }
-        
-        function setDailyQuote() {
-            // This remains session-based using localStorage, as it's not shared data.
-            const quoteEl = document.getElementById('motivationalQuote');
-            const quoteElLoggedIn = document.getElementById('motivationalQuoteLoggedIn');
-            const today = new Date().toISOString().split('T')[0];
-            const storedQuote = JSON.parse(localStorage.getItem('dailyQuote'));
-            let quoteToDisplay;
-
-            if (storedQuote && storedQuote.date === today) {
-                quoteToDisplay = storedQuote.quote;
-            } else {
-                quoteToDisplay = quotes[Math.floor(Math.random() * quotes.length)];
-                localStorage.setItem('dailyQuote', JSON.stringify({ quote: quoteToDisplay, date: today }));
-            }
-
-            if (quoteEl) quoteEl.textContent = quoteToDisplay;
-            if (quoteElLoggedIn) quoteElLoggedIn.textContent = quoteToDisplay;
-        }
-
-        function toggleMenu() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-        function logout() {
-            currentPlayerName = '';
-            // No localStorage to remove
-            window.location.reload();
-        }
-
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-
-        // --- GITHUB DATA FUNCTIONS ---
-        
-        /**
-         * Fetches the shared data file from GitHub.
-         * Populates global state variables.
-         */
-        async function fetchSharedData() {
-            try {
-                const response = await fetch(`${GITHUB_RAW_URL}?t=${new Date().getTime()}`, {
-                    headers: { 'Accept': 'application/vnd.github.v3.raw' },
-                    cache: 'no-store' // Ensure we get the freshest data
+                })
+                .catch(error => {
+                    console.error('Error loading due revisions:', error);
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    questionSets = data.questionSets || {};
-                    practiceHistory = data.practiceHistory || {};
-                    revisionProgress = data.revisionProgress || {};
-                    playerProfiles = data.playerProfiles || {};
-                    reportedQuestions = data.reportedQuestions || [];
-                    dailyRevisionScores = data.dailyRevisionScores || {};
-                    console.log('Shared data loaded successfully.');
-                } else if (response.status === 404) {
-                    console.warn('data/data.json not found. Initializing with empty state. File will be created on first save.');
-                    // Global state is already empty, so we just proceed.
-                } else {
-                    throw new Error(`GitHub fetch error: ${response.status} ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Failed to fetch shared data:', error);
-                showNotification('Error loading data from GitHub. Please refresh.', 'error');
-                // Even on error, we proceed with an empty state.
-            }
         }
         
-        /**
-         * A wrapper function to call writeSharedData with a specific commit message.
-         * This is a fire-and-forget async call.
-         * @param {string} commitMessage - The commit message for the GitHub save.
-         */
-        function saveAllSharedData(commitMessage = 'chore: Updating application data') {
-            writeSharedData(commitMessage);
-        }
-
-        /**
-         * Writes the entire current application state to the single data.json file on GitHub.
-         * Handles both creating a new file (if 404) and updating an existing file.
-         * @param {string} commitMessage - The commit message for the GitHub save.
-         */
-        async function writeSharedData(commitMessage) {
-    if (isSaving) {
-        console.warn('Save already in progress. Skipping.');
-        showNotification('Save in progress, please wait...', 'warning');
-        return;
-    }
-    isSaving = true;
-    showNotification('Saving changes...', 'warning');
-    
-    console.log('=== GITHUB DEBUG INFO ===');
-    console.log('API URL:', GITHUB_API_URL);
-    console.log('File path:', DATA_FILE_PATH);
-    console.log('Repo:', `${GITHUB_USERNAME}/${REPO_NAME}`);
-
-    try {
-        // Step 1: Fetch current SHA
-        let currentSHA = null;
-        console.log('Fetching SHA from:', GITHUB_API_URL);
-        
-        const shaResponse = await fetch(GITHUB_API_URL, {
-            headers: {
-                'Authorization': `token ${GITHUB_PAT}`,
-                'Accept': 'application/vnd.github.v3+json'
-            },
-            cache: 'no-store'
-        });
-
-        console.log('SHA Response status:', shaResponse.status);
-        console.log('SHA Response ok:', shaResponse.ok);
-
-        if (shaResponse.ok) {
-            const fileData = await shaResponse.json();
-            currentSHA = fileData.sha;
-            console.log('SHA fetched successfully:', currentSHA ? 'Yes' : 'No');
-            console.log('File exists, SHA:', currentSHA);
-        } else if (shaResponse.status === 404) {
-            console.log('File does not exist yet (first save) - this is normal for new files');
-            currentSHA = null;
-        } else {
-            const errorText = await shaResponse.text();
-            console.error('SHA fetch error details:', errorText);
-            throw new Error(`GitHub GET error: ${shaResponse.status} - ${shaResponse.statusText}`);
-        }
-
-        // Prepare data to save
-        const sharedData = {
-            questionSets,
-            practiceHistory,
-            revisionProgress,
-            playerProfiles,
-            reportedQuestions,
-            dailyRevisionScores
-        };
-
-        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(sharedData, null, 2))));
-
-        const body = {
-            message: commitMessage || `chore: Update app data ${new Date().toISOString()}`,
-            content: contentBase64,
-            branch: 'main'
-        };
-        if (currentSHA) body.sha = currentSHA;
-
-        console.log('Attempting to save data...');
-        
-        const writeResponse = await fetch(GITHUB_API_URL, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_PAT}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-
-        console.log('Write response status:', writeResponse.status);
-
-        if (!writeResponse.ok) {
-            const errorData = await writeResponse.json();
-            console.error('Write error details:', errorData);
-            throw new Error(`GitHub PUT error: ${writeResponse.status} ${errorData.message}`);
-        }
-
-        console.log('Data saved to GitHub successfully.');
-        showNotification('Changes saved!', 'success');
-
-    } catch (err) {
-        console.error('Failed to write shared data:', err);
-        showNotification(`Save Error: ${err.message}`, 'error');
-    } finally {
-        isSaving = false;
-    }
-}
-
-async function testGitHubConnection() {
-    try {
-        showNotification('Testing GitHub connection...', 'warning');
-        
-        // Test if we can access the repo
-        const repoUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}`;
-        console.log('Testing repo access:', repoUrl);
-        
-        const repoResponse = await fetch(repoUrl, {
-            headers: {
-                'Authorization': `token ${GITHUB_PAT}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        console.log('Repo access test:', repoResponse.status, repoResponse.ok);
-        
-        if (!repoResponse.ok) {
-            throw new Error(`Cannot access repository: ${repoResponse.status}`);
-        }
-        
-        // Test file access
-        console.log('Testing file access:', GITHUB_API_URL);
-        const fileResponse = await fetch(GITHUB_API_URL, {
-            headers: {
-                'Authorization': `token ${GITHUB_PAT}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        console.log('File access test:', fileResponse.status);
-        
-        if (fileResponse.status === 404) {
-            showNotification('File not found (this is OK for first save)', 'warning');
-            return true;
-        } else if (fileResponse.ok) {
-            showNotification('GitHub connection successful! File exists.', 'success');
-            return true;
-        } else {
-            throw new Error(`File access failed: ${fileResponse.status}`);
-        }
-        
-    } catch (error) {
-        console.error('Connection test failed:', error);
-        showNotification(`Connection failed: ${error.message}`, 'error');
-        return false;
-    }
-}
-        
-        // --- DATA MANAGEMENT ---
-        function exportData() {
-            // This function now exports the *current in-memory state*
-            const data = { questionSets, practiceHistory, revisionProgress, playerProfiles, reportedQuestions, dailyRevisionScores };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'psc-prep-backup.json'; a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importData() {
-            const input = document.createElement('input');
-            input.type = 'file'; input.accept = '.json';
-            input.onchange = e => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = event => {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        // Overwrite global state
-                        if(data.questionSets) questionSets = data.questionSets;
-                        if(data.practiceHistory) practiceHistory = data.practiceHistory;
-                        if(data.revisionProgress) revisionProgress = data.revisionProgress;
-                        if(data.playerProfiles) playerProfiles = data.playerProfiles;
-                        if(data.reportedQuestions) reportedQuestions = data.reportedQuestions;
-                        if(data.dailyRevisionScores) dailyRevisionScores = data.dailyRevisionScores;
+        function loadLeaderboard() {
+            callAPI('getLeaderboard')
+                .then(response => {
+                    if (response.ok) {
+                        const leaderboardList = document.getElementById('leaderboard-list');
+                        leaderboardList.innerHTML = '';
                         
-                        // Re-initialize UI
-                        loadQuestionSets(); 
-                        updatePlayerSelects(); 
-                        renderRevisionPage(); 
-                        renderBacklogPage(); 
+                        if (response.rows.length === 0) {
+                            leaderboardList.innerHTML = '<p>No leaderboard data available yet.</p>';
+                            return;
+                        }
                         
-                        // Save the newly imported data to GitHub
-                        saveAllSharedData('chore: Import data from file');
-                        
-                        showNotification('Data imported and saved successfully!');
-                    } catch (err) { showNotification('Invalid import file', 'error'); }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function clearAllData() {
-            promptForAdminPassword(() => {
-                // Reset global state
-                questionSets = {}; 
-                practiceHistory = {}; 
-                revisionProgress = {}; 
-                playerProfiles = {}; 
-                reportedQuestions = []; 
-                dailyRevisionScores = {};
-                
-                // Save the empty state to GitHub
-                saveAllSharedData('fix: CLEAR ALL DATA');
-                
-                // Reload the page
-                window.location.reload();
-            });
-        }
-        
-        function removePlayer() {
-            const playerToRemove = document.getElementById('playerToRemoveSelect').value;
-            if (!playerToRemove) { return; }
-
-            promptForAdminPassword(() => {
-                // 1. Remove history
-                const historyKeysToDelete = Object.keys(practiceHistory).filter(key => practiceHistory[key].playerName === playerToRemove);
-                historyKeysToDelete.forEach(key => delete practiceHistory[key]);
-
-                // 2. Remove revision progress
-                delete revisionProgress[playerToRemove];
-
-                // 3. Remove profile
-                delete playerProfiles[playerToRemove];
-
-                // 4. Remove daily scores
-                Object.keys(dailyRevisionScores).forEach(date => {
-                    if (dailyRevisionScores[date][playerToRemove]) {
-                        delete dailyRevisionScores[date][playerToRemove];
+                        response.rows.forEach((item, index) => {
+                            const leaderboardItem = document.createElement('div');
+                            leaderboardItem.className = 'leaderboard-item';
+                            leaderboardItem.innerHTML = `
+                                <span>${index + 1}. ${item.user}</span>
+                                <span>${item.xp} XP</span>
+                            `;
+                            leaderboardList.appendChild(leaderboardItem);
+                        });
                     }
+                })
+                .catch(error => {
+                    console.error('Error loading leaderboard:', error);
                 });
-                
-                // 5. Save changes to GitHub
-                saveAllSharedData(`fix: Remove player ${playerToRemove}`);
-                
-                if (currentPlayerName === playerToRemove) { logout(); } 
-                else { updatePlayerSelects(); }
-
-                showNotification(`Player '${playerToRemove}' has been removed.`, 'error');
-            });
-        }
-
-        function clearPlayerHistory() {
-            const playerToClear = document.getElementById('playerToClearHistorySelect').value;
-            if (!playerToClear) { return; }
-            
-            promptForAdminPassword(() => {
-                const keysToDelete = Object.keys(practiceHistory).filter(key => practiceHistory[key].playerName === playerToClear);
-                
-                keysToDelete.forEach(key => {
-                    delete practiceHistory[key];
-                });
-                
-                saveAllSharedData(`fix: Clear history for ${playerToClear}`);
-                showNotification(`All history for ${playerToClear} has been cleared.`, 'error');
-            });
-        }
-
-        function resetRevisionProgress() {
-            promptForAdminPassword(() => {
-                revisionProgress = {};
-                saveAllSharedData('fix: Reset all revision progress');
-                renderRevisionPage();
-                renderBacklogPage();
-                showNotification('All Revision Progress has been reset.', 'error');
-            });
-        }
-
-        // --- GAMIFICATION & PFP FUNCTIONS ---
-        function populateAvatars() {
-            const avatarContainer = document.getElementById('modalAvatarSelection');
-            avatarContainer.innerHTML = '';
-            const avatarSeeds = ['Leo', 'Tigger', 'Molly', 'Max', 'Zoe', 'Rocky'];
-            avatarSeeds.forEach(seed => {
-                const img = document.createElement('img');
-                const url = `https://api.dicebear.com/8.x/adventurer/svg?seed=${seed}`;
-                img.src = url; img.alt = `Avatar ${seed}`;
-                img.onclick = () => {
-                    document.querySelectorAll('.avatar-selection img').forEach(i => i.classList.remove('selected'));
-                    img.classList.add('selected');
-                    selectedAvatarUrl = url;
-                };
-                avatarContainer.appendChild(img);
-            });
         }
         
-        function updateProgressUI() {
-            if (!currentPlayerName) {
-                document.getElementById('playerStats').classList.add('hidden');
-                return;
-            }
-            const profile = playerProfiles[currentPlayerName] || {};
-            const totalXP = profile.totalXP || 0;
-            const levelInfo = getLevelForXP(totalXP);
-            
-            const xpForCurrentLevel = levelInfo.minXp;
-            const xpForNextLevel = levelInfo.nextLevelXp;
-            
-            const xpProgressInLevel = totalXP - xpForCurrentLevel;
-            const xpNeededForLevel = xpForNextLevel - xpForCurrentLevel;
-
-            const percentage = (xpNeededForLevel > 0 && isFinite(xpNeededForLevel)) ? (xpProgressInLevel / xpNeededForLevel) * 100 : 100;
-
-            document.getElementById('playerStats').classList.remove('hidden');
-            document.getElementById('playerNameDisplay').textContent = `Player: ${currentPlayerName}`;
-            document.getElementById('playerTitle').textContent = levelInfo.title;
-            document.getElementById('playerXP').textContent = totalXP;
-            document.getElementById('xpToNextLevel').textContent = isFinite(xpForNextLevel) ? xpForNextLevel : 'Max';
-            document.getElementById('xpBarFill').style.width = `${percentage}%`;
+        function loadBacklog() {
+            // For demo purposes, we'll show a placeholder
+            // In a real implementation, you would track which questions the user has missed
+            const backlogList = document.getElementById('backlog-list');
+            backlogList.innerHTML = '<p>Backlog feature will be implemented in the next version.</p>';
         }
         
-        function savePlayerProfiles() {
-            // This now just wraps the main save function
-            saveAllSharedData('feat: Update player profiles');
-        }
-
-        function loadPlayerProgress() {
-            if (!currentPlayerName) return;
-            updateProgressUI();
-            
-            // PFP logic removed
-            // const pfpDataUrl = ...
-            // const pfpElement = ...
-            // pfpElement.classList.remove('hidden');
-            
-            renderRevisionPage();
-            renderBacklogPage();
-        }
-        
-        // triggerPFPUpload and handlePFPUpload removed
-
-        // --- CORE APP FUNCTIONS ---
-        function switchTab(tabName) {
-            document.body.classList.remove('practice-active');
-            document.querySelectorAll('#tab-nav button').forEach(btn => btn.classList.remove('active'));
-            const mainTabButton = document.querySelector(`#tab-nav button[onclick="switchTab('${tabName}')"]`);
-            if(mainTabButton) mainTabButton.classList.add('active');
-            document.querySelectorAll('.container > main > .tab-content').forEach(tab => tab.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            if(tabName === 'leaderboard') showLeaderboards();
-            if(tabName === 'history') loadHistory();
-            if(tabName === 'revision') renderRevisionPage();
-            if(tabName === 'backlog') renderBacklogPage();
-            if(tabName === 'attendance') {
-                currentAttendanceCalendarDate = new Date();
-                renderAttendanceCalendar(currentAttendanceCalendarDate.getFullYear(), currentAttendanceCalendarDate.getMonth());
-            }
-        }
-
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('#admin-tab-nav button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`#admin-tab-nav button[onclick="switchAdminTab('${tabName}')"]`).classList.add('active');
-            document.querySelectorAll('#adminPanel > main > .tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-
-            if (tabName === 'adminQuestionSets') {
-                document.getElementById('editQuestionsSection').classList.add('hidden');
-                document.getElementById('reportedQuestionsSection').classList.add('hidden');
-                loadQuestionSets();
-            }
-            if (tabName === 'adminPlayerHistory') renderAdminPlayerHistory();
-            if (tabName === 'adminBacklogManager') renderAdminBacklogManager();
-            if (tabName === 'adminAttendance') {
-                 currentAdminAttendanceDate = new Date();
-                updatePlayerSelects(); // Ensure dropdown is populated
-                const firstPlayer = document.getElementById('attendancePlayerSelect').value;
-                renderAdminAttendanceCalendar(firstPlayer);
-            }
-             if (tabName === 'adminSystem') {
-                document.getElementById('editQuestionsSection').classList.add('hidden');
-                document.getElementById('reportedQuestionsSection').classList.add('hidden');
-                updatePlayerSelects();
-            }
-        }
-        
-        function switchPracticeView(viewId) {
-            document.querySelectorAll('#practice .view-stage').forEach(view => view.classList.add('hidden'));
-            document.getElementById(viewId).classList.remove('hidden');
-        }
-
-        function showAddQuestionsSection() {
-            document.getElementById('adminQuestionSets').classList.remove('hidden');
-            const bulkSelect = document.getElementById('bulkSetSelect');
-            const setNames = Object.keys(questionSets).filter(name => questionSets[name].type !== 'pdf').sort();
-            bulkSelect.innerHTML = `<option value="">-- Select an existing set --</option>`;
-            bulkSelect.innerHTML += setNames.map(name => `<option value="${name}">${name}</option>`).join('');
-            bulkSelect.innerHTML += `<option value="_new_">** Create a New Set **</option>`;
-            bulkSelect.value = '_new_'; 
-            toggleNewBulkSetName(); 
-        }
-        
-        // --- Player and Password Functions ---
-        function handlePlayerSelection() {
-            const select = document.getElementById('playerSelect');
-            const name = select.value;
-            if (!name) return;
-            if (!playerProfiles[name]) { 
-                playerProfiles[name] = createNewProfile(); 
-            }
-            const profile = playerProfiles[name];
-            if (profile.password) { showPasswordPrompt(name, profile.password, () => loginPlayer(name)); } 
-            else {
-                showCreatePasswordPrompt(name, (newPassword) => {
-                    profile.password = newPassword;
-                    savePlayerProfiles();
-                    showNotification('Password created successfully!', 'success');
-                    loginPlayer(name);
-                });
-            }
-        }
-
-        function createNewProfile() {
-            return {
-                password: '', totalXP: 0, totalCorrect: 0,
-                currentStreak: 0, lastActiveDate: null,
-                consecutiveMissedDays: 0, attendance: []
-            };
-        }
-
-        function createPlayer() {
-            const input = document.getElementById('newPlayerName');
-            const name = input.value.trim();
-            if (!name) { showNotification('Please enter a name for the new player.', 'error'); return; }
-            if (Object.keys(playerProfiles).some(pName => pName.toLowerCase() === name.toLowerCase())) {
-                showNotification('A player with this name already exists.', 'error');
-                return;
-            }
-            pendingPlayerName = name;
-            openModal('avatarModal');
-        }
-
-        function confirmAvatar() {
-            if (!pendingPlayerName) return;
-            
-            closeModal('avatarModal');
-
-            showCreatePasswordPrompt(pendingPlayerName, (newPassword) => {
-                currentPlayerName = pendingPlayerName;
-                pendingPlayerName = null;
-                
-                playerProfiles[currentPlayerName] = createNewProfile();
-                playerProfiles[currentPlayerName].password = newPassword;
-                // Add avatar to profile
-                playerProfiles[currentPlayerName].avatar = selectedAvatarUrl || `https://api.dicebear.com/8.x/initials/svg?seed=${currentPlayerName}`;
-                savePlayerProfiles();
-                
-                // PFP logic removed
-                
-                updatePlayerSelects();
-                document.getElementById('playerSelect').value = currentPlayerName;
-                document.getElementById('newPlayerName').value = '';
-                loginPlayer(currentPlayerName);
-                selectedAvatarUrl = null;
-                document.querySelectorAll('.avatar-selection img').forEach(i => i.classList.remove('selected'));
-            });
-        }
-        
-        function loginPlayer(name, isAutoLogin = false) {
-            currentPlayerName = name;
-            // No localStorage
-            
-            handleDailyLogin();
-
-            if (!isAutoLogin) { showNotification(`Welcome, ${currentPlayerName}!`); }
-            document.getElementById('setupWelcome').textContent = `Welcome, ${currentPlayerName}!`;
-            loadPlayerProgress();
-            switchPracticeView('practiceSetupView');
-            updateAllBadges();
-            updateSubjectSelect();
-        }
-
-        function updateUserPassword() {
-            const userToUpdate = document.getElementById('passwordUserSelect').value;
-            const newPassword = document.getElementById('newUserPassword').value;
-            if (!userToUpdate || !newPassword) { showNotification('Please select a user and enter a new password.', 'warning'); return; }
-            if (!playerProfiles[userToUpdate]) { playerProfiles[userToUpdate] = createNewProfile(); }
-            playerProfiles[userToUpdate].password = newPassword;
-            savePlayerProfiles();
-            document.getElementById('newUserPassword').value = '';
-            showNotification(`Password for ${userToUpdate} has been updated.`, 'success');
-        }
-
-        // --- Practice Session Functions ---
-        function startPracticeWrapper(setName = null, isRev = false, revisionKey = null) {
-            if (!currentPlayerName) { return; } 
-            const selectedSetName = setName || document.getElementById('practiceSetSelect').value;
-            if (!selectedSetName) { showNotification('Please select a question set.', 'error'); return; }
-
-            if (isRev) {
-                const todayStr = getTodayDateString();
-                const hasRevisedToday = Object.values(practiceHistory).some(attempt => 
-                    attempt.playerName === currentPlayerName &&
-                    attempt.setName === selectedSetName &&
-                    attempt.isRevision &&
-                    attempt.startTime.startsWith(todayStr)
-                );
-                if (hasRevisedToday) {
-                    showNotification("You have already completed a revision for this set today. Please try again tomorrow.", "warning");
-                    return;
-                }
-            }
-            
-            document.body.classList.add('practice-active');
-            switchPracticeView('practiceSessionView');
-            startPractice(selectedSetName, isRev, revisionKey);
-        }
-
-        function startPractice(setName, isRev, revisionKey) { 
-            if (practiceInProgress) return;
-            practiceInProgress = true;
-            initAudio();
-            isRevisionMode = isRev; currentRevisionKey = revisionKey;
-            currentSet = [...(questionSets[setName].questions || [])].sort(() => Math.random() - 0.5);
-            if (currentSet.length === 0) { 
-                showNotification('Selected set is empty.', 'error'); 
-                practiceInProgress = false;
-                switchPracticeView('practiceSetupView');
-                return; 
-            }
-            
-            const set = questionSets[setName];
-            const category = set.category || 'gk';
-            let timePerQuestion = category === 'math' ? 45 : 10;
-
-            currentQuestionIndex = 0; score = 0; timeElapsed = 0;
-            totalTimeLimit = currentSet.length * timePerQuestion; 
-            currentAttempt = { 
-                playerName: currentPlayerName, setName: setName, startTime: new Date().toISOString(), 
-                answers: [], score: 0, totalQuestions: currentSet.length, timeLimit: totalTimeLimit,
-                isRevision: isRevisionMode, revisionKey: isRevisionMode ? currentRevisionKey : null
-            };
-            document.getElementById('practiceScore').textContent = 'Score: 0';
-            clearInterval(timer); 
-            timer = setInterval(() => { 
-                timeElapsed++; 
-                const remaining = totalTimeLimit - timeElapsed;
-                document.getElementById('practiceTimer').textContent = `Time Left: ${formatTime(Math.max(0, remaining))}`;
-                if (remaining <= 0) { 
-                    showNotification('Time limit reached!', 'error'); 
-                    endPractice();
-                }
-            }, 1000);
-            showNextQuestion();
-        }
-        
-        function showNextQuestion() {
-            if (currentQuestionIndex >= currentSet.length) {
-                endPractice();
-                return;
-            }
-            document.getElementById('nextQuestionContainer').classList.add('hidden');
-            document.getElementById('skipQuestionBtn').disabled = false;
-            document.getElementById('endPracticeBtn').disabled = false;
-
-            document.getElementById('reportQuestionBtn').classList.remove('hidden');
-            const question = currentSet[currentQuestionIndex];
-            document.getElementById('practiceQuestion').textContent = `${currentQuestionIndex + 1}. ${question.question}`;
-            const optionsDiv = document.getElementById('practiceOptions');
-            optionsDiv.innerHTML = '';
-            question.options.forEach((option, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                optionDiv.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
-                optionDiv.onclick = () => selectAnswer(index);
-                optionsDiv.appendChild(optionDiv);
-            });
-        }
-        
-        function selectAnswer(selectedIndex) {
-            document.querySelectorAll('.option').forEach(o => { o.onclick = null; });
-            const question = currentSet[currentQuestionIndex];
-            const correctIndex = question.correctAnswer.charCodeAt(0) - 65;
-            const isCorrect = selectedIndex === correctIndex;
-            document.querySelectorAll('.option').forEach((o, i) => {
-                if (i === correctIndex) o.classList.add('correct');
-                else if (i === selectedIndex) o.classList.add('wrong');
-            });
-            const lastAnswerTime = currentAttempt.answers.length > 0 ? currentAttempt.answers[currentAttempt.answers.length - 1].timeAtAnswer : 0;
-            const timeForThisQuestion = timeElapsed - lastAnswerTime;
-            currentAttempt.answers.push({ 
-                isCorrect, questionText: question.question, questionOptions: question.options,
-                selectedAnswer: String.fromCharCode(65 + selectedIndex), correctAnswer: question.correctAnswer,
-                timeTaken: timeForThisQuestion, timeAtAnswer: timeElapsed, isSkipped: false
-            });
-            
-            if (isCorrect) {
-                score++;
-                playSound('correct');
-                document.getElementById('practiceScore').textContent = `Score: ${score}`;
-                proceedToNextQuestion();
-            } else {
-                playSound('wrong');
-                document.getElementById('nextQuestionContainer').classList.remove('hidden');
-                document.getElementById('skipQuestionBtn').disabled = true;
-                document.getElementById('endPracticeBtn').disabled = true;
-            }
-        }
-
-        function proceedToNextQuestion() {
-            currentQuestionIndex++;
-            showNextQuestion();
-        }
-
-        function skipQuestion() {
-            if (currentQuestionIndex >= currentSet.length) { return; }
-            const question = currentSet[currentQuestionIndex];
-            document.querySelectorAll('.option').forEach(o => { o.onclick = null; });
-            const lastAnswerTime = currentAttempt.answers.length > 0 ? currentAttempt.answers[currentAttempt.answers.length - 1].timeAtAnswer : 0;
-            const timeForThisQuestion = timeElapsed - lastAnswerTime;
-            currentAttempt.answers.push({
-                isCorrect: false, questionText: question.question, questionOptions: question.options,
-                selectedAnswer: 'SKIPPED', correctAnswer: question.correctAnswer,
-                timeTaken: timeForThisQuestion, timeAtAnswer: timeElapsed, isSkipped: true
-            });
-            showNotification('Question skipped.', 'warning');
-            proceedToNextQuestion();
-        }
-
-        function endPractice() {
-            if (!practiceInProgress || !currentAttempt) {
-                practiceInProgress = false;
-                clearInterval(timer);
-                document.body.classList.remove('practice-active');
-                switchPracticeView('practiceSetupView');
+        function startPracticeSession() {
+            if (practiceQuestions.length === 0) {
+                showNotification('No practice questions available', 'error');
                 return;
             }
             
-            practiceInProgress = false;
-            clearInterval(timer);
-
-            const totalQuestions = currentAttempt.totalQuestions;
-            const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
-            
-            let xpEarned = 0;
-            let xpMessage = '';
-
-            // Note: calculateAndApplyXP now *only* updates the playerProfiles object
-            // It does not save it. We will save at the end of this function.
-            if (isRevisionMode) {
-                const CUTOFF_DATE = new Date('2025-10-13T00:00:00');
-                const setName = currentAttempt.setName;
-                const setUploadDateStr = questionSets[setName]?.uploadDate;
-                const setUploadDate = setUploadDateStr ? new Date(setUploadDateStr + 'T00:00:00') : new Date(0); 
-
-                const isEligibleForXp = setUploadDate >= CUTOFF_DATE;
-
-                if (isEligibleForXp) {
-                    xpEarned = calculateAndApplyXP(score); // This updates playerProfiles
-                    xpMessage = `You earned ${xpEarned} XP!`;
-                } else {
-                    xpEarned = calculateAndApplyXP(0); // This updates playerProfiles (for streak)
-                    xpMessage = `Score added to today's ranking. Total XP is only awarded for revisions on sets from after 13-10-2025.`;
-                    if (xpEarned > 0) {
-                        xpMessage += ` Daily activity bonus of ${xpEarned} XP applied.`;
-                    }
-                }
-                
-                const todayStr = getTodayDateString();
-                if (!dailyRevisionScores[todayStr]) dailyRevisionScores[todayStr] = {};
-                if (!dailyRevisionScores[todayStr][currentPlayerName]) dailyRevisionScores[todayStr][currentPlayerName] = 0;
-                dailyRevisionScores[todayStr][currentPlayerName] += score;
-
-            } else {
-                xpEarned = calculateAndApplyXP(0); // This updates playerProfiles (for streak)
-                xpMessage = xpEarned > 0 ? `You earned ${xpEarned} XP for your daily activity! Score-based XP is for revisions.` : 'XP for correct answers is awarded during revision sessions.';
-            }
-
-            currentAttempt = {...currentAttempt, endTime: new Date().toISOString(), score, percentage, timeSpent: timeElapsed};
-            const attemptId = `attempt-${Date.now()}`;
-            practiceHistory[attemptId] = currentAttempt;
-            
-            if (isRevisionMode) {
-                const success = percentage >= MIN_SCORE_FOR_REVISION_SUCCESS;
-                if (!revisionProgress[currentPlayerName]) revisionProgress[currentPlayerName] = {};
-                revisionProgress[currentPlayerName][currentRevisionKey] = { percentage, date: new Date().toISOString(), success };
-                renderRevisionPage();
-                renderBacklogPage();
-            }
-
-            // --- SAVE ALL CHANGES ---
-            // We have modified: playerProfiles, dailyRevisionScores, practiceHistory, revisionProgress
-            // All of these are saved in one go.
-            saveAllSharedData(`score: ${currentPlayerName} completes ${currentAttempt.setName}`);
-            // --- END SAVE ---
-
-            document.getElementById('modalTitle').textContent = percentage >= 80 ? "Excellent!" : (percentage >= 50 ? "Good Job!" : "Keep Trying!");
-            document.getElementById('modalScore').textContent = `Score: ${score}/${totalQuestions} (${percentage}%)`;
-            document.getElementById('modalTime').textContent = `Time: ${formatTime(timeElapsed)}`;
-            document.getElementById('modalXPGained').textContent = xpMessage;
-            openModal('resultsModal');
-            
-            if (percentage > 70) startConfetti();
-
-            const wrongAnswers = currentAttempt.answers.filter(ans => !ans.isCorrect);
-            if (wrongAnswers.length > 0) {
-                showWrongAnswersPopup(wrongAnswers);
-            }
-            
-            document.body.classList.remove('practice-active');
-            switchPracticeView('practiceSetupView'); 
-            isRevisionMode = false; currentRevisionKey = null; currentSet = [];
+            currentSessionType = 'practice';
+            currentQuestionIndex = 0;
+            document.getElementById('practice-session').classList.remove('hidden');
+            document.getElementById('start-practice').classList.add('hidden');
+            showPracticeQuestion();
         }
         
-        // --- XP, STREAK, and LEVELING LOGIC ---
-        function getTodayDateString() {
-            return new Date().toISOString().split('T')[0];
-        }
-
-        function handleDailyLogin() {
-            if (!currentPlayerName) return;
-            const profile = playerProfiles[currentPlayerName];
-            const today = getTodayDateString();
-            const lastDate = profile.lastActiveDate;
-
-            if (lastDate && /\d{4}-\d{2}-\d{2}/.test(lastDate) && lastDate < today) {
-                const last = new Date(lastDate);
-                const now = new Date(today);
-                const diffTime = now - last;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        function showPracticeQuestion() {
+            if (currentQuestionIndex >= practiceQuestions.length) {
+                endPracticeSession();
+                return;
+            }
+            
+            const question = practiceQuestions[currentQuestionIndex];
+            document.getElementById('practice-question-text').textContent = question.q;
+            
+            const optionsContainer = document.getElementById('practice-options');
+            optionsContainer.innerHTML = '';
+            
+            // Determine time based on question type
+            timeLeft = question.q.startsWith('MATH:') ? 45 : 10;
+            document.getElementById('practice-timer').textContent = timeLeft;
+            
+            // Create option buttons
+            const options = [
+                { code: 'A', text: question.a },
+                { code: 'B', text: question.b },
+                { code: 'C', text: question.c },
+                { code: 'D', text: question.d }
+            ];
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = `${option.code}. ${option.text}`;
+                optionElement.setAttribute('data-code', option.code);
                 
-                if (diffDays > 1) { 
-                    if (profile.currentStreak > 0) {
-                        showNotification(`Streak broken! You missed ${diffDays - 1} day(s).`, 'warning');
-                        profile.currentStreak = 0;
-                        profile.consecutiveMissedDays = diffDays -1;
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('#practice-options .option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Check if answer is correct
+                    const isCorrect = this.getAttribute('data-code') === question.right;
+                    
+                    if (isCorrect) {
+                        showNotification('Correct!', 'success');
                     } else {
-                        profile.consecutiveMissedDays += diffDays -1;
-                    }
-
-                    let totalDeduction = 0;
-                     for(let i=0; i < diffDays - 1; i++){
-                        const dayPenalty = Math.min(50, 2**((profile.consecutiveMissedDays - (diffDays-1) + i)));
-                        totalDeduction += dayPenalty;
+                        showNotification(`Incorrect. The right answer is ${question.right}`, 'error');
                     }
                     
-                    if(totalDeduction > 0){
-                        profile.totalXP = Math.max(0, profile.totalXP - totalDeduction);
-                        showNotification(`-${totalDeduction} XP for extended absence.`, 'error');
-                    }
-                }
-            }
-            // We don't save here. We save after the practice session in endPractice().
-            // savePlayerProfiles(); 
-            updateProgressUI();
-        }
-
-        /**
-         * Updates the playerProfiles object in-memory with new XP and streak.
-         * @param {number} correctAnswers - The number of correct answers in the session.
-         * @returns {number} The total XP gained in this session.
-         */
-        function calculateAndApplyXP(correctAnswers) {
-            if (!currentPlayerName) return 0;
-            const profile = playerProfiles[currentPlayerName];
-            const today = getTodayDateString();
-            const oldLevelInfo = getLevelForXP(profile.totalXP || 0);
-            
-            const scoreXp = correctAnswers;
-            let streakXp = 0;
-
-            const lastDate = profile.lastActiveDate;
-            if (lastDate !== today) {
-                if (!profile.attendance) profile.attendance = [];
-                if (!profile.attendance.includes(today)) {
-                    profile.attendance.push(today);
-                    showNotification('Attendance automatically marked for today!', 'success');
-                }
-
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayString = yesterday.toISOString().split('T')[0];
-
-                if (lastDate === yesterdayString) {
-                    profile.currentStreak = (profile.currentStreak || 0) + 1;
-                } else {
-                    profile.currentStreak = 1; 
-                }
-
-                if (profile.currentStreak > 0) {
-                    streakXp = profile.currentStreak >= 7 ? 50 : (10 * (profile.currentStreak - 1));
-                }
-                
-                profile.lastActiveDate = today;
-                profile.consecutiveMissedDays = 0;
-            }
-        
-            const totalXpGained = scoreXp + streakXp;
-            profile.totalXP = (profile.totalXP || 0) + totalXpGained;
-            profile.totalCorrect = (profile.totalCorrect || 0) + correctAnswers;
-            
-            const newLevelInfo = getLevelForXP(profile.totalXP);
-            if (newLevelInfo.title !== oldLevelInfo.title) {
-                playSound('levelup');
-                showNotification(`🎉 Title Up! You are now a ${newLevelInfo.title}!`);
-            }
-            
-            // This function NO LONGER saves. It just updates the object.
-            // savePlayerProfiles();
-            return totalXpGained;
-        }
-
-        function getLevelForXP(xp) {
-            return LEVEL_CONFIG.slice().reverse().find(level => xp >= level.minXp) || LEVEL_CONFIG[0];
-        }
-        
-        function resetAllXP() {
-            promptForAdminPassword(() => {
-                for (const playerName in playerProfiles) {
-                    const profile = playerProfiles[playerName];
-                    profile.totalXP = 0;
-                    profile.totalCorrect = 0;
-                    profile.currentStreak = 0;
-                    profile.lastActiveDate = null;
-                    profile.consecutiveMissedDays = 0;
-                }
-                dailyRevisionScores = {};
-                
-                saveAllSharedData('fix: Reset all player XP & streaks');
-                
-                if (currentPlayerName) { loadPlayerProgress(); }
-                showNotification('All player XP and streaks have been reset.', 'error');
-            });
-        }
-
-        // --- Question Set Management ---
-        function loadQuestionSets() {
-            const setsList = document.getElementById('setsList');
-            if(!setsList) return;
-
-            const sortedSetNames = Object.keys(questionSets).sort((a, b) => {
-                const dateA = new Date(questionSets[a].uploadDate || 0);
-                const dateB = new Date(questionSets[b].uploadDate || 0);
-                return dateB - dateA;
-            });
-
-            setsList.innerHTML = sortedSetNames.map(setName => {
-                const set = questionSets[setName];
-                const uploadDateStr = set.uploadDate ? new Date(set.uploadDate + 'T00:00:00').toLocaleDateString() : 'No date';
-                const countText = `${(set.questions || []).length} questions`;
-                const categoryText = set.category ? `(${set.category.toUpperCase()})` : '';
-                const subjectText = set.subject ? `[${set.subject}]` : '[No Subject]';
-                return `
-                <div class="question-set" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 5px;">
-                    <div>
-                        <h4 style="margin-bottom: 3px;">${subjectText} ${setName} ${categoryText} (${countText})</h4>
-                        <p style="font-size: 12px; color: #555;">Uploaded: ${uploadDateStr}</p>
-                    </div>
-                    <div style="display: flex; flex-wrap: wrap;">
-                        <button onclick="editQuestionSet('${setName}')" class="btn-warning" style="margin: 2px; padding: 6px 12px;">Edit</button>
-                        <button onclick="renameSet('${setName}')" class="btn-warning" style="margin: 2px; padding: 6px 12px; background: #3498db;">Rename</button>
-                        <button onclick="deleteQuestionSet('${setName}')" class="btn-danger" style="margin: 2px; padding: 6px 12px;">Delete</button>
-                    </div>
-                </div>`;
-            }).join('') || '<p>No question sets found.</p>';
-            
-            showAddQuestionsSection(); // To populate bulk upload dropdown
-        }
-        
-        function updateSubjectSelect() {
-            const subjectSelect = document.getElementById('subjectSelect');
-            if (!subjectSelect) return;
-            const subjects = [...new Set(Object.values(questionSets).map(s => s.subject || 'Uncategorized'))].sort();
-            subjectSelect.innerHTML = '<option value="">-- Select a Subject --</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
-            updatePracticeSetSelect("");
-        }
-        
-        function updatePracticeSetSelect(subject) {
-            const practiceSetSelect = document.getElementById('practiceSetSelect');
-            const startBtn = document.getElementById('startPracticeBtn');
-            if (!practiceSetSelect) return;
-
-            practiceSetSelect.innerHTML = '<option value="">-- Select a Question Set --</option>';
-
-            if (!subject) {
-                if(startBtn) startBtn.disabled = true;
-                return;
-            }
-
-            const setsForSubject = Object.keys(questionSets).filter(setName => {
-                const set = questionSets[setName];
-                const setSubject = set.subject || 'Uncategorized';
-                return setSubject === subject && set.type !== 'pdf';
-            }).sort((a, b) => new Date(questionSets[b].uploadDate || 0) - new Date(questionSets[a].uploadDate || 0));
-
-            practiceSetSelect.innerHTML += setsForSubject.map(name => `<option value="${name}">${name}</option>`).join('');
-            if(startBtn) startBtn.disabled = setsForSubject.length === 0;
-        }
-
-        function updatePlayerSelects() {
-            const selects = [
-                document.getElementById('playerSelect'), 
-                document.getElementById('playerToRemoveSelect'), 
-                document.getElementById('playerToClearHistorySelect'), 
-                document.getElementById('passwordUserSelect'), 
-                document.getElementById('attendancePlayerSelect'),
-                document.getElementById('historyPlayerSelect'),
-                document.getElementById('backlogPlayerSelect')
-            ];
-            const players = getAllPlayerNames();
-            selects.forEach(s => {
-                if (!s) return;
-                const currentVal = s.value;
-                s.innerHTML = `<option value="">Select a player</option>` + [...players].sort().map(p => `<option value="${p}">${p}</option>`).join('');
-                if (players.includes(currentVal)) {
-                    s.value = currentVal;
-                }
-            });
-        }
-        
-        function getAllPlayerNames() {
-            return [...new Set(Object.values(practiceHistory).map(a => a.playerName).filter(Boolean).concat(Object.keys(revisionProgress).filter(Boolean)).concat(Object.keys(playerProfiles).filter(Boolean)))];
-        }
-
-        function saveQuestionSets(){
-            saveAllSharedData('feat: Update question sets');
-        }
-
-        function toggleNewBulkSetName() {
-            const select = document.getElementById('bulkSetSelect');
-            const newNameGroup = document.getElementById('newBulkSetNameGroup');
-            if (select.value === '_new_') {
-                newNameGroup.style.display = 'block';
-                document.getElementById('bulkSetName').value = '';
-            } else {
-                newNameGroup.style.display = 'none';
-            }
-        }
-
-        function importBulkQuestions() {
-            const select = document.getElementById('bulkSetSelect');
-            const subject = document.getElementById('setSubject').value.trim();
-            let setName;
-
-            if (select.value === '_new_') {
-                setName = document.getElementById('bulkSetName').value.trim();
-            } else {
-                setName = select.value;
-            }
-
-            const bulkText = document.getElementById('bulkQuestions').value.trim();
-            if (!setName || !bulkText || !subject) { showNotification('A set name, subject, and questions are required for bulk import.', 'error'); return; }
-            
-            let imported = 0;
-            if(!questionSets[setName]) {
-                const uploadDate = document.getElementById('setUploadDate').value;
-                const category = document.getElementById('setCategory').value;
-                questionSets[setName] = { questions: [], uploadDate: uploadDate || new Date().toISOString().split('T')[0], type: 'questions', category: category, subject: subject };
-            } else {
-                // Update subject if importing into existing set
-                questionSets[setName].subject = subject;
-            }
-
-            bulkText.split('\n').forEach(line => {
-                const parts = line.split('|').map(p => p.trim());
-                if(parts.length === 6) {
-                    questionSets[setName].questions.push({ question: parts[0], options: parts.slice(1, 5), correctAnswer: parts[5].toUpperCase() });
-                    imported++;
-                }
-            });
-            saveQuestionSets(); // This now calls saveAllSharedData
-            showNotification(`${imported} questions imported to "${setName}" under subject "${subject}"`);
-            loadQuestionSets(); 
-            document.getElementById('bulkQuestions').value = '';
-            document.getElementById('bulkSetName').value = '';
-            document.getElementById('setSubject').value = '';
-        }
-
-        function deleteQuestionSet(setName) {
-            const confirmed = confirm(`Delete "${setName}"? This cannot be undone.`);
-            if (confirmed) {
-                delete questionSets[setName];
-                saveQuestionSets(); // This now calls saveAllSharedData
-                showNotification(`Set "${setName}" deleted.`, 'error');
-                loadQuestionSets(); 
-            }
-        }
-        
-        function renameSet(oldName) {
-            const newName = prompt("Enter the new name for the question set:", oldName);
-            if (!newName || newName.trim() === '') { showNotification('Set name cannot be empty.', 'warning'); return; }
-            if (newName === oldName) return;
-            if (questionSets[newName]) { showNotification(`A set named "${newName}" already exists.`, 'error'); return; }
-            
-            // Update all references in the state
-            questionSets[newName] = { ...questionSets[oldName] };
-            delete questionSets[oldName];
-            Object.keys(practiceHistory).forEach(key => { if (practiceHistory[key].setName === oldName) { practiceHistory[key].setName = newName; } });
-            Object.keys(revisionProgress).forEach(player => {
-                Object.keys(revisionProgress[player]).forEach(revKey => {
-                    if (revKey.startsWith(`${oldName}_RevDay`)) {
-                        const newRevKey = revKey.replace(oldName, newName);
-                        revisionProgress[player][newRevKey] = revisionProgress[player][revKey];
-                        delete revisionProgress[player][revKey];
-                    }
+                    // Stop timer and show next button
+                    clearInterval(timerInterval);
+                    document.getElementById('practice-next').classList.remove('hidden');
                 });
+                
+                optionsContainer.appendChild(optionElement);
             });
             
-            // Save all changes to GitHub
-            saveAllSharedData(`feat: Rename set ${oldName} to ${newName}`);
-            
-            showNotification(`Set renamed from "${oldName}" to "${newName}".`, 'success');
-            loadQuestionSets();
-        }
-
-        function editQuestionSet(setName) {
-            currentEditingSet = setName;
-            document.getElementById('adminQuestionSets').classList.add('hidden');
-            document.getElementById('adminPanel').querySelector('main').appendChild(document.getElementById('editQuestionsSection'));
-            document.getElementById('editQuestionsSection').classList.remove('hidden');
-
-            document.getElementById('editQuestionsTitle').textContent = `Edit Details & Questions in Set: ${setName}`;
-            document.getElementById('questionEditForm').classList.add('hidden');
-            document.getElementById('questionsToEditList').classList.remove('hidden');
-
-            const set = questionSets[setName];
-            document.getElementById('editSetCategory').value = set.category || 'gk';
-            document.getElementById('editSetSubject').value = set.subject || '';
-
-            const questionsListDiv = document.getElementById('questionsToEditList');
-            const questions = set.questions || [];
-            questionsListDiv.innerHTML = questions.map((q, index) => `
-                <div class="history-item" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <p style="flex-grow: 1;"><strong>${index + 1}.</strong> ${q.question.substring(0, 80)}...</p>
-                    <div>
-                        <button onclick="editSpecificQuestion('${setName}', ${index})" class="btn-warning" style="margin: 0; padding: 8px 15px;">Edit</button>
-                        <button onclick="deleteSpecificQuestion('${setName}', ${index})" class="btn-danger" style="margin: 0; padding: 8px 15px;">Delete</button>
-                    </div>
-                </div>`).join('') || '<p>No questions in this set.</p>';
-        }
-
-        function updateSetCategory() {
-            if (currentEditingSet && questionSets[currentEditingSet]) {
-                questionSets[currentEditingSet].category = document.getElementById('editSetCategory').value;
-                saveQuestionSets();
-                showNotification(`Category for ${currentEditingSet} updated.`, 'success');
-            }
-        }
-        function updateSetSubject() {
-            if (currentEditingSet && questionSets[currentEditingSet]) {
-                questionSets[currentEditingSet].subject = document.getElementById('editSetSubject').value;
-                saveQuestionSets();
-                showNotification(`Subject for ${currentEditingSet} updated.`, 'success');
-            }
-        }
-
-        function deleteSpecificQuestion(setName, qIndex) {
-            const questionText = questionSets[setName].questions[qIndex].question.substring(0, 30);
-            const confirmed = confirm(`Are you sure you want to delete this question: "${questionText}..."?`);
-            if(confirmed) {
-                questionSets[setName].questions.splice(qIndex, 1);
-                saveQuestionSets();
-                showNotification('Question deleted successfully.', 'error');
-                editQuestionSet(setName);
-            }
-        }
-
-        function deleteCurrentEditedQuestion() {
-            if (currentEditingSet === null || currentEditingIndex === -1) return;
-            const confirmed = confirm(`Are you sure you want to delete this question?`);
-            if(confirmed) {
-                questionSets[currentEditingSet].questions.splice(currentEditingIndex, 1);
-                saveQuestionSets();
-                showNotification('Question deleted successfully.', 'error');
-                document.getElementById('questionEditForm').classList.add('hidden');
-                editQuestionSet(currentEditingSet); 
-                currentEditingIndex = -1;
-            }
-        }
-
-        function editSpecificQuestion(setName, qIndex) {
-            currentEditingIndex = qIndex; currentEditingSet = setName;
-            const question = questionSets[setName].questions[qIndex];
-            document.getElementById('currentQuestionIndexDisplay').textContent = `${qIndex + 1}`;
-            document.getElementById('editQuestionText').value = question.question;
-            document.getElementById('editQuestionOptions').value = question.options.join('\n');
-            document.getElementById('editCorrectAnswer').value = question.correctAnswer;
-            
-            document.getElementById('questionsToEditList').classList.add('hidden');
-            document.getElementById('questionEditForm').classList.remove('hidden');
-        }
-
-        function saveEditedQuestion() {
-            const setName = currentEditingSet; const qIndex = currentEditingIndex;
-            const newQText = document.getElementById('editQuestionText').value.trim();
-            const newOptsText = document.getElementById('editQuestionOptions').value.trim();
-            const newCorrectAnswer = document.getElementById('editCorrectAnswer').value;
-            if (!newQText || !newOptsText) { showNotification('Question text and options are required.', 'error'); return; }
-            const newOptions = newOptsText.split('\n').map(o => o.trim()).filter(Boolean);
-            if(newOptions.length !== 4) { showNotification('Please provide exactly 4 options.', 'error'); return; }
-            questionSets[setName].questions[qIndex] = { question: newQText, options: newOptions, correctAnswer: newCorrectAnswer };
-            saveQuestionSets();
-            showNotification(`Question ${qIndex + 1} in ${setName} updated!`);
-            if (editingFromReport.active) {
-                dismissReport(editingFromReport.reportId, true); // This will save
-                returnToReportedQuestionsView();
-            } else {
-                const nextQuestionIndex = qIndex + 1;
-                const totalQuestionsInSet = questionSets[setName].questions.length;
-                if (nextQuestionIndex < totalQuestionsInSet) { editSpecificQuestion(setName, nextQuestionIndex); } 
-                else { showNotification(`Finished editing all questions in ${setName}.`, 'success'); cancelQuestionEdit(); }
-            }
-        }
-
-        function cancelQuestionEdit() {
-            if (editingFromReport.active) { returnToReportedQuestionsView(); } 
-            else {
-                document.getElementById('questionEditForm').classList.add('hidden');
-                document.getElementById('questionsToEditList').classList.remove('hidden');
-                editQuestionSet(currentEditingSet);
-                currentEditingIndex = -1;
-            }
+            // Start timer
+            startTimer('practice');
         }
         
-        // --- Leaderboard ---
-        function showLeaderboards() {
-            showXpLeaderboard();
-            showTodayLeaderboard();
+        function nextPracticeQuestion() {
+            currentQuestionIndex++;
+            document.getElementById('practice-next').classList.add('hidden');
+            showPracticeQuestion();
         }
-
-        function showXpLeaderboard() {
-            const players = getAllPlayerNames();
-            const leaderboardData = players.map(name => {
-                const profile = playerProfiles[name] || createNewProfile();
-                return {
-                    name,
-                    title: getLevelForXP(profile.totalXP || 0).title,
-                    totalXP: profile.totalXP || 0,
-                    totalCorrect: profile.totalCorrect || 0,
-                    streak: profile.currentStreak || 0
-                };
-            });
-
-            leaderboardData.sort((a, b) => b.totalXP - a.totalXP || b.totalCorrect - a.totalCorrect);
-
-            const tbody = document.getElementById('xpLeaderboardTableBody');
-            tbody.innerHTML = leaderboardData.map((player, i) => {
-                const highlightClass = player.name === currentPlayerName ? 'current-player-highlight' : '';
-                const winnerClass = i === 0 ? 'winner' : '';
-                let rankDisplay = i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1;
-                return `
-                <tr class="${winnerClass} ${highlightClass}" style="animation-delay: ${i * 50}ms">
-                    <td data-label="Rank">${rankDisplay}</td>
-                    <td data-label="Player">${player.name}</td>
-                    <td data-label="Total XP">${player.totalXP}</td>
-                    <td data-label="Streak">${player.streak} day(s)</td>
-                    <td data-label="Title">${player.title}</td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="5">No data found. Complete revisions to appear here!</td></tr>';
+        
+        function endPracticeSession() {
+            document.getElementById('practice-session').classList.add('hidden');
+            document.getElementById('start-practice').classList.remove('hidden');
+            showNotification('Practice session completed!', 'success');
         }
-
-        function showTodayLeaderboard() {
-            const todayStr = getTodayDateString();
-            const todayScores = dailyRevisionScores[todayStr] || {};
-            const leaderboardData = Object.entries(todayScores)
-                .map(([name, score]) => ({ name, score }))
-                .sort((a, b) => b.score - a.score);
-
-            const tbody = document.getElementById('todayLeaderboardTableBody');
-            tbody.innerHTML = leaderboardData.map((player, i) => {
-                 const highlightClass = player.name === currentPlayerName ? 'current-player-highlight' : '';
-                const winnerClass = i === 0 ? 'winner' : '';
-                let rankDisplay = i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1;
-                return `
-                <tr class="${winnerClass} ${highlightClass}" style="animation-delay: ${i * 50}ms">
-                    <td data-label="Rank">${rankDisplay}</td>
-                    <td data-label="Player">${player.name}</td>
-                    <td data-label="Score">${player.score}</td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="3">No revision scores for today yet.</td></tr>';
-        }
-
-
-        // --- History ---
-        function loadHistory() {
-            document.getElementById('questionAnalysisView').classList.add('hidden');
-            document.getElementById('historyList').classList.remove('hidden');
-            
-            const listDiv = document.getElementById('historyList');
-            const promptEl = document.getElementById('historyPrompt');
-            const controlsEl = document.getElementById('historyControls');
-
-            if (!currentPlayerName) { 
-                listDiv.innerHTML = '';
-                promptEl.textContent = 'Please select a player on the Practice tab to view your history.';
-                controlsEl.classList.add('hidden');
-                return; 
+        
+        function startRevisionSession() {
+            if (dueRevisions.length === 0) {
+                showNotification('No revision questions due', 'error');
+                return;
             }
-
-            promptEl.textContent = 'Showing your latest attempt for each question set.';
-            controlsEl.classList.remove('hidden');
-
-            const playerAttempts = Object.values(practiceHistory).filter(a => a.playerName === currentPlayerName);
-            const latestHistoryMap = {};
-            playerAttempts.forEach(a => {
-                const key = a.setName; 
-                if (!latestHistoryMap[key] || new Date(a.startTime) > new Date(latestHistoryMap[key].startTime)) { latestHistoryMap[key] = a; }
-            });
-            const attempts = Object.values(latestHistoryMap).sort((a,b) => new Date(b.startTime) - new Date(a.startTime));
-            const timeFormat = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
-            listDiv.innerHTML = attempts.map(a => {
-                const isRevText = a.isRevision ? `(Revision: ${a.revisionKey.replace('_RevDay', ' Day ')})` : '(Practice)';
-                return `<div class="history-item">
-                    <h4>${a.setName} ${isRevText} - ${new Date(a.startTime).toLocaleString('en-US', timeFormat)}</h4>
-                    <p>Score: ${a.score}/${a.totalQuestions} (${a.percentage}%) | Time: ${formatTime(a.timeSpent)}</p>
-                    <button onclick="viewAttemptDetails('${a.startTime}')">View Details</button>
-                </div>`}).join('') || '<p>No history found for you. Time to practice!</p>';
+            
+            currentSessionType = 'revision';
+            currentQuestionIndex = 0;
+            document.getElementById('revision-session').classList.remove('hidden');
+            document.getElementById('revision-info').classList.add('hidden');
+            showRevisionQuestion();
         }
-
-        function viewAttemptDetails(startTime) {
-            const attempt = Object.values(practiceHistory).find(a => a.startTime === startTime);
-            if (!attempt) return;
-            let detailsHtml = `<h2>Details for ${attempt.setName}</h2>
-                <div style="margin: 15px 0; display: flex; flex-wrap: wrap; gap: 10px;">
-                    <button onclick="toggleWrongAnswersView(this)">Show Wrong Answers Only</button>
-                </div><div id="attemptDetailsList">`;
-            attempt.answers.forEach((ans, index) => {
-                const qText = ans.questionText || 'Question details missing';
-                const qOptions = ans.questionOptions || ['A', 'B', 'C', 'D'];
-                const correctIndex = ans.correctAnswer.charCodeAt(0) - 65;
-                const correctText = qOptions[correctIndex] || 'N/A';
-                let answerDisplay;
-                if (ans.isCorrect) { 
-                    answerDisplay = `<p class="correct-answer">Correct Answer: ${ans.correctAnswer}. ${correctText}</p>`; 
-                } else if (ans.isSkipped) { 
-                    answerDisplay = `<p class="wrong-answer">Skipped</p><p class="correct-answer">Correct Answer: ${ans.correctAnswer}. ${correctText}</p>`; 
-                } else {
-                    const selectedIndex = ans.selectedAnswer.charCodeAt(0) - 65;
-                    const selectedText = qOptions[selectedIndex] || 'N/A';
-                    answerDisplay = `<p class="wrong-answer">Your Answer: ${ans.selectedAnswer}. ${selectedText}</p><p class="correct-answer">Correct Answer: ${ans.correctAnswer}. ${correctText}</p>`;
-                }
-                detailsHtml += `
-                    <div class="question-detail-item question-set" data-correct="${ans.isCorrect}" style="margin-top:15px; border-left: 4px solid ${ans.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'};">
-                        <p><strong>${index + 1}. ${qText}</strong></p>
-                        ${answerDisplay}
-                    </div>`;
-            });
-            detailsHtml += `</div><p style="margin-top:20px;">Total Practice Time: ${formatTime(attempt.timeSpent)}</p>`;
-            document.getElementById('viewDetailsModalContent').innerHTML = detailsHtml + `<button onclick="closeModal('viewDetailsModal')" style="margin-top:20px;">Close</button>`;
-            openModal('viewDetailsModal');
-        }
-
-        function toggleWrongAnswersView(button) {
-            const listContainer = document.getElementById('attemptDetailsList');
-            const wrongOnly = button.textContent.includes('Wrong');
-            listContainer.querySelectorAll('.question-detail-item').forEach(item => {
-                if (wrongOnly && item.dataset.correct === 'true') { item.style.display = 'none'; } 
-                else { item.style.display = 'block'; }
-            });
-            button.textContent = wrongOnly ? 'Show All Answers' : 'Show Wrong Answers Only';
-        }
-
-        function showQuestionAnalysis() {
-            if (!currentPlayerName) { showNotification('Please select a player to analyze.', 'warning'); return; }
-            document.getElementById('historyList').classList.add('hidden');
-            document.getElementById('questionAnalysisView').classList.remove('hidden');
-            analyzedQuestionsBySet = {};
-            Object.values(practiceHistory).forEach(attempt => {
-                if (attempt.playerName === currentPlayerName && attempt.answers && Array.isArray(attempt.answers)) {
-                    if (!analyzedQuestionsBySet[attempt.setName]) { analyzedQuestionsBySet[attempt.setName] = []; }
-                    attempt.answers.forEach((answer, index) => {
-                        const prevTime = index > 0 ? (attempt.answers[index - 1].timeAtAnswer || 0) : 0;
-                        const timeTaken = (answer.timeAtAnswer || 0) - prevTime;
-                        analyzedQuestionsBySet[attempt.setName].push({
-                            questionText: answer.questionText || "N/A", timeTaken, isCorrect: answer.isCorrect,
-                            isSkipped: answer.isSkipped, correctAnswer: answer.correctAnswer, options: answer.questionOptions || [],
-                        });
+        
+        function showRevisionQuestion() {
+            if (currentQuestionIndex >= dueRevisions.length) {
+                endRevisionSession();
+                return;
+            }
+            
+            const question = dueRevisions[currentQuestionIndex];
+            document.getElementById('revision-question-text').textContent = question.q;
+            
+            const optionsContainer = document.getElementById('revision-options');
+            optionsContainer.innerHTML = '';
+            
+            // Use the time specified in the question data
+            timeLeft = question.seconds || (question.q.startsWith('MATH:') ? 45 : 10);
+            document.getElementById('revision-timer').textContent = timeLeft;
+            
+            // Create option buttons
+            const options = [
+                { code: 'A', text: question.a },
+                { code: 'B', text: question.b },
+                { code: 'C', text: question.c },
+                { code: 'D', text: question.d }
+            ];
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = `${option.code}. ${option.text}`;
+                optionElement.setAttribute('data-code', option.code);
+                
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('#revision-options .option').forEach(opt => {
+                        opt.classList.remove('selected');
                     });
-                }
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Check if answer is correct
+                    const isCorrect = this.getAttribute('data-code') === question.right;
+                    
+                    // Submit answer to server
+                    submitAnswer(question.id, isCorrect);
+                    
+                    if (isCorrect) {
+                        showNotification('Correct! +1 XP', 'success');
+                    } else {
+                        showNotification(`Incorrect. The right answer is ${question.right}`, 'error');
+                    }
+                    
+                    // Stop timer and show next button
+                    clearInterval(timerInterval);
+                    document.getElementById('revision-next').classList.remove('hidden');
+                });
+                
+                optionsContainer.appendChild(optionElement);
             });
-            if (Object.keys(analyzedQuestionsBySet).length === 0) {
-                document.getElementById('questionAnalysisView').innerHTML = '<p>No question data found for you.</p><button onclick="loadHistory()">Back to History</button>';
-                return;
-            }
-            renderAnalysisInterface(analyzedQuestionsBySet);
+            
+            // Start timer
+            startTimer('revision');
         }
-
-        function renderAnalysisInterface(questionsBySet) {
-            const analysisView = document.getElementById('questionAnalysisView');
-            const setNames = Object.keys(questionsBySet).sort((a, b) => new Date(questionSets[b]?.uploadDate || 0) - new Date(questionSets[a]?.uploadDate || 0));
-            const setOptions = setNames.map(name => `<option value="${name}">${name}</option>`).join('');
-            let viewHTML = `<h3>Question Timing Analysis</h3>
-                <p>A breakdown of every question you've answered. Select a set to view its analysis.</p>
-                <div style="margin: 15px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
-                    <label for="analysisSetSelect" style="font-weight: 600;">Select Set:</label>
-                    <select id="analysisSetSelect" onchange="displayAnalysisForSet(this.value)" style="flex-grow: 1;">${setOptions}</select>
-                    <button onclick="sortCurrentAnalysis('slowest')">Sort Slowest</button>
-                    <button onclick="sortCurrentAnalysis('fastest')">Sort Fastest</button>
-                    <button onclick="loadHistory()" class="btn-warning">Back</button>
-                </div>
-                <div id="analysisTableContainer"></div>`;
-            analysisView.innerHTML = viewHTML;
-            if (setNames.length > 0) { displayAnalysisForSet(setNames[0]); }
+        
+        function nextRevisionQuestion() {
+            currentQuestionIndex++;
+            document.getElementById('revision-next').classList.add('hidden');
+            showRevisionQuestion();
         }
-
-        function sortCurrentAnalysis(sortBy) {
-            const selectElement = document.getElementById('analysisSetSelect');
-            if(!selectElement) return;
-            const setName = selectElement.value;
-            if (!setName || !analyzedQuestionsBySet[setName]) return;
-            if (sortBy === 'slowest') { analyzedQuestionsBySet[setName].sort((a, b) => b.timeTaken - a.timeTaken); } 
-            else if (sortBy === 'fastest') { analyzedQuestionsBySet[setName].sort((a, b) => a.timeTaken - b.timeTaken); }
-            displayAnalysisForSet(setName);
+        
+        function endRevisionSession() {
+            document.getElementById('revision-session').classList.add('hidden');
+            document.getElementById('revision-info').classList.remove('hidden');
+            loadDueRevisions(); // Refresh due revisions count
+            loadLeaderboard(); // Refresh leaderboard
+            showNotification('Revision session completed!', 'success');
         }
-
-        function displayAnalysisForSet(setName) {
-            const container = document.getElementById('analysisTableContainer');
-            if (!setName || !analyzedQuestionsBySet[setName]) { container.innerHTML = "<p>Please select a valid set.</p>"; return; }
-            const questions = analyzedQuestionsBySet[setName];
-            let tableHTML = `<div class="history-item" style="border-left-color: var(--primary-color);"><div style="overflow-x: auto;"><table class="leaderboard-table">
-                            <thead><tr><th>Question & Answer</th><th>Time Taken</th><th>Result</th></tr></thead><tbody>`;
-            questions.forEach(q => {
-                let resultText = q.isSkipped ? 'Skipped' : (q.isCorrect ? 'Correct' : 'Incorrect');
-                let resultClass = q.isCorrect ? 'leaderboard-win-loss' : (q.isSkipped ? '' : 'loss');
-                const correctIndex = q.correctAnswer ? q.correctAnswer.charCodeAt(0) - 65 : -1;
-                const correctAnswerText = (correctIndex !== -1 && q.options.length > correctIndex) ? q.options[correctIndex] : 'N/A';
-                tableHTML += `
-                    <tr>
-                        <td data-label="Question">${q.questionText}<div class="correct-answer" style="margin-top: 5px; font-size: 0.9em;">↳ Answer: ${q.correctAnswer}. ${correctAnswerText}</div></td>
-                        <td data-label="Time Taken">${q.timeTaken} sec</td>
-                        <td data-label="Result"><span class="${resultClass}">${resultText}</span></td>
-                    </tr>`;
-            });
-            tableHTML += `</tbody></table></div></div>`;
-            container.innerHTML = tableHTML;
-        }
-
-        // --- REVISION FUNCTIONS ---
-        function getRevisionItems(playerName = null) {
-            const targetPlayer = playerName || currentPlayerName;
-            if (!targetPlayer) return { dueToday: [], backlog: [], all: [] };
-
-            const allMissedItems = [];
-            const today = new Date(); today.setHours(0, 0, 0, 0);
-
-            for (const setName in questionSets) {
-                const set = questionSets[setName];
-                if (!set || typeof set.uploadDate === 'undefined' || set.type === 'pdf') continue;
-                if (!set.questions || set.questions.length === 0) continue;
-
-                for (const day of revisionIntervals) {
-                    const uploadDate = new Date(set.uploadDate);
-                    const revisionDate = new Date(uploadDate.setDate(uploadDate.getDate() + day));
-                    revisionDate.setHours(0,0,0,0);
-
-                    if (revisionDate <= today) {
-                        const revisionKey = `${setName}_RevDay${day}`;
-                        const playerRevisionStatus = revisionProgress[targetPlayer] && revisionProgress[targetPlayer][revisionKey];
-                        const isCompleted = playerRevisionStatus && playerRevisionStatus.success;
-
-                        if (!isCompleted) {
-                            allMissedItems.push({ setName, day, type: set.type || 'questions', revisionDate, revisionKey });
-                        }
+        
+        function startTimer(type) {
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById(`${type}-timer`).textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    
+                    if (type === 'practice') {
+                        showNotification('Time\'s up! Moving to next question.', 'error');
+                        document.getElementById('practice-next').classList.remove('hidden');
+                    } else {
+                        showNotification('Time\'s up! Question marked as incorrect.', 'error');
+                        submitAnswer(dueRevisions[currentQuestionIndex].id, false);
+                        document.getElementById('revision-next').classList.remove('hidden');
                     }
                 }
-            }
-
-            const dueTodayItems = allMissedItems.filter(item => item.revisionDate.getTime() === today.getTime());
-            
-            const backlogItemsMap = new Map();
-            allMissedItems.filter(item => item.revisionDate.getTime() < today.getTime()).forEach(item => {
-                if (!backlogItemsMap.has(item.setName) || item.day < backlogItemsMap.get(item.setName).day) {
-                    backlogItemsMap.set(item.setName, item);
-                }
-            });
-            const backlogItems = Array.from(backlogItemsMap.values()).sort((a,b) => a.day - b.day);
-            
-            const fullBacklog = allMissedItems.filter(item => item.revisionDate.getTime() < today.getTime()).sort((a,b) => a.setName.localeCompare(b.setName) || a.revisionDate - b.revisionDate);
-
-            return { dueToday: dueTodayItems, backlog: backlogItems, all: fullBacklog };
-        }
-
-        function renderRevisionPage() {
-            const dueTodayDiv = document.getElementById('dueTodayList');
-            const userPrompt = document.getElementById('revisionUserPrompt');
-            updateAllBadges();
-
-            if (!currentPlayerName) { 
-                userPrompt.classList.remove('hidden'); 
-                dueTodayDiv.innerHTML = '';
-                return;
-            } 
-            else { 
-                userPrompt.classList.add('hidden'); 
-            }
-            
-            const { dueToday } = getRevisionItems();
-            dueTodayDiv.innerHTML = dueToday.length > 0 ? dueToday.map(item => renderRevisionItem(item, false)).join('') : '<p>No revision tasks due today. Good job!</p>';
-        }
-
-        function renderBacklogPage() {
-            const backlogDiv = document.getElementById('fullBacklogList');
-            updateAllBadges();
-            if (!currentPlayerName) { 
-                backlogDiv.innerHTML = '<p>Please select a player to view the backlog.</p>'; 
-                return; 
-            }
-            const { all: fullBacklog } = getRevisionItems();
-            backlogDiv.innerHTML = fullBacklog.length > 0 ? fullBacklog.map(item => renderRevisionItem(item, true)).join('') : '<p>Your backlog is clear. Keep it up!</p>';
-        }
-
-        function renderRevisionItem(item, isBacklog) {
-            const key = `${item.setName}_RevDay${item.day}`;
-            let itemHtml = `<div class="history-item" style="border-left-color: ${isBacklog ? 'var(--danger-color)' : 'var(--primary-color)'};"><h4>${item.setName} - Revision Day ${item.day}</h4>`;
-            
-            const status = revisionProgress[currentPlayerName] && revisionProgress[currentPlayerName][key];
-            const percentage = status ? status.percentage : 0;
-            const buttonText = status ? `Retry (${percentage}%)` : 'Start Revision';
-            const buttonClass = status ? 'btn-warning' : 'btn-success';
-            itemHtml += `<p>Total Questions: ${questionSets[item.setName].questions.length}</p>
-                <button onclick="startRevisionPractice('${item.setName}', '${key}')" class="${buttonClass}">${buttonText}</button>
-                ${status ? `<p style="font-size: 12px; margin-top: 5px;">Last Score: ${percentage}% on ${new Date(status.date).toLocaleDateString()}</p>` : ''}`;
-            
-            itemHtml += `</div>`; return itemHtml;
-        }
-
-        function updateAllBadges() {
-            if (isAdminLoggedIn) return;
-            const { dueToday, all: fullBacklog } = getRevisionItems();
-
-            const revisionButton = document.querySelector('nav button[onclick="switchTab(\'revision\')"]');
-            updateBadgeOnButton(revisionButton, dueToday.length);
-
-            const backlogButton = document.querySelector('nav button[onclick="switchTab(\'backlog\')"]');
-            updateBadgeOnButton(backlogButton, fullBacklog.length);
-        }
-
-        function updateBadgeOnButton(button, count) {
-            if (!button) return;
-            button.style.position = 'relative';
-            let badge = button.querySelector('.revision-badge');
-            if (badge) badge.remove();
-            if (count > 0) {
-                badge = document.createElement('span');
-                badge.className = 'revision-badge';
-                badge.textContent = count;
-                button.appendChild(badge);
-            }
+            }, 1000);
         }
         
-        function startRevisionPractice(setName, revisionKey) { 
-            if (!currentPlayerName) { showNotification('Please select a player first from the Dashboard.', 'error'); switchTab('practice'); return; };
-            switchTab('practice');
-            setTimeout(() => startPracticeWrapper(setName, true, revisionKey), 100); 
+        function submitAnswer(questionId, isCorrect) {
+            callAPI('submitAnswer', {
+                username: currentUser.username,
+                qid: questionId,
+                correct: isCorrect
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Error submitting answer:', response.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting answer:', error);
+            });
         }
-
-        // --- CALENDAR FUNCTIONS ---
-        function getRevisionScheduleForPlayer(playerName) {
-            const schedule = {};
-            if (!playerName) return schedule;
-
-            for (const setName in questionSets) {
-                const set = questionSets[setName];
-                if (!set || !set.uploadDate || set.type === 'pdf') continue;
-                for (const day of revisionIntervals) {
-                    const revisionDate = new Date(set.uploadDate);
-                    revisionDate.setDate(revisionDate.getDate() + day);
-                    const dateKey = revisionDate.toISOString().split('T')[0];
-
-                    const revisionKey = `${setName}_RevDay${day}`;
-                    const playerStatus = revisionProgress[playerName] && revisionProgress[playerName][revisionKey];
-                    const isCompleted = playerStatus && playerStatus.success;
-
-                    if (!isCompleted) {
-                         if (!schedule[dateKey]) schedule[dateKey] = [];
-                        schedule[dateKey].push({ setName, day });
+        
+        function uploadBulkQuestions() {
+            const bulkText = document.getElementById('bulk-questions').value;
+            
+            if (!bulkText) {
+                showNotification('Please enter questions to upload', 'error');
+                return;
+            }
+            
+            callAPI('uploadBulk', { bulkText })
+                .then(response => {
+                    const resultDiv = document.getElementById('upload-result');
+                    resultDiv.classList.remove('hidden');
+                    
+                    if (response.ok) {
+                        resultDiv.innerHTML = `<p style="color: green;">Successfully uploaded ${response.inserted} questions!</p>`;
+                        document.getElementById('bulk-questions').value = '';
+                        
+                        // Reload questions
+                        loadInitialData();
+                    } else {
+                        resultDiv.innerHTML = `<p style="color: red;">Error: ${response.error}</p>`;
                     }
-                }
-            }
-            return schedule;
+                })
+                .catch(error => {
+                    console.error('Error uploading questions:', error);
+                    showNotification('Error uploading questions', 'error');
+                });
         }
         
-        function showAdminRevisionDetailsForDate(dateKey, revisions, playerName) {
-            const formattedDate = new Date(dateKey + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            let detailsHtml = `<h2>Revisions Due for ${playerName} on ${formattedDate}</h2>`;
-            revisions.forEach(rev => {
-                detailsHtml += `<div class="question-set" style="margin-top:15px; border-left-color: var(--primary-color);"><p><strong>Set: ${rev.setName} (Day ${rev.day})</strong></p></div>`;
+        function callAPI(action, data = {}) {
+            const url = `${API_URL}?action=${action}`;
+            
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...data, action })
+            })
+            .then(response => response.json())
+            .catch(error => {
+                console.error('API call failed:', error);
+                throw error;
             });
-            detailsHtml += `<button onclick="closeModal('viewDetailsModal')" style="margin-top:20px;">Close</button>`;
-            document.getElementById('viewDetailsModalContent').innerHTML = detailsHtml;
-            openModal('viewDetailsModal');
-        }
-
-        function showUserRevisionDetailsForDate(dateKey, revisions) {
-            const formattedDate = new Date(dateKey + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            let detailsHtml = `<h2>Revisions Due on ${formattedDate}</h2>`;
-            revisions.forEach(rev => {
-                detailsHtml += `<div class="question-set" style="margin-top:15px; border-left-color: var(--primary-color);"><p><strong>Set: ${rev.setName} (Day ${rev.day})</strong></p></div>`;
-            });
-            detailsHtml += `<button onclick="closeModal('viewDetailsModal')" style="margin-top:20px;">Close</button>`;
-            document.getElementById('viewDetailsModalContent').innerHTML = detailsHtml;
-            openModal('viewDetailsModal');
-        }
-
-
-        function renderAttendanceCalendar(year, month) {
-             if (!currentPlayerName) {
-                document.getElementById('attendanceCalendarBody').innerHTML = '<p>Please select a player to view attendance.</p>';
-                document.getElementById('attendanceCalendarMonthYear').textContent = '';
-                return;
-            }
-            const profile = playerProfiles[currentPlayerName];
-            const attendance = profile.attendance || [];
-            const revisionSchedule = getRevisionScheduleForPlayer(currentPlayerName);
-            const monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
-            document.getElementById('attendanceCalendarMonthYear').textContent = `${monthName} ${year}`;
-            const calendarBody = document.getElementById('attendanceCalendarBody');
-            calendarBody.innerHTML = '';
-            const firstDayOfMonth = (new Date(year, month, 1).getDay() + 6) % 7; // Monday as first day
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            daysOfWeek.forEach(day => { calendarBody.innerHTML += `<div class="calendar-day-header">${day}</div>`; });
-            for (let i = 0; i < firstDayOfMonth; i++) { calendarBody.innerHTML += `<div class="calendar-day empty"></div>`; }
-
-            const todayStr = getTodayDateString();
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('calendar-day'); dayCell.textContent = day;
-                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-                if (attendance.includes(dateKey)) {
-                    dayCell.classList.add('present');
-                }
-                if (revisionSchedule[dateKey]) {
-                    dayCell.classList.add('has-revision');
-                    dayCell.onclick = () => showUserRevisionDetailsForDate(dateKey, revisionSchedule[dateKey]);
-                }
-                if (dateKey === todayStr) {
-                    dayCell.classList.add('today');
-                }
-                calendarBody.appendChild(dayCell);
-            }
         }
         
-        function renderAdminAttendanceCalendar(playerName) {
-            const year = currentAdminAttendanceDate.getFullYear();
-            const month = currentAdminAttendanceDate.getMonth();
-            const monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
-            document.getElementById('adminAttendanceCalendarMonthYear').textContent = `${monthName} ${year}`;
-            const calendarBody = document.getElementById('adminAttendanceCalendarBody');
-            
-            if (!playerName || !playerProfiles[playerName]) {
-                calendarBody.innerHTML = '<p>Select a player to view their attendance.</p>';
-                return;
-            }
-            const profile = playerProfiles[playerName];
-            const attendance = profile.attendance || [];
-            const revisionSchedule = getRevisionScheduleForPlayer(playerName);
-            
-            calendarBody.innerHTML = '';
-            const firstDayOfMonth = (new Date(year, month, 1).getDay() + 6) % 7; // Monday as first day
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            daysOfWeek.forEach(day => { calendarBody.innerHTML += `<div class="calendar-day-header">${day}</div>`; });
-            for (let i = 0; i < firstDayOfMonth; i++) { calendarBody.innerHTML += `<div class="calendar-day empty"></div>`; }
-
-            const today = new Date();
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('calendar-day'); dayCell.textContent = day;
-                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-                if (attendance.includes(dateKey)) {
-                    dayCell.classList.add('present');
-                }
-                
-                if (revisionSchedule[dateKey]) {
-                    dayCell.classList.add('has-revision');
-                    dayCell.onclick = () => showAdminRevisionDetailsForDate(dateKey, revisionSchedule[dateKey], playerName);
-                }
-
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayCell.classList.add('today');
-                }
-                calendarBody.appendChild(dayCell);
-            }
-        }
-
-
-        // --- STATS MODAL & POPUPS ---
-        function showPlayerStatsModal() {
-            if (!currentPlayerName) { showNotification("Select a player to see their stats.", "warning"); return; }
-            const profile = playerProfiles[currentPlayerName] || createNewProfile();
-            document.getElementById('statsTitle').textContent = getLevelForXP(profile.totalXP || 0).title;
-            document.getElementById('statsXP').textContent = profile.totalXP || 0;
-            document.getElementById('statsCorrect').textContent = profile.totalCorrect || 0;
-            document.getElementById('statsStreak').textContent = `${profile.currentStreak || 0} Day(s)`;
-            openModal('statsModal');
-        }
-
-        function showWrongAnswersPopup(wrongAnswers) {
-            const body = document.getElementById('wrongAnswersBody');
-            body.innerHTML = wrongAnswers.map((ans, index) => {
-                const qOptions = ans.questionOptions || [];
-                const correctIndex = ans.correctAnswer.charCodeAt(0) - 65;
-                const correctText = qOptions[correctIndex] || 'N/A';
-                let yourAnswerText = "Skipped";
-                if (!ans.isSkipped) {
-                    const selectedIndex = ans.selectedAnswer.charCodeAt(0) - 65;
-                    yourAnswerText = qOptions[selectedIndex] || 'N/A';
-                }
-                return `
-                    <div class="question-set" style="margin-top:15px; border-left: 4px solid var(--danger-color);">
-                        <p><strong>${index + 1}. ${ans.questionText}</strong></p>
-                        <p class="wrong-answer">Your Answer: ${ans.selectedAnswer}. ${yourAnswerText}</p>
-                        <p class="correct-answer">Correct Answer: ${ans.correctAnswer}. ${correctText}</p>
-                    </div>`;
-            }).join('');
-            openModal('wrongAnswersModal');
-        }
-        
-        // --- ADMIN FUNCTIONS ---
-        function handleAdminLogin() {
-            // Always show the regular login prompt.
-            document.getElementById('adminModalTitle').textContent = "Admin Login";
-            document.getElementById('adminModalPrompt').textContent = "Please enter your admin credentials.";
-            document.getElementById('adminPasswordConfirmGroup').classList.add('hidden');
-            document.getElementById('adminSubmitBtn').textContent = "Login";
-            document.getElementById('adminSubmitBtn').onclick = loginAdmin;
-            
-            document.getElementById('adminUsername').value = '';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminPasswordConfirm').value = '';
-            openModal('adminAuthModal');
-        }
-
-        // createAdmin() function removed
-
-        function loginAdmin() {
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            // Check against hardcoded credentials
-            if (username === ADMIN_USER && password === ADMIN_PASS) {
-                closeModal('adminAuthModal');
-                enterAdminMode(username);
-            } else {
-                showNotification('Invalid admin credentials.', 'error');
-            }
-        }
-
-        function enterAdminMode(username) {
-            isAdminLoggedIn = true;
-            document.querySelector('.container').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('adminWelcome').textContent = `Welcome, ${username}!`;
-            updatePlayerSelects();
-            switchAdminTab('adminQuestionSets');
-        }
-
-        function adminLogout() {
-            isAdminLoggedIn = false;
-            document.querySelector('.container').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-        }
-
-        function renderAdminPlayerHistory(playerName) {
-            const listDiv = document.getElementById('adminHistoryList');
-            if (!playerName) {
-                listDiv.innerHTML = '<p>Select a player to view their history.</p>';
-                return;
-            }
-
-            const playerAttempts = Object.values(practiceHistory).filter(a => a.playerName === playerName)
-                .sort((a,b) => new Date(b.startTime) - new Date(a.startTime));
-            
-            const timeFormat = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
-            listDiv.innerHTML = playerAttempts.map(a => {
-                const isRevText = a.isRevision ? `(Revision: ${a.revisionKey.replace('_RevDay', ' Day ')})` : '(Practice)';
-                return `<div class="history-item">
-                    <h4>${a.setName} ${isRevText} - ${new Date(a.startTime).toLocaleString('en-US', timeFormat)}</h4>
-                    <p>Score: ${a.score}/${a.totalQuestions} (${a.percentage}%) | Time: ${formatTime(a.timeSpent)}</p>
-                    <button onclick="viewAttemptDetails('${a.startTime}')">View Details</button>
-                </div>`}).join('') || `<p>No history found for ${playerName}.</p>`;
-        }
-
-        function renderAdminBacklogManager(playerName) {
-            const listDiv = document.getElementById('adminBacklogList');
-            if (!playerName) {
-                listDiv.innerHTML = '<p>Select a player to manage their backlog.</p>';
-                return;
-            }
-
-            const { all: fullBacklog } = getRevisionItems(playerName);
-            listDiv.innerHTML = fullBacklog.map(item => `
-                <div class="history-item" style="border-left-color: var(--danger-color); display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4>${item.setName} - Revision Day ${item.day}</h4>
-                        <p style="font-size: 12px; color: #555;">Due Date: ${item.revisionDate.toLocaleDateString()}</p>
-                    </div>
-                    <button onclick="removeBacklogItem('${playerName}', '${item.revisionKey}')" class="btn-danger">Remove</button>
-                </div>
-            `).join('') || `<p>${playerName} has no backlog items. Great job!</p>`;
-        }
-
-        function removeBacklogItem(playerName, revisionKey) {
-            const confirmed = confirm(`Are you sure you want to remove this backlog item (${revisionKey}) for ${playerName}? This will mark it as complete.`);
-            if (confirmed) {
-                if (!revisionProgress[playerName]) revisionProgress[playerName] = {};
-                revisionProgress[playerName][revisionKey] = { success: true, date: new Date().toISOString(), percentage: 100, clearedByAdmin: true };
-                
-                saveAllSharedData(`fix: Admin cleared backlog for ${playerName}`);
-                
-                showNotification('Backlog item removed.', 'success');
-                renderAdminBacklogManager(playerName); // Re-render the list
-            }
-        }
-
-        // --- UI & UTILITY FUNCTIONS ---
-        
-        /**
-         * Prompts for the destructive action password before executing a callback.
-         * @param {function} onSuccess - The function to call if the password is correct.
-         */
-        function promptForAdminPassword(onSuccess) {
-            const pass = prompt("This is a destructive action. Please enter the admin password (2525) to confirm:");
-            if (pass === DESTRUCTIVE_ACTION_PASSWORD) {
-                onSuccess();
-            } else if (pass !== null) { // Don't show error if they hit "Cancel"
-                showNotification('Incorrect admin password. Action cancelled.', 'error');
-            }
-        }
-
-        function formatTime(totalSeconds) {
-            const minutes = Math.floor(totalSeconds / 60); const seconds = totalSeconds % 60;
-            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-
-        function showNotification(message, type = 'success') {
+        function showNotification(message, type) {
+            const notificationArea = document.getElementById('notification-area');
             const notification = document.createElement('div');
-            notification.className = 'notification'; notification.textContent = message;
-            notification.style.cssText = `position: fixed; top: 20px; right: 20px; padding: 15px; border-radius: 8px; color: white; background: ${type === 'success' ? 'var(--success-color)' : (type === 'error' ? 'var(--danger-color)' : 'var(--warning-color)')}; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 2000; transform: translateX(120%); animation: slideInNotification 0.5s forwards;`;
-            document.body.appendChild(notification);
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            notificationArea.appendChild(notification);
+            
+            // Remove notification after 3 seconds
             setTimeout(() => {
-                notification.style.animation = 'slideOutNotification 0.5s forwards';
-                setTimeout(() => notification.remove(), 500);
+                notification.remove();
             }, 3000);
         }
-        const style = document.createElement('style'); style.innerHTML = `@keyframes slideInNotification{to{transform:translateX(0)}}@keyframes slideOutNotification{from{transform:translateX(0)}to{transform:translateX(120%)}}`; document.head.appendChild(style);
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; if(id === 'viewDetailsModal') {document.getElementById('viewDetailsModalContent').innerHTML='';} }
         
-        function showPasswordPrompt(playerName, correctPassword, onSuccess) {
-            document.getElementById('passwordConfirmGroup').classList.add('hidden');
-            document.getElementById('passwordModalTitle').textContent = `Login as ${playerName}`;
-            document.getElementById('passwordModalPrompt').textContent = 'Please enter your password:';
-            const input = document.getElementById('passwordInput');
-            const submitBtn = document.getElementById('passwordSubmitBtn');
-            submitBtn.textContent = 'Login'; input.value = '';
-            openModal('passwordModal'); input.focus();
-            submitBtn.onclick = () => {
-                if (input.value === correctPassword) { onSuccess(); closeModal('passwordModal'); } 
-                else { showNotification('Incorrect Password', 'error'); }
-            };
-            input.onkeyup = (event) => { if(event.key === 'Enter') submitBtn.click(); }
-        }
-
-        function showCreatePasswordPrompt(playerName, onSuccess) {
-            document.getElementById('passwordModalTitle').textContent = `Create Password for ${playerName}`;
-            document.getElementById('passwordModalPrompt').textContent = 'Please create a password for your account.';
-            document.getElementById('passwordConfirmGroup').classList.remove('hidden');
-            const passInput = document.getElementById('passwordInput');
-            const confirmInput = document.getElementById('passwordConfirmInput');
-            const submitBtn = document.getElementById('passwordSubmitBtn');
-            submitBtn.textContent = 'Create Password'; passInput.value = ''; confirmInput.value = '';
-            openModal('passwordModal'); passInput.focus();
-            const handleSubmit = () => {
-                const pass = passInput.value; const confirmPass = confirmInput.value;
-                if (!pass) { showNotification('Password cannot be empty.', 'error'); return; }
-                if (pass !== confirmPass) { showNotification('Passwords do not match.', 'error'); return; }
-                onSuccess(pass); closeModal('passwordModal');
-            };
-            submitBtn.onclick = handleSubmit;
-            passInput.onkeyup = (event) => { if(event.key === 'Enter') confirmInput.focus(); }
-            confirmInput.onkeyup = (event) => { if(event.key === 'Enter') submitBtn.click(); }
-        }
-        
-        function playSound(type) {
-             if (!audioCtx) return;
-            const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-            gainNode.gain.setValueAtTime(0, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.01);
-            if (type === 'correct') { oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(600, audioCtx.currentTime); oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1); } 
-            else if (type === 'wrong') { oscillator.type = 'square'; oscillator.frequency.setValueAtTime(200, audioCtx.currentTime); oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2); } 
-            else if (type === 'levelup') { oscillator.type = 'triangle'; oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); oscillator.frequency.linearRampToValueAtTime(880, audioCtx.currentTime + 0.1); oscillator.frequency.linearRampToValueAtTime(660, audioCtx.currentTime + 0.2); }
-            oscillator.start(audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.2); oscillator.stop(audioCtx.currentTime + 0.2);
-        }
-        const confettiCanvas = document.getElementById('confetti-canvas'), confettiCtx = confettiCanvas.getContext('2d');
-        let confettiParticles = [], animationFrameId;
-        function startConfetti() {
-            confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight;
-            confettiParticles = Array.from({ length: 150 }, createConfettiParticle);
-            animateConfetti();
-            setTimeout(stopConfetti, 4000);
-        }
-        function stopConfetti() { cancelAnimationFrame(animationFrameId); if(confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); }
-        function createConfettiParticle() {
-            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#8e44ad', '#2ecc71'];
-            return { x: Math.random() * confettiCanvas.width, y: -20, w: Math.random() * 10 + 5, h: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], vx: (Math.random() - 0.5) * 4, vy: Math.random() * 4 + 2, angle: Math.random() * Math.PI * 2, angularVelocity: (Math.random() - 0.5) * 0.1 };
-        }
-        function animateConfetti() {
-            if(!confettiCtx) return;
-            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            confettiParticles.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy; p.angle += p.angularVelocity;
-                if (p.y > confettiCanvas.height) confettiParticles.splice(i, 1);
-                confettiCtx.save(); confettiCtx.translate(p.x, p.y); confettiCtx.rotate(p.angle);
-                confettiCtx.fillStyle = p.color; confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                confettiCtx.restore();
-            });
-            if (confettiParticles.length > 0) animationFrameId = requestAnimationFrame(animateConfetti);
-        }
-
-        // --- REPORTING FUNCTIONS ---
-        function reportCurrentQuestion() {
-            const question = currentSet[currentQuestionIndex];
-            const isAlreadyReported = reportedQuestions.some(r => r.setName === currentAttempt.setName && r.question.question === question.question);
-            if (isAlreadyReported) { showNotification('This question has already been reported.', 'warning'); return; }
-            
-            reportedQuestions.push({ 
-                reportId: `report-${Date.now()}`, 
-                setName: currentAttempt.setName, 
-                question: JSON.parse(JSON.stringify(question)), 
-                reportedAt: new Date().toISOString(), 
-                reportedBy: currentPlayerName 
-            });
-            
-            saveAllSharedData('report: User reported a question');
-            
-            showNotification('Question reported for admin review.', 'success');
-            document.getElementById('reportQuestionBtn').classList.add('hidden');
-        }
-
-        function renderReportedQuestions() {
-            const listDiv = document.getElementById('reportedQuestionsList');
-            if (reportedQuestions.length === 0) { listDiv.innerHTML = '<p>No questions have been reported. All clear!</p>'; return; }
-            listDiv.innerHTML = reportedQuestions.map(report => {
-                const correctOpt = report.question.options[report.question.correctAnswer.charCodeAt(0) - 65];
-                return `<div class="question-set" style="border-left-color: var(--danger-color);"><h4>Set: ${report.setName}</h4><p><strong>Question:</strong> ${report.question.question}</p>
-                    <p style="margin-top: 5px;"><strong>Options:</strong> ${report.question.options.join(', ')}</p><p><strong>Correct Answer:</strong> ${report.question.correctAnswer} (${correctOpt})</p>
-                    <p style="font-size: 12px; color: #555;">Reported by ${report.reportedBy} on ${new Date(report.reportedAt).toLocaleDateString()}</p>
-                    <div style="margin-top: 10px;"><button onclick="editReportedQuestion('${report.reportId}')" class="btn-warning">Review & Edit</button><button onclick="dismissReport('${report.reportId}')" class="btn-success">Dismiss Report</button></div></div>`;
-            }).join('');
-        }
-
-        function dismissReport(reportId, silent = false) {
-            reportedQuestions = reportedQuestions.filter(r => r.reportId !== reportId);
-            
-            saveAllSharedData('report: Admin dismissed a question');
-            
-            renderReportedQuestions();
-            if (!silent) showNotification('Report dismissed.', 'success');
-        }
-
-        function editReportedQuestion(reportId) {
-            const report = reportedQuestions.find(r => r.reportId === reportId);
-            if (!report) return;
-            const qIndex = (questionSets[report.setName]?.questions || []).findIndex(q => q.question === report.question.question);
-            if (qIndex === -1) { 
-                showNotification('Original question not found. It may have been edited or deleted. Dismissing report.', 'error'); 
-                dismissReport(reportId); 
-                return; 
+        // Simple hash function for demo purposes
+        // In a real app, you would use a more secure method
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
             }
-            editingFromReport = { active: true, reportId: report.reportId };
-            document.getElementById('reportedQuestionsSection').classList.add('hidden');
-            editQuestionSet(report.setName);
-            setTimeout(() => editSpecificQuestion(report.setName, qIndex), 100);
-        }
-        
-        function returnToReportedQuestionsView() {
-            editingFromReport = { active: false, reportId: null };
-            document.getElementById('editQuestionsSection').classList.add('hidden');
-            document.getElementById('reportedQuestionsSection').classList.remove('hidden');
-            renderReportedQuestions();
+            return hash.toString();
         }
     </script>
 </body>
