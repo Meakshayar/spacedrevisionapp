@@ -1005,7 +1005,7 @@
         const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${DATA_FILE_PATH}`; // Assuming 'main' branch
 
         // --- HARDCODED ADMIN ---
-        const ADMIN_USER = 'admin';
+        const ADMIN_USER = 'Admin';
         const ADMIN_PASS = '2525';
         
         // --- CONSTANTS ---
@@ -1230,86 +1230,80 @@
          * @param {string} commitMessage - The commit message for the GitHub save.
          */
         async function writeSharedData(commitMessage) {
-            if (isSaving) {
-                console.warn('Save already in progress. Skipping.');
-                showNotification('Save in progress, please wait...', 'warning');
-                return;
-            }
-            isSaving = true;
-            showNotification('Saving changes...', 'warning');
-            console.log('Starting data save...');
+    if (isSaving) {
+        console.warn('Save already in progress. Skipping.');
+        showNotification('Save in progress, please wait...', 'warning');
+        return;
+    }
+    isSaving = true;
+    showNotification('Saving changes...', 'warning');
+    console.log('Starting data save...');
 
-            let currentSHA = null;
-            try {
-                // 1. Get the current file SHA (to prevent overwriting concurrent changes)
-                const shaResponse = await fetch(`${GITHUB_API_URL}?t=${new Date().getTime()}`, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_PAT}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    cache: 'no-store' // Must not cache the SHA response
-                });
+    try {
+        // Step 1: Fetch current SHA
+        let currentSHA = null;
+        const shaResponse = await fetch(`${GITHUB_API_URL}?t=${new Date().getTime()}`, {
+            headers: {
+                'Authorization': `token ${GITHUB_PAT}`,
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            cache: 'no-store'
+        });
 
-                if (shaResponse.ok) {
-                    const data = await shaResponse.json();
-                    currentSHA = data.sha;
-                } else if (shaResponse.status !== 404) {
-                    // It's not a 404 (file not found), so it's a real error.
-                    throw new Error(`GitHub GET SHA error: ${shaResponse.statusText}`);
-                }
-                // If it IS a 404, currentSHA remains null, which is correct for file creation.
-
-                // 2. Bundle all shared data
-                const sharedData = {
-                    questionSets,
-                    practiceHistory,
-                    revisionProgress,
-                    playerProfiles,
-                    reportedQuestions,
-                    dailyRevisionScores
-                };
-                
-                // 3. Encode content to Base64, handling Unicode
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(sharedData, null, 2))));
-                
-                // 4. Create the PUT request body
-                const body = {
-                    message: commitMessage || `chore: Update app data ${new Date().toISOString()}`,
-                    content: content,
-                    branch: 'main' // Assuming 'main' branch
-                };
-                
-                // Add the SHA if we have it (for updates)
-                if (currentSHA) {
-                    body.sha = currentSHA;
-                }
-
-                // 5. Send the PUT request
-                const writeResponse = await fetch(GITHUB_API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_PAT}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!writeResponse.ok) {
-                    const errorData = await writeResponse.json();
-                    throw new Error(`GitHub PUT error: ${writeResponse.status} ${errorData.message}`);
-                }
-
-                console.log('Data saved to GitHub successfully.');
-                showNotification('Changes saved!', 'success');
-
-            } catch (error) {
-                console.error('Failed to write shared data:', error);
-                showNotification(`Save Error: ${error.message}. Please try again.`, 'error');
-            } finally {
-                isSaving = false; // Release the lock
-            }
+        if (shaResponse.ok) {
+            const fileData = await shaResponse.json();
+            currentSHA = fileData.sha; // SHA for update
+        } else if (shaResponse.status !== 404) {
+            throw new Error(`GitHub GET SHA error: ${shaResponse.statusText}`);
         }
+
+        // Step 2: Prepare data
+        const sharedData = {
+            questionSets,
+            practiceHistory,
+            revisionProgress,
+            playerProfiles,
+            reportedQuestions,
+            dailyRevisionScores
+        };
+
+        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(sharedData, null, 2))));
+
+        // Step 3: Create request body
+        const body = {
+            message: commitMessage || `chore: Update app data ${new Date().toISOString()}`,
+            content: contentBase64,
+            branch: 'main'
+        };
+        if (currentSHA) body.sha = currentSHA;
+
+        // Step 4: PUT request to GitHub
+        const writeResponse = await fetch(GITHUB_API_URL, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_PAT}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!writeResponse.ok) {
+            const errorData = await writeResponse.json();
+            throw new Error(`GitHub PUT error: ${writeResponse.status} ${errorData.message}`);
+        }
+
+        console.log('Data saved to GitHub successfully.');
+        showNotification('Changes saved!', 'success');
+
+    } catch (err) {
+        console.error('Failed to write shared data:', err);
+        showNotification(`Save Error: ${err.message}`, 'error');
+    } finally {
+        isSaving = false;
+    }
+}
+
         
         // --- DATA MANAGEMENT ---
         function exportData() {
