@@ -999,7 +999,7 @@
         // --- GITHUB API CONSTANTS ---
         const GITHUB_USERNAME = "Meakshayar";
         const REPO_NAME = "spacedrevisionapp";
-        const GITHUB_PAT = "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"; 
+        const GITHUB_PAT = "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"; 
         const DATA_FILE_PATH = "data/data.json";
         const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${DATA_FILE_PATH}`;
         const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${DATA_FILE_PATH}`; // Assuming 'main' branch
@@ -1237,12 +1237,18 @@
     }
     isSaving = true;
     showNotification('Saving changes...', 'warning');
-    console.log('Starting data save...');
+    
+    console.log('=== GITHUB DEBUG INFO ===');
+    console.log('API URL:', GITHUB_API_URL);
+    console.log('File path:', DATA_FILE_PATH);
+    console.log('Repo:', `${GITHUB_USERNAME}/${REPO_NAME}`);
 
     try {
         // Step 1: Fetch current SHA
         let currentSHA = null;
-        const shaResponse = await fetch(`${GITHUB_API_URL}?t=${new Date().getTime()}`, {
+        console.log('Fetching SHA from:', GITHUB_API_URL);
+        
+        const shaResponse = await fetch(GITHUB_API_URL, {
             headers: {
                 'Authorization': `token ${GITHUB_PAT}`,
                 'Accept': 'application/vnd.github.v3+json'
@@ -1250,14 +1256,24 @@
             cache: 'no-store'
         });
 
+        console.log('SHA Response status:', shaResponse.status);
+        console.log('SHA Response ok:', shaResponse.ok);
+
         if (shaResponse.ok) {
             const fileData = await shaResponse.json();
-            currentSHA = fileData.sha; // SHA for update
-        } else if (shaResponse.status !== 404) {
-            throw new Error(`GitHub GET SHA error: ${shaResponse.statusText}`);
+            currentSHA = fileData.sha;
+            console.log('SHA fetched successfully:', currentSHA ? 'Yes' : 'No');
+            console.log('File exists, SHA:', currentSHA);
+        } else if (shaResponse.status === 404) {
+            console.log('File does not exist yet (first save) - this is normal for new files');
+            currentSHA = null;
+        } else {
+            const errorText = await shaResponse.text();
+            console.error('SHA fetch error details:', errorText);
+            throw new Error(`GitHub GET error: ${shaResponse.status} - ${shaResponse.statusText}`);
         }
 
-        // Step 2: Prepare data
+        // Prepare data to save
         const sharedData = {
             questionSets,
             practiceHistory,
@@ -1269,7 +1285,6 @@
 
         const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(sharedData, null, 2))));
 
-        // Step 3: Create request body
         const body = {
             message: commitMessage || `chore: Update app data ${new Date().toISOString()}`,
             content: contentBase64,
@@ -1277,7 +1292,8 @@
         };
         if (currentSHA) body.sha = currentSHA;
 
-        // Step 4: PUT request to GitHub
+        console.log('Attempting to save data...');
+        
         const writeResponse = await fetch(GITHUB_API_URL, {
             method: 'PUT',
             headers: {
@@ -1288,8 +1304,11 @@
             body: JSON.stringify(body)
         });
 
+        console.log('Write response status:', writeResponse.status);
+
         if (!writeResponse.ok) {
             const errorData = await writeResponse.json();
+            console.error('Write error details:', errorData);
             throw new Error(`GitHub PUT error: ${writeResponse.status} ${errorData.message}`);
         }
 
@@ -1304,6 +1323,54 @@
     }
 }
 
+async function testGitHubConnection() {
+    try {
+        showNotification('Testing GitHub connection...', 'warning');
+        
+        // Test if we can access the repo
+        const repoUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}`;
+        console.log('Testing repo access:', repoUrl);
+        
+        const repoResponse = await fetch(repoUrl, {
+            headers: {
+                'Authorization': `token ${GITHUB_PAT}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        console.log('Repo access test:', repoResponse.status, repoResponse.ok);
+        
+        if (!repoResponse.ok) {
+            throw new Error(`Cannot access repository: ${repoResponse.status}`);
+        }
+        
+        // Test file access
+        console.log('Testing file access:', GITHUB_API_URL);
+        const fileResponse = await fetch(GITHUB_API_URL, {
+            headers: {
+                'Authorization': `token ${GITHUB_PAT}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        console.log('File access test:', fileResponse.status);
+        
+        if (fileResponse.status === 404) {
+            showNotification('File not found (this is OK for first save)', 'warning');
+            return true;
+        } else if (fileResponse.ok) {
+            showNotification('GitHub connection successful! File exists.', 'success');
+            return true;
+        } else {
+            throw new Error(`File access failed: ${fileResponse.status}`);
+        }
+        
+    } catch (error) {
+        console.error('Connection test failed:', error);
+        showNotification(`Connection failed: ${error.message}`, 'error');
+        return false;
+    }
+}
         
         // --- DATA MANAGEMENT ---
         function exportData() {
