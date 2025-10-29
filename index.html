@@ -3018,7 +3018,6 @@
                 
                 // --- Firebase Init ---
                 try {
-                    fb.setLogLevel('Debug');
                     const app = fb.initializeApp(firebaseConfig);
                     db = fb.getFirestore(app);
                     auth = fb.getAuth(app);
