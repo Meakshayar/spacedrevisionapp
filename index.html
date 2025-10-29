@@ -31,95 +31,6 @@
             --heatmap-due: #fee2e2; /* Light red for due items */
             --heatmap-due-high: #fecaca; /* Darker red for high intensity */
         }
-        
-        /* --- Syllabus Styles --- */
-        .syllabus-topic-group {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px dashed var(--border-color);
-        }
-        
-        .syllabus-topic-group h4 {
-            margin-bottom: 10px;
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-        
-        .syllabus-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 8px 5px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-        }
-        
-        .syllabus-item:hover {
-            background-color: #f8fafc;
-        }
-        
-        .syllabus-item label {
-            font-weight: 500;
-            line-height: 1.4;
-            cursor: default; /* No longer clicking a checkbox */
-            flex-grow: 1;
-        }
-
-        /* NEW: Wrapper for percent input */
-        .syllabus-percent-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            flex-shrink: 0;
-        }
-        .syllabus-percent-input-wrapper input {
-            width: 60px;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            text-align: right;
-        }
-        .syllabus-percent-input-wrapper span {
-            font-weight: 600;
-            color: var(--secondary-text);
-        }
-        
-        .syllabus-page-item {
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid var(--border-color);
-        }
-        
-        .syllabus-page-item label {
-            font-weight: 600;
-            color: var(--primary-dark);
-            display: block;
-            margin-bottom: 8px;
-        }
-        
-        .syllabus-page-inputs {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .syllabus-page-inputs input[type="number"] {
-            padding: 8px 12px;
-            width: 80px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-        
-        .syllabus-page-inputs span {
-            font-weight: 600;
-            color: var(--primary-text);
-        }
-        /* --- End Syllabus Styles --- */
-
 
         /* --- Base & Mobile Styles --- */
         * {
@@ -357,17 +268,16 @@
             font-size: 0.95rem;
         }
 
-        .form-group input, .form-group textarea, .form-group select, button[type="submit"] {
+        .form-group input, .form-group textarea, button[type="submit"] {
             padding: 12px 15px;
             font-size: 1rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             width: 100%;
             transition: all 0.2s;
-            background-color: white; /* Ensure select has bg */
         }
         
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-accent);
             box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
@@ -542,7 +452,6 @@
             background-color: white;
             box-shadow: var(--card-shadow);
             transition: all 0.2s;
-            cursor: pointer; /* NEW: Add pointer cursor */
         }
         
         .review-item:hover {
@@ -618,7 +527,9 @@
         }
         
         /* --- Data Management Modal Styles --- */
+        /* Export area removed in favor of file download */
         
+        /* NEW button for JSON export */
         #export-json-btn {
             background-color: var(--primary-accent);
             color: white;
@@ -1137,7 +1048,6 @@
         </button>
         <button class="nav-tab" data-tab="add">Add Session</button>
         <button class="nav-tab" data-tab="all">All Sessions</button>
-        <button class="nav-tab" data-tab="syllabus">Syllabus</button>
     </nav>
 
     <main class="container">
@@ -1145,8 +1055,7 @@
         <section id="tab-today" class="tab-content active">
             <h2>Today's Reviews</h2>
             <div id="today-reviews-container">
-                <p class="empty-state">Loading reviews...</p>
-            </div>
+                </div>
             
             <div class="time-logger-container">
                 <h4>Log Your Study Time</h4>
@@ -1163,13 +1072,11 @@
             
             <h3 class="backlog-section-header critical">🚨 Critical Open Loops (Start Here)</h3>
             <div id="backlog-critical-container">
-                <p class="empty-state" style="padding: 10px; border: none;">Loading...</p>
-            </div>
+                </div>
             
             <h3 class="backlog-section-header standard">🟡 Standard Backlog</h3>
             <div id="backlog-standard-container">
-                <p class="empty-state" style="padding: 10px; border: none;">Loading...</p>
-            </div>
+                </div>
         </section>
 
         <section id="tab-attendance" class="tab-content">
@@ -1184,7 +1091,13 @@
                     <button id="cal-next-btn" class="cal-nav-btn">Next &gt;</button>
                 </div>
                 <div class="calendar-grid" id="calendar-grid">
-                    <!-- Calendar will be rendered here -->
+                    <div class="calendar-day-name">Mon</div>
+                    <div class="calendar-day-name">Tue</div>
+                    <div class="calendar-day-name">Wed</div>
+                    <div class="calendar-day-name">Thu</div>
+                    <div class="calendar-day-name">Fri</div>
+                    <div class="calendar-day-name">Sat</div>
+                    <div class="calendar-day-name">Sun</div>
                 </div>
                 
                 <div class="calendar-legend">
@@ -1205,20 +1118,15 @@
             
             <h2>Start a New Session</h2>
             <form id="session-form">
-                
                 <div class="form-group" id="form-group-subject">
-                    <label for="subject">1. Select Subject (Category)</label>
-                    <select id="subject" required>
-                        <option value="">-- Select a Subject --</option>
-                    </select>
+                    <label for="subject">1. Select Subject</label>
+                    <input type="text" id="subject" list="subject-list" placeholder="e.g., 'Math' or 'History'" required>
+                    <datalist id="subject-list"></datalist>
                 </div>
                 <div class="form-group" id="form-group-topic">
-                    <label for="topic">2. Select Topic (For this session)</label>
-                    <select id="topic" required>
-                        <option value="">-- Select a Subject First --</option>
-                    </select>
+                    <label for="topic">2. Select Topic</label>
+                    <input type="text" id="topic" placeholder="e.g., 'Chapter 3: Neural Networks'" required>
                 </div>
-                
                 <div class="form-group" id="form-group-notes">
                     <label for="notes">3. Notes (Optional)</label>
                     <textarea id="notes" placeholder="e.g., 'Key concepts: backpropagation, activation functions'"></textarea>
@@ -1244,41 +1152,15 @@
                 <label for="subject-filter-dropdown">Filter by Subject:</label>
                 <select id="subject-filter-dropdown">
                     <option value="all">Show All</option>
-                    <!-- Populated by JS -->
-                </select>
+                    </select>
             </div>
             
             <div id="all-sessions-container">
-                <p class="empty-state">Loading sessions...</p>
-            </div>
-        </section>
-        
-        <section id="tab-syllabus" class="tab-content">
-            <h2>Syllabus Progress</h2>
-
-            <!-- NEW: Syllabus Subject Filter -->
-            <div class="filter-container">
-                <label for="syllabus-subject-filter">Filter by Subject:</label>
-                <select id="syllabus-subject-filter">
-                    <option value="all">Show All</option>
-                    <!-- Populated by JS -->
-                </select>
-            </div>
-
-            <div class="global-syllabus-stats" style="margin-bottom: 25px; padding: 15px; background: var(--primary-accent-light); border-radius: 12px; border-left: 5px solid var(--primary-accent);">
-                <h4 style="color: var(--primary-dark); margin-bottom: 8px;">Overall Completion: <span id="total-syllabus-percent">0%</span></h4>
-                <div class="global-progress-bar">
-                    <div class="global-progress-bar-inner" id="total-syllabus-bar" style="width: 0%; background: linear-gradient(90deg, var(--primary-accent), var(--primary-dark));"></div>
                 </div>
-            </div>
-            <div id="syllabus-container">
-                <p class="empty-state">Loading syllabus...</p>
-            </div>
         </section>
 
     </main>
     
-    <!-- Details Modal -->
     <div id="details-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1300,7 +1182,6 @@
         </div>
     </div>
     
-    <!-- Data Management Modal -->
     <div id="data-management-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1309,7 +1190,7 @@
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.9rem;">
-                    Use this tool to **back up** your study data (Export) or **restore** it on a new device (Import). Data is now saved to your Firebase account.
+                    Use this tool to **back up** your study data (Export) or **restore** it on a new device (Import).
                 </p>
                 
                 <h4>Export Data</h4>
@@ -1326,12 +1207,11 @@
                 <button id="import-data-btn" style="background-color: var(--danger-color);">Import Data (Overwrite)</button>
                 
                 <h4 style="margin-top: 30px;">Clear All Data</h4>
-                <button id="clear-data-btn" style="background-color: var(--danger-color);">Clear All Firebase Data</button>
+                <button id="clear-data-btn" style="background-color: var(--danger-color);">Clear All Local Data</button>
             </div>
         </div>
     </div>
     
-    <!-- Schedule Modal -->
     <div id="schedule-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1342,14 +1222,12 @@
                 <div id="schedule-summary-banner" class="schedule-summary-banner"></div>
                 
                 <div id="schedule-modal-content">
-                    <!-- Schedule items will be rendered here -->
-                </div>
+                    </div>
                 <p id="schedule-empty-message" style="margin-top: 15px; color: var(--secondary-text); font-weight: 500;"></p>
             </div>
         </div>
     </div>
     
-    <!-- Edit Modal -->
     <div id="edit-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1388,1749 +1266,977 @@
             </div>
         </div>
     </div>
-<!-- Firebase SDK for Realtime Database -->
-<script type="module">
-    // Import Firebase services for Realtime Database
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { 
-        getDatabase, ref, onValue, set, update, remove, 
-        push, get, child 
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-    // Make Firebase functions globally available to the main script
-    window.fb = {
-        initializeApp,
-        getAuth, signInAnonymously, onAuthStateChanged,
-        getDatabase, ref, onValue, set, update, remove, 
-        push, get, child
-    };
-</script>
 
-<script>
-    // Main app logic, now aware of window.fb
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- CONSTANTS & STATE ---
-        const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60, 90]; 
-        const DAILY_GOAL = 3;
-        
-        // --- Firebase Config (User-provided) ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBpmZ-LEBH7YJ79NUwG-ZTrrsL6FVa3Ueo",
-            authDomain: "revision-61cb3.firebaseapp.com",
-            databaseURL: "https://revision-61cb3-default-rtdb.firebaseio.com",
-            projectId: "revision-61cb3",
-            storageBucket: "revision-61cb3.firebasestorage.app",
-            messagingSenderId: "912742749047",
-            appId: "1:912742749047:web:111bf3f91e9a6d99b30772"
-        };
-        
-        // Use projectId as the app identifier for database paths
-        const appId = firebaseConfig.projectId; 
-        
-        // --- Firebase Globals ---
-        let db, auth, userId;
-        
-        // --- Master Syllabus Blueprint ---
-        const MASTER_SYLLABUS = [
-            {
-                "subjectId": "ARITHMETIC",
-                "subjectName": "Simple Arithmetic",
-                "topics": [
-                    {
-                        "mainTopic": "Simple Arithmetic",
-                        "items": [
-                            { "id": "SA_1", "name": "Numbers and Basic Operations", "trackingMode": "percent" },
-                            { "id": "SA_2", "name": "Fraction and Decimal Numbers", "trackingMode": "percent" },
-                            { "id": "SA_3", "name": "Percentage", "trackingMode": "percent" },
-                            { "id": "SA_4", "name": "Profit and Loss", "trackingMode": "percent" },
-                            { "id": "SA_5", "name": "Simple and Compound Interest", "trackingMode": "percent" },
-                            { "id": "SA_6", "name": "Ratio and Proportion", "trackingMode": "percent" },
-                            { "id": "SA_7", "name": "Time and Distance", "trackingMode": "percent" },
-                            { "id": "SA_8", "name": "Time and Work", "trackingMode": "percent" },
-                            { "id": "SA_9", "name": "Average", "trackingMode": "percent" },
-                            { "id": "SA_10", "name": "Laws of Exponents", "trackingMode": "percent" },
-                            { "id": "SA_11", "name": "Mensuration", "trackingMode": "percent" },
-                            { "id": "SA_12", "name": "Progressions", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "MENTAL_ABILITY",
-                "subjectName": "Mental Ability",
-                "topics": [
-                    {
-                        "mainTopic": "Mental Ability",
-                        "items": [
-                            { "id": "MA_1", "name": "Series", "trackingMode": "percent" },
-                            { "id": "MA_2", "name": "Problems on Mathematical signs", "trackingMode": "percent" },
-                            { "id": "MA_3", "name": "Analogy", "trackingMode": "percent" },
-                            { "id": "MA_4", "name": "Odd man out", "trackingMode": "percent" },
-                            { "id": "MA_5", "name": "Coding and De coding", "trackingMode": "percent" },
-                            { "id": "MA_6", "name": "Family Relations", "trackingMode": "percent" },
-                            { "id": "MA_7", "name": "Sense of Direction", "trackingMode": "percent" },
-                            { "id": "MA_8", "name": "Time and Angles", "trackingMode": "percent" },
-                            { "id": "MA_9", "name": "Time in a clock and its reflection", "trackingMode": "percent" },
-                            { "id": "MA_10", "name": "Date and Calendar", "trackingMode": "percent" },
-                            { "id": "MA_11", "name": "Clerical Ability", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "GEN_ENGLISH",
-                "subjectName": "General English",
-                "topics": [
-                    {
-                        "mainTopic": "English Grammar",
-                        "items": [
-                            { "id": "GE_G_1", "name": "Types of Sentences and Interchange of Sentences", "trackingMode": "percent" },
-                            { "id": "GE_G_2", "name": "Different Parts of Speech", "trackingMode": "percent" },
-                            { "id": "GE_G_3", "name": "Agreement of Verb and Subject", "trackingMode": "percent" },
-                            { "id": "GE_G_4", "name": "Confusion of Adjectives and Adverbs", "trackingMode": "percent" },
-                            { "id": "GE_G_5", "name": "Comparison of Adjectives", "trackingMode": "percent" },
-                            { "id": "GE_G_6", "name": "Adverbs and Position of adverbs", "trackingMode": "percent" },
-                            { "id": "GE_G_7", "name": "Articles - The Definite and the Indefinite Articles", "trackingMode": "percent" },
-                            { "id": "GE_G_8", "name": "Uses of Primary and Model Auxiliary Verbs", "trackingMode": "percent" },
-                            { "id": "GE_G_9", "name": "Tag Questions", "trackingMode": "percent" },
-                            { "id": "GE_G_10", "name": "Infinitive and Gerunds", "trackingMode": "percent" },
-                            { "id": "GE_G_11", "name": "Tenses", "trackingMode": "percent" },
-                            { "id": "GE_G_12", "name": "Tenses in Conditional Sentences", "trackingMode": "percent" },
-                            { "id": "GE_G_13", "name": "Prepositions", "trackingMode": "percent" },
-                            { "id": "GE_G_14", "name": "The Use of Correlatives", "trackingMode": "percent" },
-                            { "id": "GE_G_15", "name": "Direct and Indirect Speech", "trackingMode": "percent" },
-                            { "id": "GE_G_16", "name": "Active and Passive voice", "trackingMode": "percent" },
-                            { "id": "GE_G_17", "name": "Correction of Sentences", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Vocabulary",
-                        "items": [
-                            { "id": "GE_V_1", "name": "Singular & Plural, Change of Gender, Collective Nouns", "trackingMode": "percent" },
-                            { "id": "GE_V_2", "name": "Word formation (prefix/suffix)", "trackingMode": "percent" },
-                            { "id": "GE_V_3", "name": "Compound words", "trackingMode": "percent" },
-                            { "id": "GE_V_4", "name": "Synonyms", "trackingMode": "percent" },
-                            { "id": "GE_V_5", "name": "Antonyms", "trackingMode": "percent" },
-                            { "id": "GE_V_6", "name": "Phrasal Verbs", "trackingMode": "percent" },
-                            { "id": "GE_V_7", "name": "Foreign Words and Phrases", "trackingMode": "percent" },
-                            { "id": "GE_V_8", "name": "One Word Substitutes", "trackingMode": "percent" },
-                            { "id": "GE_V_9", "name": "Words often confused", "trackingMode": "percent" },
-                            { "id": "GE_V_10", "name": "Spelling Test", "trackingMode": "percent" },
-                            { "id": "GE_V_11", "name": "Idioms and their Meanings", "trackingMode": "percent" },
-                            { "id": "GE_V_12", "name": "Translation (Sentence/Proverb to Malayalam)", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "MALAYALAM",
-                "subjectName": "Regional Language (Malayalam)",
-                "topics": [
-                    {
-                        "mainTopic": "Malayalam",
-                        "items": [
-                            { "id": "ML_1", "name": "പദശുദില (Word Purity)", "trackingMode": "percent" },
-                            { "id": "ML_2", "name": "വ്ാകയശുദില (Sentence Purity)", "trackingMode": "percent" },
-                            { "id": "ML_3", "name": "പരിലഭാഷ (Translation)", "trackingMode": "percent" },
-                            { "id": "ML_4", "name": "ഒറ്റപദം (One Word)", "trackingMode": "percent" },
-                            { "id": "ML_5", "name": "പരയായം (Synonym)", "trackingMode": "percent" },
-                            { "id": "ML_6", "name": "വ്ിലപരീത പദം (Antonym)", "trackingMode": "percent" },
-                            { "id": "ML_7", "name": "ൈശ്ലിലകള്‍ പഴെഞ്ചാലകള്‍ (Idioms & Proverbs)", "trackingMode": "percent" },
-                            { "id": "ML_8", "name": "സമാനപദം (Similar Word)", "trackingMode": "percent" },
-                            { "id": "ML_9", "name": "േചര്‍െത്തഴുതക (Join Words)", "trackingMode": "percent" },
-                            { "id": "ML_10", "name": "സ്ത്രീലിലംഗം പുല്ലിലംഗം (Gender)", "trackingMode": "percent" },
-                            { "id": "ML_11", "name": "വ്ചനം (Number)", "trackingMode": "percent" },
-                            { "id": "ML_12", "name": "പിലരിലെച്ചഴുതല (Split Words)", "trackingMode": "percent" },
-                            { "id": "ML_13", "name": "ഘടെക പദം (Component Word)", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "HISTORY",
-                "subjectName": "History",
-                "topics": [
-                    {
-                        "mainTopic": "Rank File / Book Topics",
-                        "items": [
-                            { "id": "HI_KE", "name": "Kerala History (Rank File)", "trackingMode": "pages" },
-                            { "id": "HI_IN", "name": "India History (Rank File)", "trackingMode": "pages" },
-                            { "id": "HI_WO", "name": "World History (Rank File)", "trackingMode": "pages" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "HI_CA", "name": "History Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "GEOGRAPHY",
-                "subjectName": "Geography",
-                "topics": [
-                    {
-                        "mainTopic": "Core Topics / Rank File",
-                        "items": [
-                            { "id": "GO_BS", "name": "Basics of Geography", "trackingMode": "pages" },
-                            { "id": "GO_IN", "name": "India Geography", "trackingMode": "pages" },
-                            { "id": "GO_KE", "name": "Kerala Geography", "trackingMode": "pages" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "GO_CA", "name": "Geography Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "ECONOMICS",
-                "subjectName": "Economics",
-                "topics": [
-                    {
-                        "mainTopic": "Core Topics",
-                        "items": [
-                            { "id": "EC_1", "name": "National Income, Per Capita Income", "trackingMode": "percent" },
-                            { "id": "EC_2", "name": "Factors of Production", "trackingMode": "percent" },
-                            { "id": "EC_3", "name": "Economic Sectors of Production", "trackingMode": "percent" },
-                            { "id": "EC_4", "name": "Indian Economic Planning, Five Year Plans, NITI Aayog", "trackingMode": "percent" },
-                            { "id": "EC_5", "name": "Types and Functions of Economic Institutions", "trackingMode": "percent" },
-                            { "id": "EC_6", "name": "Reserve Bank & Functions", "trackingMode": "percent" },
-                            { "id": "EC_7", "name": "Public revenue, Tax and Non Tax revenue", "trackingMode": "percent" },
-                            { "id": "EC_8", "name": "Public Expenditure, Budget, Fiscal Policy", "trackingMode": "percent" },
-                            { "id": "EC_9", "name": "Consumer Protection & Rights", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "EC_CA", "name": "Economics Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "CIVICS",
-                "subjectName": "Civics",
-                "topics": [
-                    {
-                        "mainTopic": "Core Topics",
-                        "items": [
-                            { "id": "CI_1", "name": "Public Administration, Bureaucracy", "trackingMode": "percent" },
-                            { "id": "CI_2", "name": "Indian Civil Service, State Civil Service", "trackingMode": "percent" },
-                            { "id": "CI_3", "name": "E_Governance", "trackingMode": "percent" },
-                            { "id": "CI_4", "name": "Information Commission and Right to information Act", "trackingMode": "percent" },
-                            { "id": "CI_5", "name": "Lokpal & Lokayuktha", "trackingMode": "percent" },
-                            { "id": "CI_6", "name": "Government (Executive, Judiciary, Legislature)", "trackingMode": "percent" },
-                            { "id": "CI_7", "name": "Election, Political Parties", "trackingMode": "percent" },
-                            { "id": "CI_8", "name": "Human Rights, Human Rights Organizations", "trackingMode": "percent" },
-                            { "id": "CI_9", "name": "Consumer Protection Act & Rules", "trackingMode": "percent" },
-                            { "id": "CI_10", "name": "Watershed Management", "trackingMode": "percent" },
-                            { "id": "CI_11", "name": "Labour and Employment, National Rural Employment Policies", "trackingMode": "percent" },
-                            { "id": "CI_12", "name": "Land Reforms", "trackingMode": "percent" },
-                            { "id": "CI_13", "name": "Protection of women, Children, and Old age People", "trackingMode": "percent" },
-                            { "id": "CI_14", "name": "Social Welfare, Social Security", "trackingMode": "percent" },
-                            { "id": "CI_15", "name": "Socio-Economic Statistical Data", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "CI_CA", "name": "Civics Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "CONSTITUTION",
-                "subjectName": "Indian Constitution",
-                "topics": [
-                    {
-                        "mainTopic": "Core Topics",
-                        "items": [
-                            { "id": "IC_1", "name": "Constituent Assembly, Preamble", "trackingMode": "percent" },
-                            { "id": "IC_2", "name": "Fundamental Rights", "trackingMode": "percent" },
-                            { "id": "IC_3", "name": "Directive principles", "trackingMode": "percent" },
-                            { "id": "IC_4", "name": "Fundamental Duties", "trackingMode": "percent" },
-                            { "id": "IC_5", "name": "Citizenship", "trackingMode": "percent" },
-                            { "id": "IC_6", "name": "Constitutional Amendments", "trackingMode": "percent" },
-                            { "id": "IC_7", "name": "Panchayath Raj", "trackingMode": "percent" },
-                            { "id": "IC_8", "name": "Constitutional Institutions and their Functions", "trackingMode": "percent" },
-                            { "id": "IC_9", "name": "Emergency", "trackingMode": "percent" },
-                            { "id": "IC_10", "name": "Union List, State List, Concurrent List", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "IC_CA", "name": "Constitution Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "ASL",
-                "subjectName": "Arts, Sports & Literature",
-                "topics": [
-                    {
-                        "mainTopic": "Rank File / Book Topics",
-                        "items": [
-                            { "id": "ASL_AR", "name": "Arts (കല)", "trackingMode": "pages" },
-                            { "id": "ASL_SP", "name": "Sports (കായികം)", "trackingMode": "pages" },
-                            { "id": "ASL_LI", "name": "Literature (സാഹിതയം)", "trackingMode": "pages" },
-                            { "id": "ASL_CU", "name": "Culture (സംസ്കാരം)", "trackingMode": "pages" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Current Affairs",
-                        "items": [
-                            { "id": "ASL_CA", "name": "Arts, Sports, Lit. Current Affairs", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "subjectId": "COMP_SCIENCE",
-                "subjectName": "Computer Science",
-                "topics": [
-                    {
-                        "mainTopic": "Hardware",
-                        "items": [
-                            { "id": "CS_HW_1", "name": "Input Devices (Names and uses)", "trackingMode": "percent" },
-                            { "id": "CS_HW_2", "name": "Output Devices (Names and uses/features)", "trackingMode": "percent" },
-                            { "id": "CS_HW_3", "name": "Memory devices - Primary and Secondary", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Software",
-                        "items": [
-                            { "id": "CS_SW_1", "name": "Classification – System and Application software", "trackingMode": "percent" },
-                            { "id": "CS_SW_2", "name": "Operating System – Functions and examples", "trackingMode": "percent" },
-                            { "id": "CS_SW_3", "name": "Popular Application software packages", "trackingMode": "percent" },
-                            { "id": "CS_SW_4", "name": "Basics of programming", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Computer Networks",
-                        "items": [
-                            { "id": "CS_NW_1", "name": "Types of networks – LAN, WAN, MAN", "trackingMode": "percent" },
-                            { "id": "CS_NW_2", "name": "Network Devices – Media, Switch, Hub, Router, etc.", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Internet",
-                        "items": [
-                            { "id": "CS_IN_1", "name": "Services – WWW, E-mail, Search engines", "trackingMode": "percent" },
-                            { "id": "CS_IN_2", "name": "Social Media", "trackingMode": "percent" },
-                            { "id": "CS_IN_3", "name": "Web Designing – Browser, HTML", "trackingMode": "percent" }
-                        ]
-                    },
-                    {
-                        "mainTopic": "Cyber Crimes and Cyber Laws",
-                        "items": [
-                            { "id": "CS_CY_1", "name": "Types of crimes (Awareness level)", "trackingMode": "percent" },
-                            { "id":"CS_CY_2", "name": "IT Act and Other laws (Awareness level)", "trackingMode": "percent" }
-                        ]
-                    }
-                ]
-                // NEW SUBJECTS CAN BE ADDED HERE
-            }
-        ];
-        
-        // --- Global State Variables (will be populated by Firebase) ---
-        let sessions = [];
-        let dailyLog = [];
-        let streakState = { streakCount: 0, lastVisit: null, reviewsToday: 0 };
-        let syllabusProgress = {};
-        let currentCalendarDate = new Date();
-        
-        // Unsubscribe listeners
-        let unsubSessions = () => {};
-        let unsubLog = () => {};
-        let unsubStreak = () => {};
-        let unsubSyllabus = () => {};
-
-        // --- DOM SELECTORS ---
-        const dateInput = document.getElementById('initial-date');
-        const sessionForm = document.getElementById('session-form');
-        
-        const addSessionSubjectSelect = document.getElementById('subject');
-        const addSessionTopicSelect = document.getElementById('topic');
-        
-        const notesInput = document.getElementById('notes');
-        const fileLinkInput = document.getElementById('file-link');
-        
-        const navTabs = document.querySelectorAll('.nav-tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const todayCountBubble = document.getElementById('today-count-bubble');
-        const backlogCountBubble = document.getElementById('backlog-count-bubble');
-        
-        const todayReviewsContainer = document.getElementById('today-reviews-container');
-        const backlogCriticalContainer = document.getElementById('backlog-critical-container');
-        const backlogStandardContainer = document.getElementById('backlog-standard-container');
-        const allSessionsContainer = document.getElementById('all-sessions-container');
-        
-        // Subject Filters
-        const subjectFilterDropdown = document.getElementById('subject-filter-dropdown');
-        const syllabusSubjectFilter = document.getElementById('syllabus-subject-filter'); // NEW
-        
-        const globalStatsText = document.getElementById('global-stats-text');
-        const globalProgressBarInner = document.getElementById('global-progress-bar-inner');
-        const streakCounter = document.getElementById('streak-counter');
-        const dailyGoalCounter = document.getElementById('daily-goal-counter');
-        const totalTimeCounter = document.getElementById('total-time-counter');
-        
-        const dailyTimeInput = document.getElementById('daily-time');
-        const logTimeBtn = document.getElementById('log-time-btn');
-        const loggedTimeToday = document.getElementById('logged-time-today');
-        const todayDateLog = document.getElementById('today-date-log');
-        
-        const detailsModal = document.getElementById('details-modal');
-        const dataManagementModal = document.getElementById('data-management-modal');
-        
-        const modalTopic = document.getElementById('modal-topic');
-        const modalNotes = document.getElementById('modal-notes');
-        const modalFileLink = document.getElementById('modal-file-link');
-        const modalStartDate = document.getElementById('modal-start-date');
-        
-        const dataManagementBtn = document.getElementById('data-management-btn');
-        
-        const exportJsonBtn = document.getElementById('export-json-btn');
-        const importFileInput = document.getElementById('import-file-input');
-        const importBtn = document.getElementById('import-data-btn');
-        const clearDataBtn = document.getElementById('clear-data-btn');
-        
-        const calPrevBtn = document.getElementById('cal-prev-btn');
-        const calNextBtn = document.getElementById('cal-next-btn');
-        const calMonthYear = document.getElementById('cal-month-year');
-        const calGrid = document.getElementById('calendar-grid');
-
-        const scheduleModal = document.getElementById('schedule-modal');
-        const scheduleModalDate = document.getElementById('schedule-modal-date');
-        const scheduleModalContent = document.getElementById('schedule-modal-content');
-        const scheduleEmptyMessage = document.getElementById('schedule-empty-message');
-        const scheduleSummaryBanner = document.getElementById('schedule-summary-banner');
-        
-        const editModal = document.getElementById('edit-modal');
-        const editSessionForm = document.getElementById('edit-session-form');
-        const editSessionId = document.getElementById('edit-session-id');
-        const editSubject = document.getElementById('edit-subject');
-        const editTopic = document.getElementById('edit-topic');
-        const editNotes = document.getElementById('edit-notes');
-        const editFileLink = document.getElementById('edit-file-link');
-        const editInitialDate = document.getElementById('edit-initial-date');
-
-        // --- DATE HELPERS ---
-        const formatDate = (date) => {
-            const d = new Date(date);
-            const offset = d.getTimezoneOffset();
-            const adjustedDate = new Date(d.getTime() - (offset * 60 * 1000));
-            return adjustedDate.toISOString().split('T')[0];
-        };
-
-        const getTodayString = () => {
-            return formatDate(new Date());
-        };
-
-        const calculateReviewDates = (initialDateStr) => {
-            const startDate = new Date(initialDateStr + 'T00:00:00');
-            return REVIEW_INTERVALS.map(days => {
-                const reviewDate = new Date(startDate.getTime());
-                reviewDate.setDate(reviewDate.getDate() + days); 
-                return formatDate(reviewDate);
-            });
-        };
-
-        // --- REALTIME DATABASE SAVE/UPDATE FUNCTIONS ---
-        
-        async function saveDailyLog() {
-            if (!userId) return;
-            const logRef = fb.ref(db, `artifacts/${appId}/users/${userId}/dailyLog`);
-            try {
-                await fb.set(logRef, dailyLog);
-                console.log("Realtime DB: dailyLog saved");
-            } catch (err) {
-                console.error("Error saving dailyLog:", err);
-            }
-        }
-        
-        async function saveStreakState() {
-            if (!userId) return;
-            const streakRef = fb.ref(db, `artifacts/${appId}/users/${userId}/streakState`);
-            try {
-                await fb.set(streakRef, streakState);
-                console.log("Realtime DB: streakState saved");
-            } catch (err) {
-                console.error("Error saving streakState:", err);
-            }
-        }
-        
-        async function saveSyllabusProgress() {
-            if (!userId) return;
-            const syllabusRef = fb.ref(db, `artifacts/${appId}/users/${userId}/syllabusProgress`);
-            try {
-                await fb.set(syllabusRef, syllabusProgress);
-                console.log("Realtime DB: syllabusProgress saved");
-            } catch (err) {
-                console.error("Error saving syllabusProgress:", err);
-            }
-        }
-
-        async function saveSession(session) {
-            if (!userId) return;
-            const sessionRef = fb.ref(db, `artifacts/${appId}/users/${userId}/sessions/${session.id}`);
-            try {
-                await fb.set(sessionRef, session);
-                console.log("Realtime DB: session saved");
-            } catch (err) {
-                console.error("Error saving session:", err);
-            }
-        }
-
-        async function deleteSession(sessionId) {
-            if (!userId) return;
-            const sessionRef = fb.ref(db, `artifacts/${appId}/users/${userId}/sessions/${sessionId}`);
-            try {
-                await fb.remove(sessionRef);
-                console.log("Realtime DB: session deleted");
-            } catch (err) {
-                console.error("Error deleting session:", err);
-            }
-        }
-
-        // --- DATA HELPERS (Datalists & Filters) ---
-        
-        function populateAddSessionDropdowns() {
-            addSessionSubjectSelect.innerHTML = '<option value="">-- Select a Subject --</option>';
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONSTANTS & STATE ---
+            const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60, 90]; 
+            const DAILY_GOAL = 3;
             
-            MASTER_SYLLABUS.forEach(subject => {
-                addSessionSubjectSelect.innerHTML += `<option value="${subject.subjectId}">${subject.subjectName}</option>`;
-            });
+            // Storage Keys
+            const STORAGE_KEY = 'studySessions';
+            const STORAGE_KEY_LOG = 'studyDailyLog';
+            const STORAGE_KEY_STREAK = 'studyStreakState';
             
-            // Add listener to update topics when subject changes
-            addSessionSubjectSelect.addEventListener('change', () => {
-                const selectedSubjectId = addSessionSubjectSelect.value;
-                addSessionTopicSelect.innerHTML = '<option value="">-- Select a Topic --</option>';
-                
-                if (!selectedSubjectId) {
-                    addSessionTopicSelect.innerHTML = '<option value="">-- Select a Subject First --</option>';
-                    return;
-                }
-                
-                const subject = MASTER_SYLLABUS.find(s => s.subjectId === selectedSubjectId);
-                if (!subject) return; // Safety check
-                
-                subject.topics.forEach(topicGroup => {
-                    // Add an optgroup for clarity
-                    addSessionTopicSelect.innerHTML += `<optgroup label="${topicGroup.mainTopic}">`;
-                    topicGroup.items.forEach(item => {
-                        // The value is the syllabus item ID, text is the name
-                        addSessionTopicSelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
-                    });
-                    addSessionTopicSelect.innerHTML += `</optgroup>`;
-                });
-            });
-        }
-        
-        // Populate "All Sessions" Subject Filter Dropdown
-        const populateSubjectFilter = () => {
-            const currentVal = subjectFilterDropdown.value;
-            const subjects = [...new Set(sessions.map(s => (s.subject || "Uncategorized").trim()))].sort((a, b) => {
-                if (a === "Uncategorized") return 1;
-                if (b === "Uncategorized") return -1;
-                return a.localeCompare(b);
-            });
-            
-            subjectFilterDropdown.innerHTML = '<option value="all">Show All</option>'; // Reset
-            
-            subjects.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject;
-                option.textContent = subject;
-                subjectFilterDropdown.appendChild(option);
-            });
-            
-            if (Array.from(subjectFilterDropdown.options).some(opt => opt.value === currentVal)) {
-                subjectFilterDropdown.value = currentVal;
-            } else {
-                subjectFilterDropdown.value = 'all';
-            }
-        };
-        
-        // NEW: Populate "Syllabus" Subject Filter Dropdown
-        function populateSyllabusFilter() {
-            syllabusSubjectFilter.innerHTML = '<option value="all">Show All</option>';
-            MASTER_SYLLABUS.forEach(subject => {
-                syllabusSubjectFilter.innerHTML += `<option value="${subject.subjectId}">${subject.subjectName}</option>`;
-            });
-        }
-        
-        // --- TAB SWITCHING & UI ---
-        const handleTabClick = (e) => {
-            const clickedTab = e.currentTarget;
-            const tabTarget = clickedTab.dataset.tab;
-            
-            navTabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            clickedTab.classList.add('active');
-            document.getElementById(`tab-${tabTarget}`).classList.add('active');
-            
-            // Re-render on tab click to ensure data is fresh
-            if (tabTarget === 'attendance') {
-                renderCalendar(currentCalendarDate);
-            } else if (tabTarget === 'syllabus') {
-                renderSyllabus(); 
-            } else if (tabTarget === 'all') {
-                renderAllSessions();
-            }
-        };
-        
-        // --- MODAL LOGIC ---
-        const showModal = (modalElement, sessionId = null) => {
-            if (modalElement.id === 'details-modal' && sessionId) {
-                const session = sessions.find(s => s.id === sessionId);
-                if (!session) {
-                    console.error("Could not find session for modal:", sessionId);
-                    return;
-                }
-                
-                const subject = session.subject || "Uncategorized";
-                modalTopic.innerHTML = `<span style="color: var(--primary-text); font-size: 1.1rem; display: block;">${subject}</span>${session.topic}`;
-                modalNotes.textContent = session.notes || '(No notes added)';
-                modalStartDate.textContent = session.initialDate;
-                
-                if (session.fileLink) {
-                    modalFileLink.innerHTML = `<a href="${session.fileLink}" target="_blank" rel="noopener noreferrer">${session.fileLink}</a>`;
-                } else {
-                    modalFileLink.innerHTML = `<p>(No file link provided)</p>`;
-                }
-            }
-            
-            modalElement.style.display = 'block';
-        };
-        
-        const closeModal = (modalElement) => {
-            modalElement.style.display = 'none';
-        };
-        
-        const openEditModal = (sessionId) => {
-            const session = sessions.find(s => s.id === sessionId);
-            if (!session) return;
-            
-            editSessionId.value = session.id;
-            editSubject.value = session.subject;
-            editTopic.value = session.topic;
-            editNotes.value = session.notes;
-            editFileLink.value = session.fileLink;
-            editInitialDate.value = session.initialDate;
-            
-            showModal(editModal);
-        };
-        
-        // --- CALENDAR LOGIC ---
-        const getReviewsForDate = (dateString) => {
-            let isCompleted = false;
-            let reviewsDueCount = 0;
+            // State Variables
+            let sessions = [];
+            let dailyLog = [];
+            let streakState = { streakCount: 0, lastVisit: null, reviewsToday: 0 };
+            let currentCalendarDate = new Date();
 
-            sessions.forEach(session => {
-                if (session.completedReviews.includes(dateString)) {
-                    isCompleted = true;
-                }
-                if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
-                    reviewsDueCount++;
-                }
-            });
-            return { isCompleted, isDue: reviewsDueCount > 0, reviewsDueCount };
-        };
-
-        const renderCalendar = (date) => {
-            const year = date.getFullYear();
-            const month = date.getMonth();
+            // --- DOM SELECTORS ---
+            const dateInput = document.getElementById('initial-date');
+            const sessionForm = document.getElementById('session-form');
+            const subjectInput = document.getElementById('subject');
+            const subjectList = document.getElementById('subject-list');
+            const topicInput = document.getElementById('topic');
+            const notesInput = document.getElementById('notes');
+            const fileLinkInput = document.getElementById('file-link');
             
-            const monthName = date.toLocaleString('default', { month: 'long' });
-            calMonthYear.textContent = `${monthName} ${year}`;
-
-            const firstDayOfMonth = new Date(year, month, 1);
-            const lastDayOfMonth = new Date(year, month + 1, 0);
-            const today = getTodayString();
-            const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-            let gridHTML = dayNames.map(name => `<div class="calendar-day-name">${name}</div>`).join('');
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const todayCountBubble = document.getElementById('today-count-bubble');
+            const backlogCountBubble = document.getElementById('backlog-count-bubble');
             
-            const startDay = (firstDayOfMonth.getDay() + 6) % 7; // Monday is 0
-
-            for (let i = 0; i < startDay; i++) {
-                gridHTML += '<div class="calendar-date-cell"></div>';
-            }
-
-            for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
-                const dateString = formatDate(new Date(year, month, d));
-                const reviewData = getReviewsForDate(dateString);
-                
-                let classes = 'calendar-date-cell';
-                let attributes = `title="${dateString}"`; 
-                
-                if (dateString === today) classes += ' today';
-                if (reviewData.isCompleted) classes += ' completed';
-                
-                if (reviewData.reviewsDueCount > 0) classes += ' due-revision';
-                if (reviewData.reviewsDueCount > 5) classes += ' due-intensity-high';
-
-                gridHTML += `<div class="${classes}" ${attributes}>${d}</div>`;
-            }
+            const todayReviewsContainer = document.getElementById('today-reviews-container');
+            const backlogCriticalContainer = document.getElementById('backlog-critical-container');
+            const backlogStandardContainer = document.getElementById('backlog-standard-container');
+            const allSessionsContainer = document.getElementById('all-sessions-container');
             
-            calGrid.innerHTML = gridHTML;
-        };
-
-        const navigateCalendar = (direction) => {
-            if (direction === 'prev') {
-                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-            } else if (direction === 'next') {
-                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-            }
-            renderCalendar(currentCalendarDate);
-        };
-        
-        const showDailySchedule = (dateString) => {
-            const dueTasks = [];
-            const today = getTodayString();
+            // Subject Filter
+            const subjectFilterDropdown = document.getElementById('subject-filter-dropdown');
             
-            scheduleSummaryBanner.style.display = 'none';
-            const logEntry = dailyLog.find(entry => entry.date === dateString);
-            if (logEntry) {
-                scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: Logged <strong>${logEntry.minutes}</strong> minutes. <strong>${logEntry.reviewsCompleted}</strong> reviews completed.`;
-                scheduleSummaryBanner.style.display = 'block';
-            } else if (dateString < today) {
-                scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: <strong>0</strong> minutes logged. <strong>0</strong> reviews completed.`;
-                scheduleSummaryBanner.style.display = 'block';
-            }
-
-            sessions.forEach(session => {
-                if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
-                    dueTasks.push({
-                        sessionId: session.id,
-                        subject: session.subject || "Uncategorized",
-                        topic: session.topic,
-                        reviewDate: dateString,
-                        isOverdue: dateString < today 
-                    });
-                }
-            });
-
-            scheduleModalDate.textContent = `Scheduled Reviews for ${dateString}`;
+            const globalStatsText = document.getElementById('global-stats-text');
+            const globalProgressBarInner = document.getElementById('global-progress-bar-inner');
+            const streakCounter = document.getElementById('streak-counter');
+            const dailyGoalCounter = document.getElementById('daily-goal-counter');
+            const totalTimeCounter = document.getElementById('total-time-counter');
             
-            if (dueTasks.length > 0) {
-                scheduleEmptyMessage.textContent = `Total ${dueTasks.length} task(s) found. Check the boxes to complete them.`;
-                dueTasks.sort((a, b) => a.subject.localeCompare(b.subject));
-                // MODIFIED: Added data-session-id to div
-                scheduleModalContent.innerHTML = dueTasks.map(task => 
-                    `<div class="review-item ${task.isOverdue ? 'overdue' : ''}" data-session-id="${task.sessionId}">
-                        ${createReviewItemHTML(task)}
-                    </div>`
-                ).join('');
-            } else {
-                scheduleModalContent.innerHTML = '<p class="empty-state" style="padding: 10px; border: 1px dashed var(--border-color);">No scheduled revisions for this date.</p>';
-                scheduleEmptyMessage.textContent = '';
-            }
+            const dailyTimeInput = document.getElementById('daily-time');
+            const logTimeBtn = document.getElementById('log-time-btn');
+            const loggedTimeToday = document.getElementById('logged-time-today');
+            const todayDateLog = document.getElementById('today-date-log');
             
-            showModal(scheduleModal);
-        };
-
-        // --- RENDER FUNCTIONS (UI updates) ---
-        
-        // *** BUG FIX: Corrected page-based logic ***
-        function calculateSyllabusProgress() {
-            let grandTotalItems = 0;
-            let grandTotalCompletionSum = 0;
-            const subjectProgressStats = {};
-
-            MASTER_SYLLABUS.forEach(subject => {
-                let subjectTotalItems = 0;
-                let subjectCompletionSum = 0;
-                
-                subject.topics.forEach(topicGroup => {
-                    topicGroup.items.forEach(item => {
-                        subjectTotalItems++;
-                        grandTotalItems++;
-                        
-                        const progress = syllabusProgress[item.id] || {};
-                        let itemCompletion = 0; // This will be a value between 0 and 1
-
-                        if (item.trackingMode === 'pages') {
-                            // BUG FIX: Use default 100 if totalPages isn't set
-                            const totalPages = progress.totalPages || 100; 
-                            const pagesComplete = progress.pagesComplete || 0;
-                            
-                            // BUG FIX: Use the 'totalPages' var, not 'progress.totalPages'
-                            if (totalPages > 0) { 
-                                itemCompletion = Math.min(pagesComplete, totalPages) / totalPages;
-                            }
-                            
-                        } else if (item.trackingMode === 'percent') {
-                            const percent = progress.percent || 0;
-                            itemCompletion = percent / 100;
-                        }
-                        
-                        subjectCompletionSum += itemCompletion;
-                    });
-                });
-                
-                const subjectPercent = (subjectTotalItems > 0) ? (subjectCompletionSum / subjectTotalItems) * 100 : 0;
-                
-                subjectProgressStats[subject.subjectId] = {
-                    percent: subjectPercent
-                };
-                grandTotalCompletionSum += subjectCompletionSum;
-            });
+            const detailsModal = document.getElementById('details-modal');
+            const dataManagementModal = document.getElementById('data-management-modal');
             
-            const totalPercent = (grandTotalItems > 0) ? (grandTotalCompletionSum / grandTotalItems) * 100 : 0;
+            const modalTopic = document.getElementById('modal-topic');
+            const modalNotes = document.getElementById('modal-notes');
+            const modalFileLink = document.getElementById('modal-file-link');
+            const modalStartDate = document.getElementById('modal-start-date');
             
-            return {
-                totalPercent: totalPercent,
-                subjectProgress: subjectProgressStats
+            const dataManagementBtn = document.getElementById('data-management-btn');
+            
+            // UPDATED: Data Management Selectors
+            const exportJsonBtn = document.getElementById('export-json-btn');
+            const importFileInput = document.getElementById('import-file-input');
+            const importBtn = document.getElementById('import-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            
+            const calPrevBtn = document.getElementById('cal-prev-btn');
+            const calNextBtn = document.getElementById('cal-next-btn');
+            const calMonthYear = document.getElementById('cal-month-year');
+            const calGrid = document.getElementById('calendar-grid');
+
+            const scheduleModal = document.getElementById('schedule-modal');
+            const scheduleModalDate = document.getElementById('schedule-modal-date');
+            const scheduleModalContent = document.getElementById('schedule-modal-content');
+            const scheduleEmptyMessage = document.getElementById('schedule-empty-message');
+            const scheduleSummaryBanner = document.getElementById('schedule-summary-banner');
+            
+            // Edit Modal Selectors
+            const editModal = document.getElementById('edit-modal');
+            const editSessionForm = document.getElementById('edit-session-form');
+            const editSessionId = document.getElementById('edit-session-id');
+            const editSubject = document.getElementById('edit-subject');
+            const editTopic = document.getElementById('edit-topic');
+            const editNotes = document.getElementById('edit-notes');
+            const editFileLink = document.getElementById('edit-file-link');
+            const editInitialDate = document.getElementById('edit-initial-date');
+
+
+            // --- DATE HELPERS ---
+            const formatDate = (date) => {
+                const d = new Date(date);
+                const offset = d.getTimezoneOffset();
+                const adjustedDate = new Date(d.getTime() - (offset * 60 * 1000));
+                return adjustedDate.toISOString().split('T')[0];
             };
-        }
-        
-        // *** MODIFIED: Respects syllabus subject filter ***
-        function renderSyllabus() {
-            const container = document.getElementById('syllabus-container');
-            container.innerHTML = ''; // Clear old content
-            
-            const progressStats = calculateSyllabusProgress(); 
-            const selectedSubjectId = syllabusSubjectFilter.value; // NEW
 
-            let subjectsFound = 0;
-            MASTER_SYLLABUS.forEach(subject => {
-                // NEW: Filter logic
-                if (selectedSubjectId !== 'all' && subject.subjectId !== selectedSubjectId) {
-                    return; // Skip this subject
-                }
-                subjectsFound++;
+            const getTodayString = () => {
+                return formatDate(new Date());
+            };
 
-                const subjectStats = progressStats.subjectProgress[subject.subjectId];
-                let subjectHTML = `
-                    <div class="session-card" style="border-left-color: var(--info-color);">
-                        <h3 class="subject-group-header" style="margin-top: 0; border-bottom-color: var(--info-color);">
-                            ${subject.subjectName}
-                            <span class="subject-scoreboard" style="background-color: #e0f2fe; color: var(--info-color);">
-                                ${subjectStats.percent.toFixed(0)}% Complete
-                            </span>
-                        </h3>
-                `;
-
-                subject.topics.forEach(topicGroup => {
-                    subjectHTML += `<div class="syllabus-topic-group"><h4>${topicGroup.mainTopic}</h4>`;
-                    
-                    topicGroup.items.forEach(item => {
-                        const progress = syllabusProgress[item.id] || {};
-                        
-                        if (item.trackingMode === 'pages') {
-                            // Render Page-based Item
-                            const pagesComplete = progress.pagesComplete || 0;
-                            const totalPages = progress.totalPages || 100; // Default 100
-                            subjectHTML += `
-                                <div class="syllabus-page-item">
-                                    <label>${item.name}</label>
-                                    <div class="syllabus-page-inputs">
-                                        <input type="number" class="syllabus-page-input" data-item-id="${item.id}" data-type="complete" value="${pagesComplete}" min="0" placeholder="Done">
-                                        <span>/</span>
-                                        <input type="number" class="syllabus-page-input" data-item-id="${item.id}" data-type="total" value="${totalPages}" min="1" placeholder="Total">
-                                        <span>pages</span>
-                                    </div>
-                                </div>
-                            `;
-                        } else if (item.trackingMode === 'percent') {
-                            // Render Percent-based Item
-                            const percent = progress.percent || 0;
-                            subjectHTML += `
-                                <div class="syllabus-item">
-                                    <div class="syllabus-percent-input-wrapper">
-                                        <input type="number" class="syllabus-percent-input" data-item-id="${item.id}" value="${percent}" min="0" max="100">
-                                        <span>%</span>
-                                    </div>
-                                    <label id="${item.id}">
-                                        ${item.name}
-                                    </label>
-                                </div>
-                            `;
-                        }
-                    });
-                    subjectHTML += `</div>`; // Close topic-group
+            const calculateReviewDates = (initialDateStr) => {
+                const startDate = new Date(initialDateStr + 'T00:00:00');
+                return REVIEW_INTERVALS.map(days => {
+                    const reviewDate = new Date(startDate.getTime());
+                    reviewDate.setDate(reviewDate.getDate() + days); 
+                    return formatDate(reviewDate);
                 });
+            };
 
-                subjectHTML += `</div>`; // Close session-card
-                container.innerHTML += subjectHTML;
-            });
-            
-            if (subjectsFound === 0) {
-                container.innerHTML = `<p class="empty-state">No syllabus found for this filter.</p>`;
-            }
-            
-            // Update the total progress bar
-            document.getElementById('total-syllabus-percent').textContent = `${progressStats.totalPercent.toFixed(1)}%`;
-            document.getElementById('total-syllabus-bar').style.width = `${progressStats.totalPercent}%`;
-        }
+            // --- LOCAL STORAGE ---
+            const loadSessions = () => {
+                try {
+                    const sessionsJSON = localStorage.getItem(STORAGE_KEY);
+                    sessions = sessionsJSON ? JSON.parse(sessionsJSON) : [];
+                    if (!Array.isArray(sessions)) {
+                         sessions = [];
+                         console.error("Loaded data was not an array. Resetting sessions.");
+                    }
+                } catch (error) {
+                    console.error("Error loading sessions from localStorage:", error);
+                    sessions = [];
+                }
+            };
 
-        
-        const updateGlobalUIElements = (todayTasks, backlogTasks) => {
-            let totalReviews = 0;
-            let completedReviews = 0;
-            sessions.forEach(session => {
-                totalReviews += session.reviewDates.length;
-                completedReviews += session.completedReviews.length;
-            });
-            const globalProgressPercent = totalReviews > 0 ? (completedReviews / totalReviews) * 100 : 0;
+            const saveSessions = () => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+            };
             
-            globalStatsText.textContent = `Total Progress: ${completedReviews} / ${totalReviews} Reviews`;
-            globalProgressBarInner.style.width = `${globalProgressPercent}%`;
+            const loadDailyLog = () => {
+                try {
+                    const logJSON = localStorage.getItem(STORAGE_KEY_LOG);
+                    dailyLog = logJSON ? JSON.parse(logJSON) : [];
+                    if (!Array.isArray(dailyLog)) dailyLog = [];
+                } catch (e) { 
+                    console.error("Error loading daily log:", e);
+                    dailyLog = []; 
+                }
+            };
             
-            todayCountBubble.textContent = todayTasks.length;
-            todayCountBubble.style.display = todayTasks.length > 0 ? 'grid' : 'none';
+            const saveDailyLog = () => {
+                localStorage.setItem(STORAGE_KEY_LOG, JSON.stringify(dailyLog));
+            };
             
-            backlogCountBubble.textContent = backlogTasks.length;
-            backlogCountBubble.style.display = backlogTasks.length > 0 ? 'grid' : 'none';
-            
-            const totalMinutes = dailyLog.reduce((sum, entry) => sum + (entry.minutes || 0), 0);
-            const totalHours = (totalMinutes / 60).toFixed(1);
-            
-            streakCounter.textContent = `🔥 Streak: ${streakState.streakCount}`;
-            dailyGoalCounter.textContent = `Reviews Today: ${streakState.reviewsToday} / ${DAILY_GOAL}`;
-            totalTimeCounter.textContent = `🕒 Total Study Time: ${totalHours} Hours`;
-            
-            const today = getTodayString();
-            todayDateLog.textContent = today;
-            const todayLogEntry = dailyLog.find(entry => entry.date === today);
-            loggedTimeToday.textContent = todayLogEntry ? todayLogEntry.minutes : 0;
-        };
+            const loadStreakState = () => {
+                try {
+                    const streakJSON = localStorage.getItem(STORAGE_KEY_STREAK);
+                    const loadedState = streakJSON ? JSON.parse(streakJSON) : {};
+                    const today = getTodayString();
+                    const yesterday = formatDate(new Date(Date.now() - 86400000));
 
-        const renderApp = () => {
-            if (!userId) return; // Don't render if not authenticated
-            
-            const today = getTodayString();
-            let todayTasks = [];
-            let backlogTasks = [];
+                    streakState = {
+                        streakCount: loadedState.streakCount || 0,
+                        lastVisit: loadedState.lastVisit || null,
+                        reviewsToday: loadedState.reviewsToday || 0
+                    };
+                    
+                    if (streakState.lastVisit === today) {
+                        // Already visited today
+                    } else if (streakState.lastVisit === yesterday) {
+                        // Visited yesterday. Check if goal was met.
+                        if (streakState.reviewsToday >= DAILY_GOAL) {
+                            streakState.streakCount++;
+                        } else {
+                            streakState.streakCount = 1; // Reset streak
+                        }
+                        streakState.lastVisit = today;
+                        streakState.reviewsToday = 0; 
+                    } else {
+                        // Missed a day or first visit
+                        streakState.streakCount = 1; 
+                        if (!streakState.lastVisit) streakState.streakCount = 0; 
+                        streakState.lastVisit = today;
+                        streakState.reviewsToday = 0;
+                    }
 
-            sessions.forEach(session => {
-                session.reviewDates.forEach(reviewDate => {
-                    if (!session.completedReviews.includes(reviewDate)) {
-                        const task = {
+                } catch (e) {
+                    console.error("Error loading streak state:", e);
+                    streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
+                }
+                saveStreakState();
+            };
+            
+            const saveStreakState = () => {
+                localStorage.setItem(STORAGE_KEY_STREAK, JSON.stringify(streakState));
+            };
+            
+            
+            // --- DATA HELPERS (Datalists & Filters) ---
+            const updateSubjectDatalist = () => {
+                const subjects = [...new Set(sessions.map(s => s.subject ? s.subject.trim() : "")
+                                                    .filter(s => s && s !== "Uncategorized"))].sort();
+                subjectList.innerHTML = '';
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    subjectList.appendChild(option);
+                });
+            };
+            
+            // Populate Subject Filter Dropdown
+            const populateSubjectFilter = () => {
+                const currentVal = subjectFilterDropdown.value;
+                const subjects = [...new Set(sessions.map(s => (s.subject || "Uncategorized").trim()))].sort((a, b) => {
+                    if (a === "Uncategorized") return 1;
+                    if (b === "Uncategorized") return -1;
+                    return a.localeCompare(b);
+                });
+                
+                subjectFilterDropdown.innerHTML = '<option value="all">Show All</option>'; // Reset
+                
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    subjectFilterDropdown.appendChild(option);
+                });
+                
+                // Restore selection if possible
+                if (Array.from(subjectFilterDropdown.options).some(opt => opt.value === currentVal)) {
+                    subjectFilterDropdown.value = currentVal;
+                } else {
+                    subjectFilterDropdown.value = 'all';
+                }
+            };
+            
+            // --- TAB SWITCHING & UI ---
+            const handleTabClick = (e) => {
+                const clickedTab = e.currentTarget;
+                const tabTarget = clickedTab.dataset.tab;
+                
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                clickedTab.classList.add('active');
+                document.getElementById(`tab-${tabTarget}`).classList.add('active');
+                
+                if (tabTarget === 'attendance') {
+                    renderCalendar(currentCalendarDate);
+                }
+            };
+            
+            // --- MODAL LOGIC ---
+            const showModal = (modalElement, sessionId = null) => {
+                // This function is now multipurpose.
+                // If it's the details modal, populate it.
+                if (modalElement.id === 'details-modal' && sessionId) {
+                    const session = sessions.find(s => s.id === sessionId);
+                    if (!session) return;
+                    
+                    const subject = session.subject || "Uncategorized";
+                    modalTopic.innerHTML = `<span style="color: var(--primary-text); font-size: 1.1rem; display: block;">${subject}</span>${session.topic}`;
+                    modalNotes.textContent = session.notes || '(No notes added)';
+                    modalStartDate.textContent = session.initialDate;
+                    
+                    if (session.fileLink) {
+                        modalFileLink.innerHTML = `<a href="${session.fileLink}" target="_blank" rel="noopener noreferrer">${session.fileLink}</a>`;
+                    } else {
+                        modalFileLink.innerHTML = `<p>(No file link provided)</p>`;
+                    }
+                }
+                
+                modalElement.style.display = 'block';
+            };
+            
+            const closeModal = (modalElement) => {
+                modalElement.style.display = 'none';
+            };
+            
+            // Open and populate the Edit Modal
+            const openEditModal = (sessionId) => {
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
+                
+                editSessionId.value = session.id;
+                editSubject.value = session.subject;
+                editTopic.value = session.topic;
+                editNotes.value = session.notes;
+                editFileLink.value = session.fileLink;
+                editInitialDate.value = session.initialDate;
+                
+                showModal(editModal);
+            };
+            
+            // --- CALENDAR LOGIC ---
+            const getReviewsForDate = (dateString) => {
+                let isCompleted = false;
+                let reviewsDueCount = 0;
+
+                sessions.forEach(session => {
+                    if (session.completedReviews.includes(dateString)) {
+                        isCompleted = true;
+                    }
+                    if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
+                        reviewsDueCount++;
+                    }
+                });
+                return { isCompleted, isDue: reviewsDueCount > 0, reviewsDueCount };
+            };
+
+            const renderCalendar = (date) => {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                
+                const monthName = date.toLocaleString('default', { month: 'long' });
+                calMonthYear.textContent = `${monthName} ${year}`;
+
+                const firstDayOfMonth = new Date(year, month, 1);
+                const lastDayOfMonth = new Date(year, month + 1, 0);
+                const today = getTodayString();
+                const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+                let gridHTML = dayNames.map(name => `<div class="calendar-day-name">${name}</div>`).join('');
+                
+                const startDay = (firstDayOfMonth.getDay() + 6) % 7; // Monday is 0
+
+                for (let i = 0; i < startDay; i++) {
+                    gridHTML += '<div class="calendar-date-cell"></div>';
+                }
+
+                for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
+                    const dateString = formatDate(new Date(year, month, d));
+                    const reviewData = getReviewsForDate(dateString);
+                    
+                    let classes = 'calendar-date-cell';
+                    let attributes = `title="${dateString}"`; 
+                    
+                    if (dateString === today) classes += ' today';
+                    if (reviewData.isCompleted) classes += ' completed';
+                    
+                    if (reviewData.reviewsDueCount > 0) classes += ' due-revision';
+                    if (reviewData.reviewsDueCount > 5) classes += ' due-intensity-high';
+
+                    gridHTML += `<div class="${classes}" ${attributes}>${d}</div>`;
+                }
+                
+                calGrid.innerHTML = gridHTML;
+            };
+
+            const navigateCalendar = (direction) => {
+                if (direction === 'prev') {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                } else if (direction === 'next') {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                }
+                renderCalendar(currentCalendarDate);
+            };
+            
+            const showDailySchedule = (dateString) => {
+                const dueTasks = [];
+                const today = getTodayString();
+                
+                scheduleSummaryBanner.style.display = 'none';
+                const logEntry = dailyLog.find(entry => entry.date === dateString);
+                if (logEntry) {
+                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: Logged <strong>${logEntry.minutes}</strong> minutes. <strong>${logEntry.reviewsCompleted}</strong> reviews completed.`;
+                    scheduleSummaryBanner.style.display = 'block';
+                } else if (dateString < today) {
+                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: <strong>0</strong> minutes logged. <strong>0</strong> reviews completed.`;
+                    scheduleSummaryBanner.style.display = 'block';
+                }
+
+                sessions.forEach(session => {
+                    if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
+                        dueTasks.push({
                             sessionId: session.id,
                             subject: session.subject || "Uncategorized",
                             topic: session.topic,
-                            reviewDate: reviewDate
-                        };
-                        if (reviewDate === today) {
-                            todayTasks.push(task);
-                        } else if (reviewDate < today) {
-                            task.isOverdue = true;
-                            const daysOverdue = (new Date(today) - new Date(reviewDate)) / (1000 * 60 * 60 * 24);
-                            task.isCritical = daysOverdue > 30;
-                            backlogTasks.push(task);
-                        }
+                            reviewDate: dateString,
+                            isOverdue: dateString < today 
+                        });
                     }
                 });
-            });
-            
-            renderTodayReviews(todayTasks);
-            renderBacklogReviews(backlogTasks);
-            renderAllSessions(); // This now reads from the filter itself
-            updateGlobalUIElements(todayTasks, backlogTasks);
-            
-            if (document.getElementById('tab-attendance').classList.contains('active')) {
-                 renderCalendar(currentCalendarDate);
-            }
-            
-            if (document.getElementById('tab-syllabus').classList.contains('active')) {
-                 renderSyllabus();
-            }
-        };
-        
-        const createReviewItemHTML = (task) => {
-            // This HTML is now wrapped by a div with data-session-id
-            return `
-                <div class="review-item-info">
-                    <strong>${task.subject}</strong>
-                    <div class="topic-name">${task.topic}</div>
-                    <div class="review-date">
-                        Due: ${task.reviewDate}
-                        ${task.isOverdue ? '<span style="color: var(--overdue-color); font-weight: 600;"> (Overdue)</span>' : ''}
-                    </div>
-                </div>
-                <div class="review-item-actions">
-                    <button class="details-btn" data-session-id="${task.sessionId}">&#8942;</button>
-                    <input type="checkbox" data-session-id="${task.sessionId}" data-review-date="${task.reviewDate}">
-                </div>
-            `;
-        };
 
-        const renderTodayReviews = (tasks) => {
-            tasks.sort((a, b) => a.subject.localeCompare(b.subject));
-            // MODIFIED: Added data-session-id to div
-            todayReviewsContainer.innerHTML = tasks.length === 0 
-                ? '<p class="empty-state">No reviews due today. Great job! 🎉</p>' 
-                : tasks.map(task => `<div class="review-item" data-session-id="${task.sessionId}">${createReviewItemHTML(task)}</div>`).join('');
-        };
-        
-        const renderBacklogReviews = (tasks) => {
-            const criticalTasks = tasks.filter(t => t.isCritical);
-            const standardTasks = tasks.filter(t => !t.isCritical);
-            
-            criticalTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
-            standardTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
-            
-            // MODIFIED: Added data-session-id to div
-            backlogCriticalContainer.innerHTML = criticalTasks.length === 0 
-                ? '<p class="empty-state" style="padding: 10px; border: none;">No critical items. Phew!</p>' 
-                : criticalTasks.map(task => `<div class="review-item overdue critical" data-session-id="${task.sessionId}">${createReviewItemHTML(task)}</div>`).join('');
-            
-            // MODIFIED: Added data-session-id to div
-            backlogStandardContainer.innerHTML = standardTasks.length === 0 
-                ? '<p class="empty-state" style="padding: 10px; border: none;">No standard backlog items.</p>' 
-                : standardTasks.map(task => `<div class="review-item overdue" data-session-id="${task.sessionId}">${createReviewItemHTML(task)}</div>`).join('');
-        };
-        
-        const renderAllSessions = () => {
-            populateSubjectFilter();
-            const selectedSubject = subjectFilterDropdown.value;
-            
-            allSessionsContainer.innerHTML = '';
-            if (sessions.length === 0) {
-                allSessionsContainer.innerHTML = '<p class="empty-state">No study sessions logged yet. Add one to get started!</p>';
-                return;
-            }
-
-            const subjectGroups = {};
-            sessions.forEach(session => {
-                const subject = (session.subject || "Uncategorized").trim();
-                if (!subjectGroups[subject]) { subjectGroups[subject] = []; }
-                subjectGroups[subject].push(session);
-            });
-
-            const sortedSubjectNames = Object.keys(subjectGroups).sort((a, b) => {
-                if (a === "Uncategorized") return 1;
-                if (b === "Uncategorized") return -1;
-                return a.localeCompare(b);
-            });
-
-            let sessionsFound = false;
-            sortedSubjectNames.forEach(subjectName => {
-                if (selectedSubject !== 'all' && subjectName !== selectedSubject) {
-                    return;
-                }
-                sessionsFound = true;
-
-                const sessionsInSubject = subjectGroups[subjectName];
-                const totalInSubject = sessionsInSubject.length;
-                const masteredInSubject = sessionsInSubject.filter(s => 
-                    s.completedReviews.length === s.reviewDates.length && s.reviewDates.length > 0
-                ).length;
+                scheduleModalDate.textContent = `Scheduled Reviews for ${dateString}`;
                 
-                const subjectHeader = document.createElement('h3');
-                subjectHeader.className = 'subject-group-header';
-                subjectHeader.innerHTML = `${subjectName} <span class="subject-scoreboard">${masteredInSubject} / ${totalInSubject} Mastered</span>`;
-                allSessionsContainer.appendChild(subjectHeader);
-
-                subjectGroups[subjectName].sort((a, b) => (b.id) - (a.id)).forEach(session => {
-                    const card = document.createElement('div');
-                    card.className = 'session-card';
-
-                    const completedCount = session.completedReviews.length;
-                    const totalCount = session.reviewDates.length;
-                    const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-                    
-                    const isMastered = completedCount === REVIEW_INTERVALS.length;
-                    if (isMastered) {
-                        card.classList.add('mastered');
-                    }
-
-                    const sortedCompleted = [...session.completedReviews].sort((a, b) => new Date(a) - new Date(b));
-
-                    const completedListHTML = sortedCompleted.map(date => {
-                        return `<li>
-                                    <span>✅ ${date}</span>
-                                    <button class="undo-btn" data-session-id="${session.id}" data-review-date="${date}">Undo</button>
-                                </li>`;
-                    }).join('');
-
-                    card.innerHTML = `
-                        <h3>${session.topic}</h3>
-                        <p><strong>Started:</strong> ${session.initialDate}</p>
-                        ${session.notes ? `<p><strong>Notes:</strong>\n${session.notes.substring(0, 100) + (session.notes.length > 100 ? '...' : '')}</p>` : ''}
-                        
-                        <h4>Mastery Level:</h4> 
-                        <div class="progress-bar">
-                            <div class="progress-bar-inner" style="width: ${progressPercent}%;"></div>
-                        </div>
-                        
-                        ${completedListHTML.length > 0 ? '<h5>Completed Reviews:</h5>' : ''}
-                        <ul class="completed-reviews-list">
-                            ${completedListHTML}
-                        </ul>
-                        
-                        <div class="session-footer">
-                            <span class="progress-text">Progress: ${completedCount} / ${totalCount}</span>
-                            <div>
-                                <button class="edit-btn" data-session-id="${session.id}">Edit</button>
-                                <button class="delete-btn" data-session-id="${session.id}">Delete</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    const masteryTitle = card.querySelector('h4');
-                    masteryTitle.textContent = `Mastery: ${completedCount} / ${totalCount} Levels`;
-                    
-                    allSessionsContainer.appendChild(card);
-                });
-            });
-            
-            if (!sessionsFound && selectedSubject !== 'all') {
-                 allSessionsContainer.innerHTML = `<p class="empty-state">No sessions found for the subject "${selectedSubject}".</p>`;
-            }
-        };
-
-        // --- CORE EVENT HANDLERS (Now async for Firebase) ---
-        
-        const handleFormSubmit = async (e) => {
-            e.preventDefault();
-            if (!userId) {
-                alert("Not signed in. Please reload.");
-                return;
-            }
-            
-            const subjectName = addSessionSubjectSelect.options[addSessionSubjectSelect.selectedIndex].text;
-            const syllabusTopicId = addSessionTopicSelect.value;
-            const topicName = addSessionTopicSelect.options[addSessionTopicSelect.selectedIndex].text;
-            
-            if (!addSessionSubjectSelect.value || !syllabusTopicId || !dateInput.value) { 
-                alert("Please select a subject, topic, and start date.");
-                return; 
-            }
-            
-            // Create a new session with unique ID
-            const newSession = {
-                id: Date.now().toString(), // Use timestamp as ID
-                subject: subjectName, 
-                topic: topicName,    
-                syllabusTopicId: syllabusTopicId,
-                notes: notesInput.value.trim(),
-                fileLink: fileLinkInput.value.trim(),
-                initialDate: dateInput.value,
-                reviewDates: calculateReviewDates(dateInput.value),
-                completedReviews: []
+                if (dueTasks.length > 0) {
+                    scheduleEmptyMessage.textContent = `Total ${dueTasks.length} task(s) found. Check the boxes to complete them.`;
+                    dueTasks.sort((a, b) => a.subject.localeCompare(b.subject));
+                    scheduleModalContent.innerHTML = dueTasks.map(task => 
+                        `<div class="review-item ${task.isOverdue ? 'overdue' : ''}">
+                            ${createReviewItemHTML(task)}
+                        </div>`
+                    ).join('');
+                } else {
+                    scheduleModalContent.innerHTML = '<p class="empty-state" style="padding: 10px; border: 1px dashed var(--border-color);">No scheduled revisions for this date.</p>';
+                    scheduleEmptyMessage.textContent = '';
+                }
+                
+                showModal(scheduleModal);
             };
 
-            // Save to Realtime Database
-            try {
-                await saveSession(newSession);
+            // --- RENDER FUNCTIONS (UI updates) ---
+            const updateGlobalUIElements = (todayTasks, backlogTasks) => {
+                let totalReviews = 0;
+                let completedReviews = 0;
+                sessions.forEach(session => {
+                    totalReviews += session.reviewDates.length;
+                    completedReviews += session.completedReviews.length;
+                });
+                const globalProgressPercent = totalReviews > 0 ? (completedReviews / totalReviews) * 100 : 0;
                 
-                console.log("Realtime DB: New session added");
+                globalStatsText.textContent = `Total Progress: ${completedReviews} / ${totalReviews} Reviews`;
+                globalProgressBarInner.style.width = `${globalProgressPercent}%`;
+                
+                todayCountBubble.textContent = todayTasks.length;
+                todayCountBubble.style.display = todayTasks.length > 0 ? 'grid' : 'none';
+                
+                backlogCountBubble.textContent = backlogTasks.length;
+                backlogCountBubble.style.display = backlogTasks.length > 0 ? 'grid' : 'none';
+                
+                const totalMinutes = dailyLog.reduce((sum, entry) => sum + (entry.minutes || 0), 0);
+                const totalHours = (totalMinutes / 60).toFixed(1);
+                
+                streakCounter.textContent = `🔥 Streak: ${streakState.streakCount}`;
+                dailyGoalCounter.textContent = `Reviews Today: ${streakState.reviewsToday} / ${DAILY_GOAL}`;
+                totalTimeCounter.textContent = `🕒 Total Study Time: ${totalHours} Hours`;
+                
+                const today = getTodayString();
+                todayDateLog.textContent = today;
+                const todayLogEntry = dailyLog.find(entry => entry.date === today);
+                loggedTimeToday.textContent = todayLogEntry ? todayLogEntry.minutes : 0;
+            };
+
+            const renderApp = () => {
+                const today = getTodayString();
+                let todayTasks = [];
+                let backlogTasks = [];
+
+                sessions.forEach(session => {
+                    session.reviewDates.forEach(reviewDate => {
+                        if (!session.completedReviews.includes(reviewDate)) {
+                            const task = {
+                                sessionId: session.id,
+                                subject: session.subject || "Uncategorized",
+                                topic: session.topic,
+                                reviewDate: reviewDate
+                            };
+                            if (reviewDate === today) {
+                                todayTasks.push(task);
+                            } else if (reviewDate < today) {
+                                task.isOverdue = true;
+                                const daysOverdue = (new Date(today) - new Date(reviewDate)) / (1000 * 60 * 60 * 24);
+                                task.isCritical = daysOverdue > 30;
+                                backlogTasks.push(task);
+                            }
+                        }
+                    });
+                });
+                
+                renderTodayReviews(todayTasks);
+                renderBacklogReviews(backlogTasks);
+                renderAllSessions(); 
+                updateGlobalUIElements(todayTasks, backlogTasks);
+                updateSubjectDatalist();
+                
+                if (document.getElementById('tab-attendance').classList.contains('active')) {
+                     renderCalendar(currentCalendarDate);
+                }
+            };
+            
+            const createReviewItemHTML = (task) => {
+                return `
+                    <div class="review-item-info">
+                        <strong>${task.subject}</strong>
+                        <div class="topic-name">${task.topic}</div>
+                        <div class="review-date">
+                            Due: ${task.reviewDate}
+                            ${task.isOverdue ? '<span style="color: var(--overdue-color); font-weight: 600;"> (Overdue)</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="review-item-actions">
+                        <button class="details-btn" data-session-id="${task.sessionId}">&#8942;</button>
+                        <input type="checkbox" data-session-id="${task.sessionId}" data-review-date="${task.reviewDate}">
+                    </div>
+                `;
+            };
+
+            const renderTodayReviews = (tasks) => {
+                tasks.sort((a, b) => a.subject.localeCompare(b.subject));
+                todayReviewsContainer.innerHTML = tasks.length === 0 
+                    ? '<p class="empty-state">No reviews due today. Great job! 🎉</p>' 
+                    : tasks.map(task => `<div class="review-item">${createReviewItemHTML(task)}</div>`).join('');
+            };
+            
+            const renderBacklogReviews = (tasks) => {
+                const criticalTasks = tasks.filter(t => t.isCritical);
+                const standardTasks = tasks.filter(t => !t.isCritical);
+                
+                criticalTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
+                standardTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
+                
+                backlogCriticalContainer.innerHTML = criticalTasks.length === 0 
+                    ? '<p class="empty-state" style="padding: 10px; border: none;">No critical items. Phew!</p>' 
+                    : criticalTasks.map(task => `<div class="review-item overdue critical">${createReviewItemHTML(task)}</div>`).join('');
+                
+                backlogStandardContainer.innerHTML = standardTasks.length === 0 
+                    ? '<p class="empty-state" style="padding: 10px; border: none;">No standard backlog items.</p>' 
+                    : standardTasks.map(task => `<div class="review-item overdue">${createReviewItemHTML(task)}</div>`).join('');
+            };
+            
+            // To handle subject filtering
+            const renderAllSessions = () => {
+                // 1. Populate/update the filter dropdown first
+                populateSubjectFilter();
+                
+                // 2. Get the currently selected subject
+                const selectedSubject = subjectFilterDropdown.value;
+                
+                allSessionsContainer.innerHTML = '';
+                if (sessions.length === 0) {
+                    allSessionsContainer.innerHTML = '<p class="empty-state">No study sessions logged yet. Add one to get started!</p>';
+                    return;
+                }
+
+                const subjectGroups = {};
+                sessions.forEach(session => {
+                    const subject = (session.subject || "Uncategorized").trim();
+                    if (!subjectGroups[subject]) { subjectGroups[subject] = []; }
+                    subjectGroups[subject].push(session);
+                });
+
+                const sortedSubjectNames = Object.keys(subjectGroups).sort((a, b) => {
+                    if (a === "Uncategorized") return 1;
+                    if (b === "Uncategorized") return -1;
+                    return a.localeCompare(b);
+                });
+
+                let sessionsFound = false;
+                sortedSubjectNames.forEach(subjectName => {
+                    // 3. Check if this subject should be rendered
+                    if (selectedSubject !== 'all' && subjectName !== selectedSubject) {
+                        return; // Skip this subject
+                    }
+                    sessionsFound = true;
+
+                    const sessionsInSubject = subjectGroups[subjectName];
+                    const totalInSubject = sessionsInSubject.length;
+                    const masteredInSubject = sessionsInSubject.filter(s => 
+                        s.completedReviews.length === s.reviewDates.length && s.reviewDates.length > 0
+                    ).length;
+                    
+                    const subjectHeader = document.createElement('h3');
+                    subjectHeader.className = 'subject-group-header';
+                    subjectHeader.innerHTML = `${subjectName} <span class="subject-scoreboard">${masteredInSubject} / ${totalInSubject} Mastered</span>`;
+                    allSessionsContainer.appendChild(subjectHeader);
+
+                    subjectGroups[subjectName].sort((a, b) => b.id - a.id).forEach(session => {
+                        const card = document.createElement('div');
+                        card.className = 'session-card';
+
+                        const completedCount = session.completedReviews.length;
+                        const totalCount = session.reviewDates.length;
+                        const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+                        
+                        const isMastered = completedCount === REVIEW_INTERVALS.length;
+                        if (isMastered) {
+                            card.classList.add('mastered');
+                        }
+
+                        const sortedCompleted = [...session.completedReviews].sort((a, b) => new Date(a) - new Date(b));
+
+                        const completedListHTML = sortedCompleted.map(date => {
+                            return `<li>
+                                        <span>✅ ${date}</span>
+                                        <button class="undo-btn" data-session-id="${session.id}" data-review-date="${date}">Undo</button>
+                                    </li>`;
+                        }).join('');
+
+                        card.innerHTML = `
+                            <h3>${session.topic}</h3>
+                            <p><strong>Started:</strong> ${session.initialDate}</p>
+                            ${session.notes ? `<p><strong>Notes:</strong>\n${session.notes.substring(0, 100) + (session.notes.length > 100 ? '...' : '')}</p>` : ''}
+                            
+                            <h4>Mastery Level:</h4> 
+                            <div class="progress-bar">
+                                <div class="progress-bar-inner" style="width: ${progressPercent}%;"></div>
+                            </div>
+                            
+                            ${completedListHTML.length > 0 ? '<h5>Completed Reviews:</h5>' : ''}
+                            <ul class="completed-reviews-list">
+                                ${completedListHTML}
+                            </ul>
+                            
+                            <div class="session-footer">
+                                <span class="progress-text">Progress: ${completedCount} / ${totalCount}</span>
+                                <div>
+                                    <button class="edit-btn" data-session-id="${session.id}">Edit</button>
+                                    <button class="delete-btn" data-session-id="${session.id}">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        const masteryTitle = card.querySelector('h4');
+                        masteryTitle.textContent = `Mastery: ${completedCount} / ${totalCount} Levels`;
+                        
+                        allSessionsContainer.appendChild(card);
+                    });
+                });
+                
+                if (!sessionsFound && selectedSubject !== 'all') {
+                     allSessionsContainer.innerHTML = `<p class="empty-state">No sessions found for the subject "${selectedSubject}".</p>`;
+                }
+            };
+
+            // --- CORE EVENT HANDLERS ---
+            const handleFormSubmit = (e) => {
+                e.preventDefault();
+                const subject = subjectInput.value.trim();
+                const topic = topicInput.value.trim();
+                if (!subject || !topic || !dateInput.value) { return; }
+                
+                const newSession = {
+                    id: Date.now(),
+                    subject: subject,
+                    topic: topic,
+                    notes: notesInput.value.trim(),
+                    fileLink: fileLinkInput.value.trim(),
+                    initialDate: dateInput.value,
+                    reviewDates: calculateReviewDates(dateInput.value),
+                    completedReviews: []
+                };
+
+                sessions.push(newSession);
+                saveSessions();
+                renderApp();
                 sessionForm.reset();
-                addSessionTopicSelect.innerHTML = '<option value="">-- Select a Subject First --</option>'; // Reset topic dropdown
                 dateInput.value = getTodayString();
                 document.querySelector('.nav-tab[data-tab="all"]').click();
-            } catch (err) {
-                console.error("Error adding session:", err);
-                alert("Failed to add session. See console for details.");
-            }
-        };
-        
-        const handleEditFormSubmit = async (e) => {
-            e.preventDefault();
-            if (!userId) return;
+            };
             
-            const sessionId = editSessionId.value;
-            const session = sessions.find(s => s.id === sessionId);
-            if (!session) return;
-            
-            const oldInitialDate = session.initialDate;
-            const newInitialDate = editInitialDate.value;
-            
-            // Update local object
-            session.subject = editSubject.value.trim();
-            session.topic = editTopic.value.trim();
-            session.notes = editNotes.value.trim();
-            session.fileLink = editFileLink.value.trim();
-            session.initialDate = newInitialDate;
-            
-            if (oldInitialDate !== newInitialDate) {
-                session.reviewDates = calculateReviewDates(newInitialDate);
-            }
-            
-            try {
-                await saveSession(session);
-                console.log("Realtime DB: Session updated");
+            // Handle Edit Form Submit
+            const handleEditFormSubmit = (e) => {
+                e.preventDefault();
+                
+                const sessionId = parseInt(editSessionId.value, 10);
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
+                
+                const oldInitialDate = session.initialDate;
+                const newInitialDate = editInitialDate.value;
+                
+                // Update session properties
+                session.subject = editSubject.value.trim();
+                session.topic = editTopic.value.trim();
+                session.notes = editNotes.value.trim();
+                session.fileLink = editFileLink.value.trim();
+                session.initialDate = newInitialDate;
+                
+                // Check if start date changed, if so, recalculate reviews
+                if (oldInitialDate !== newInitialDate) {
+                    session.reviewDates = calculateReviewDates(newInitialDate);
+                    // Completed reviews are kept, which is a reasonable approach for editing
+                }
+                
+                saveSessions();
+                renderApp();
                 closeModal(editModal);
-            } catch (err) {
-                console.error("Error updating session:", err);
-            }
-        };
-        
-        const handleTimeLog = () => {
-            const minutes = parseInt(dailyTimeInput.value, 10);
-            if (isNaN(minutes) || minutes <= 0) {
-                alert('Please enter a valid number of minutes.');
-                return;
-            }
+            };
             
-            const today = getTodayString();
-            let logEntry = dailyLog.find(entry => entry.date === today);
-            
-            if (logEntry) {
-                logEntry.minutes += minutes;
-            } else {
-                logEntry = {
-                    date: today,
-                    minutes: minutes,
-                    reviewsCompleted: streakState.reviewsToday
-                };
-                dailyLog.push(logEntry);
-            }
-            
-            dailyTimeInput.value = '';
-            saveDailyLog(); // Async save
-            // renderApp() will be called by onValue, but we can call it locally
-            renderApp();
-        };
-
-        const handleReviewCompletion = async (e) => {
-            if (!userId) return;
-            
-            const checkbox = e.target;
-            const sessionId = String(checkbox.dataset.sessionId);
-            const reviewDate = checkbox.dataset.reviewDate;
-            const session = sessions.find(s => s.id === sessionId);
-            if (!session) return;
-            
-            // Optimistically update local state
-            if (checkbox.checked) {
-                if (!session.completedReviews.includes(reviewDate)) {
-                    session.completedReviews.push(reviewDate);
+            const handleTimeLog = () => {
+                const minutes = parseInt(dailyTimeInput.value, 10);
+                if (isNaN(minutes) || minutes <= 0) {
+                    alert('Please enter a valid number of minutes.');
+                    return;
                 }
-            } else {
-                session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
-            }
-            
-            // Save session update to Realtime Database
-            try {
-                await saveSession(session);
-                console.log("Realtime DB: Review completion updated");
-            } catch (err) {
-                console.error("Error updating review completion:", err);
-                // TODO: Revert optimistic update?
-            }
-            
-            // Update streak/log state
-            const today = getTodayString();
-            if (reviewDate === today) {
-                const oldReviewsToday = streakState.reviewsToday;
                 
-                if (checkbox.checked) {
-                    streakState.reviewsToday++;
+                const today = getTodayString();
+                let logEntry = dailyLog.find(entry => entry.date === today);
+                
+                if (logEntry) {
+                    logEntry.minutes += minutes;
                 } else {
-                    streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
+                    logEntry = {
+                        date: today,
+                        minutes: minutes,
+                        reviewsCompleted: streakState.reviewsToday
+                    };
+                    dailyLog.push(logEntry);
                 }
                 
-                if (oldReviewsToday < DAILY_GOAL && streakState.reviewsToday >= DAILY_GOAL) {
-                    if (streakState.streakCount === 0) {
-                        streakState.streakCount = 1;
+                dailyTimeInput.value = '';
+                saveDailyLog();
+                renderApp();
+            };
+
+            const handleReviewCompletion = (e) => {
+                const checkbox = e.target;
+                const sessionId = parseInt(checkbox.dataset.sessionId, 10);
+                const reviewDate = checkbox.dataset.reviewDate;
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
+
+                if (checkbox.checked) {
+                    if (!session.completedReviews.includes(reviewDate)) {
+                        session.completedReviews.push(reviewDate);
+                    }
+                } else {
+                    session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
+                }
+                saveSessions();
+                
+                const today = getTodayString();
+                if (reviewDate === today) {
+                    const oldReviewsToday = streakState.reviewsToday;
+                    
+                    if (checkbox.checked) {
+                        streakState.reviewsToday++;
+                    } else {
+                        streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
+                    }
+                    
+                    if (oldReviewsToday < DAILY_GOAL && streakState.reviewsToday >= DAILY_GOAL) {
+                        if (streakState.streakCount === 0) {
+                            streakState.streakCount = 1;
+                        }
                     }
                 }
-            }
-            
-            let logEntry = dailyLog.find(entry => entry.date === today);
-            if (logEntry) {
-                logEntry.reviewsCompleted = streakState.reviewsToday;
-            } else if (reviewDate === today || e.target.closest('#tab-today')) {
-                dailyLog.push({
-                    date: today,
-                    minutes: 0,
-                    reviewsCompleted: streakState.reviewsToday
-                });
-            }
-            
-            // Save streak and log
-            saveStreakState();
-            saveDailyLog();
-            
-            // renderApp(); // onValue will handle this
-            
-            if(scheduleModal.style.display === 'block' && scheduleModalDate.textContent.includes(reviewDate)) {
-                showDailySchedule(reviewDate); 
-            }
-        };
-        
-        const handleUndoCompletion = async (e) => {
-            if (!userId) return;
-            
-            const sessionId = String(e.target.dataset.sessionId);
-            const reviewDate = e.target.dataset.reviewDate;
-            const session = sessions.find(s => s.id === sessionId);
-            if (!session) return;
-            
-            // Optimistically update state
-            session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
-            
-            // Save to Realtime Database
-            try {
-                await saveSession(session);
-                console.log("Realtime DB: Review undone");
-            } catch (err) {
-                console.error("Error undoing review:", err);
-            }
-            
-            // Update streak/log
-            const today = getTodayString();
-            if (reviewDate === today) {
-                streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
                 
                 let logEntry = dailyLog.find(entry => entry.date === today);
                 if (logEntry) {
                     logEntry.reviewsCompleted = streakState.reviewsToday;
+                } else if (reviewDate === today || e.target.closest('#tab-today')) {
+                    dailyLog.push({
+                        date: today,
+                        minutes: 0,
+                        reviewsCompleted: streakState.reviewsToday
+                    });
                 }
+                
                 saveStreakState();
                 saveDailyLog();
-            }
-            
-            // renderApp(); // onValue will handle this
-        };
-
-        const handleDeleteSession = async (e) => {
-            if (!userId) return;
-            
-            const button = e.target.closest('.delete-btn');
-            if (!button) return;
-            
-            if (!confirm('Are you sure you want to delete this entire session? This action cannot be undone.')) return;
-            
-            const sessionId = String(button.dataset.sessionId);
-            
-            try {
-                await deleteSession(sessionId);
-                console.log("Realtime DB: Session deleted");
-                // renderApp() will be called by onValue
-            } catch (err) {
-                console.error("Error deleting session:", err);
-            }
-        };
-
-        // --- Data Management (Export/Import) Handlers ---
-        const downloadJSON = (data, filename) => {
-            const jsonString = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
-
-        const handleExportData = () => {
-            const exportData = {
-                sessions: sessions,
-                dailyLog: dailyLog,
-                streakState: streakState,
-                syllabusProgress: syllabusProgress
-            };
-            const today = getTodayString();
-            downloadJSON(exportData, `study_tracker_data_backup_${today}.json`);
-        };
-
-        const openDataManagement = () => {
-            importFileInput.value = '';
-            showModal(dataManagementModal);
-        };
-
-        const handleImportData = async () => {
-            if (!userId) {
-                alert("Error: Not authenticated. Please reload.");
-                return;
-            }
-            
-            const file = importFileInput.files[0];
-            if (!file) {
-                alert('Please select a JSON file to import first.');
-                return;
-            }
-
-            if (!confirm('Importing will overwrite ALL of your current Firebase data, logs, and streaks. Are you absolutely sure?')) {
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const dataString = event.target.result;
-                try {
-                    const importedData = JSON.parse(dataString);
-                    let dataToImport;
-
-                    if (Array.isArray(importedData)) { // Old format compatibility
-                        dataToImport = {
-                            sessions: importedData,
-                            dailyLog: [],
-                            streakState: { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 },
-                            syllabusProgress: {}
-                        };
-                    } else if (importedData.sessions && importedData.dailyLog && importedData.streakState) { // New format
-                        dataToImport = {
-                            sessions: importedData.sessions,
-                            dailyLog: importedData.dailyLog,
-                            streakState: importedData.streakState,
-                            syllabusProgress: importedData.syllabusProgress || {}
-                        };
-                    } else {
-                        throw new Error('File structure is invalid or corrupted.');
-                    }
-                    
-                    // Clear existing data first
-                    const userBaseRef = fb.ref(db, `artifacts/${appId}/users/${userId}`);
-                    await fb.remove(userBaseRef);
-                    
-                    // Save new data
-                    const sessionsRef = fb.ref(db, `artifacts/${appId}/users/${userId}/sessions`);
-                    const dailyLogRef = fb.ref(db, `artifacts/${appId}/users/${userId}/dailyLog`);
-                    const streakRef = fb.ref(db, `artifacts/${appId}/users/${userId}/streakState`);
-                    const syllabusRef = fb.ref(db, `artifacts/${appId}/users/${userId}/syllabusProgress`);
-                    
-                    // Save sessions individually
-                    const savePromises = dataToImport.sessions.map(session => {
-                        const sessionRef = fb.ref(db, `artifacts/${appId}/users/${userId}/sessions/${session.id}`);
-                        return fb.set(sessionRef, session);
-                    });
-                    
-                    // Save other data
-                    savePromises.push(fb.set(dailyLogRef, dataToImport.dailyLog));
-                    savePromises.push(fb.set(streakRef, dataToImport.streakState));
-                    savePromises.push(fb.set(syllabusRef, dataToImport.syllabusProgress));
-                    
-                    await Promise.all(savePromises);
-
-                    alert('Data imported successfully! Data will now reload.');
-                    closeModal(dataManagementModal);
-                    // Data will reload via onValue listeners
-                    
-                } catch (error) {
-                    console.error("Import Error:", error);
-                    alert(`Import failed. The file is not a valid JSON file. Error: ${error.message}`);
-                }
-            };
-            
-            reader.onerror = () => {
-                alert('Error reading file. Please try again.');
-            };
-
-            reader.readAsText(file);
-        };
-        
-        const handleClearData = async () => {
-            if (!userId) {
-                alert("Error: Not authenticated. Please reload.");
-                return;
-            }
-            
-            if (confirm('DANGER! This will delete ALL study data, logs, and streaks from Firebase permanently. Are you absolutely sure?')) {
                 
-                try {
-                    const userBaseRef = fb.ref(db, `artifacts/${appId}/users/${userId}`);
-                    await fb.remove(userBaseRef);
-                    
-                    // Data will clear via onValue
-                    closeModal(dataManagementModal);
-                    alert('All Firebase data has been cleared.');
-
-                } catch (err) {
-                    console.error("Error clearing data:", err);
-                    alert("Failed to clear data. See console.");
-                }
-            }
-        };
-        
-        // --- Syllabus Tab Listeners ---
-        function addSyllabusListeners() {
-            const syllabusTab = document.getElementById('tab-syllabus');
-            
-            syllabusTab.addEventListener('input', (e) => {
-                
-                if (e.target.classList.contains('syllabus-percent-input')) {
-                    const itemId = e.target.dataset.itemId;
-                    if (!syllabusProgress[itemId]) syllabusProgress[itemId] = {};
-                    
-                    let percent = parseInt(e.target.value, 10);
-                    if (isNaN(percent)) percent = 0;
-                    if (percent > 100) percent = 100;
-                    if (percent < 0) percent = 0;
-                    
-                    syllabusProgress[itemId].percent = percent;
-                    saveSyllabusProgress(); // Async save
-                    
-                    // Re-render locally for instant feedback
-                    renderSyllabus();
-                    
-                    // Restore focus
-                    const newRenderedInput = document.querySelector(`.syllabus-percent-input[data-item-id="${itemId}"]`);
-                    if(newRenderedInput) {
-                        newRenderedInput.focus();
-                        newRenderedInput.selectionStart = newRenderedInput.selectionEnd = newRenderedInput.value.length;
-                    }
-                }
-                
-                if (e.target.classList.contains('syllabus-page-input')) {
-                    const itemId = e.target.dataset.itemId;
-                    const inputType = e.target.dataset.type;
-                    let value = parseInt(e.target.value, 10);
-
-                    if (isNaN(value)) value = 0;
-                    if (value < 0) value = 0;
-                    if(inputType === 'total' && value === 0) value = 1; // Total pages can't be 0
-                    
-                    if (!syllabusProgress[itemId]) syllabusProgress[itemId] = {};
-                    
-                    if (inputType === 'complete') {
-                        syllabusProgress[itemId].pagesComplete = value;
-                    } else if (inputType === 'total') {
-                        syllabusProgress[itemId].totalPages = value;
-                    }
-                    
-                    saveSyllabusProgress(); // Async save
-                    renderSyllabus(); // Re-render locally
-
-                    // Restore focus
-                    const newRenderedInput = document.querySelector(`.syllabus-page-input[data-item-id="${itemId}"][data-type="${inputType}"]`);
-                     if(newRenderedInput) {
-                        newRenderedInput.focus();
-                        newRenderedInput.selectionStart = newRenderedInput.selectionEnd = newRenderedInput.value.length;
-                    }
-                }
-            });
-        }
-        
-        // --- REALTIME DATABASE LISTENER SETUP ---
-        function setupRealtimeDatabaseListeners(uid) {
-            const userBasePath = `artifacts/${appId}/users/${uid}`;
-            
-            // 1. Sessions Listener
-            const sessionsRef = fb.ref(db, `${userBasePath}/sessions`);
-            unsubSessions = fb.onValue(sessionsRef, (snapshot) => {
-                const data = snapshot.val();
-                sessions = data ? Object.values(data) : [];
-                console.log("Realtime DB: sessions updated", sessions);
                 renderApp();
-            }, err => console.error("Sessions onValue error", err));
-
-            // 2. Daily Log Listener
-            const logRef = fb.ref(db, `${userBasePath}/dailyLog`);
-            unsubLog = fb.onValue(logRef, (snapshot) => {
-                dailyLog = snapshot.val() || [];
-                console.log("Realtime DB: dailyLog updated", dailyLog);
-                renderApp();
-            }, err => console.error("DailyLog onValue error", err));
-
-            // 3. Streak State Listener
-            const streakRef = fb.ref(db, `${userBasePath}/streakState`);
-            unsubStreak = fb.onValue(streakRef, (snapshot) => {
-                const loadedState = snapshot.val() || {};
                 
-                // Run streak logic on load
+                if(scheduleModal.style.display === 'block' && scheduleModalDate.textContent.includes(reviewDate)) {
+                    showDailySchedule(reviewDate); 
+                }
+            };
+            
+            const handleUndoCompletion = (e) => {
+                const sessionId = parseInt(e.target.dataset.sessionId, 10);
+                const reviewDate = e.target.dataset.reviewDate;
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
+                
+                session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
+                saveSessions();
+                
                 const today = getTodayString();
-                const yesterday = formatDate(new Date(Date.now() - 86400000));
+                if (reviewDate === today) {
+                    streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
+                    
+                    let logEntry = dailyLog.find(entry => entry.date === today);
+                    if (logEntry) {
+                        logEntry.reviewsCompleted = streakState.reviewsToday;
+                    }
+                    saveStreakState();
+                    saveDailyLog();
+                }
+                
+                renderApp();
+            };
 
-                streakState = {
-                    streakCount: loadedState.streakCount || 0,
-                    lastVisit: loadedState.lastVisit || null,
-                    reviewsToday: loadedState.reviewsToday || 0
+            const handleDeleteSession = (e) => {
+                const button = e.target.closest('.delete-btn');
+                if (!button) return;
+                
+                if (!confirm('Are you sure you want to delete this entire session? This action cannot be undone.')) return;
+                
+                const sessionId = parseInt(button.dataset.sessionId, 10);
+                sessions = sessions.filter(s => s.id !== sessionId);
+                saveSessions();
+                renderApp();
+            };
+
+            // --- Data Management (Export/Import) Handlers ---
+
+            // Helper to download JSON file
+            const downloadJSON = (data, filename) => {
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Export logic
+            const handleExportData = () => {
+                const exportData = {
+                    sessions: sessions,
+                    dailyLog: dailyLog,
+                    streakState: streakState
+                };
+                const today = getTodayString();
+                downloadJSON(exportData, `study_tracker_data_backup_${today}.json`);
+            };
+
+            const openDataManagement = () => {
+                // Reset file input when opening modal
+                importFileInput.value = '';
+                showModal(dataManagementModal);
+            };
+
+            // Import logic
+            const handleImportData = () => {
+                const file = importFileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select a JSON file to import first.');
+                    return;
+                }
+
+                if (!confirm('Importing will overwrite ALL of your current study data, logs, and streaks. Are you absolutely sure?')) {
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const dataString = event.target.result;
+                    try {
+                        const importedData = JSON.parse(dataString);
+                        
+                        if (Array.isArray(importedData)) {
+                            // Old format compatibility
+                            sessions = importedData;
+                            dailyLog = [];
+                            streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
+                            alert('Old data format imported successfully! Logs and streaks have been reset.');
+                        } else if (importedData.sessions && importedData.dailyLog && importedData.streakState) {
+                            // New format import
+                            sessions = importedData.sessions;
+                            dailyLog = importedData.dailyLog;
+                            streakState = importedData.streakState;
+                            alert('Data imported successfully!');
+                        } else {
+                            throw new Error('File structure is invalid or corrupted.');
+                        }
+
+                        saveSessions();
+                        saveDailyLog();
+                        saveStreakState();
+                        
+                        loadStreakState(); 
+                        renderApp();
+                        closeModal(dataManagementModal);
+                        
+                    } catch (error) {
+                        console.error("Import Error:", error);
+                        alert(`Import failed. The file is not a valid JSON file. Error: ${error.message}`);
+                    }
                 };
                 
-                let needsSave = false;
-                if (streakState.lastVisit === today) {
-                    // Visited today
-                } else if (streakState.lastVisit === yesterday) {
-                    if (streakState.reviewsToday >= DAILY_GOAL) {
-                        streakState.streakCount++;
-                    } else {
-                        streakState.streakCount = 1;
-                    }
-                    streakState.lastVisit = today;
-                    streakState.reviewsToday = 0;
-                    needsSave = true;
-                } else {
-                    streakState.streakCount = (streakState.lastVisit === null) ? 0 : 1;
-                    streakState.lastVisit = today;
-                    streakState.reviewsToday = 0;
-                    needsSave = true;
-                }
-                
-                console.log("Realtime DB: streakState loaded/updated", streakState);
-                if (needsSave) {
-                    saveStreakState(); // Save updated state back to Realtime DB
-                } else {
-                    renderApp(); // Just render
-                }
-            }, err => console.error("Streak onValue error", err));
-            
-            // 4. Syllabus Progress Listener
-            const syllabusRef = fb.ref(db, `${userBasePath}/syllabusProgress`);
-            unsubSyllabus = fb.onValue(syllabusRef, (snapshot) => {
-                syllabusProgress = snapshot.val() || {};
-                console.log("Realtime DB: syllabusProgress updated", syllabusProgress);
-                renderApp();
-            }, err => console.error("Syllabus onValue error", err));
-        }
-        
-        // --- INITIALIZATION ---
-        async function init() {
-            dateInput.value = getTodayString();
-            
-            // --- Firebase Init ---
-            try {
-                const app = fb.initializeApp(firebaseConfig);
-                db = fb.getDatabase(app); // Changed from getFirestore to getDatabase
-                auth = fb.getAuth(app);
-                
-                await fb.signInAnonymously(auth);
-                
-                fb.onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        console.log("Firebase Auth Success. UserID:", userId);
-                        
-                        // Detach old listeners
-                        unsubSessions();
-                        unsubLog();
-                        unsubStreak();
-                        unsubSyllabus();
+                reader.onerror = () => {
+                    alert('Error reading file. Please try again.');
+                };
 
-                        // Start listening to data
-                        setupRealtimeDatabaseListeners(userId);
-                        
-                    } else {
-                        userId = null;
-                        console.log("User is signed out.");
-                        // Handle signed-out state
-                        unsubSessions();
-                        unsubLog();
-                        unsubStreak();
-                        unsubSyllabus();
-                        // Show a "please log in" message or similar
-                        document.main.innerHTML = "<h1>Please wait, connecting...</h1>";
+                reader.readAsText(file);
+            };
+            
+            const handleClearData = () => {
+                if (confirm('DANGER! This will delete ALL study data, logs, and streaks permanently. Are you absolutely sure?')) {
+                    sessions = [];
+                    dailyLog = [];
+                    streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
+                    
+                    localStorage.removeItem(STORAGE_KEY);
+                    localStorage.removeItem(STORAGE_KEY_LOG);
+                    localStorage.removeItem(STORAGE_KEY_STREAK);
+                    
+                    renderApp();
+                    closeModal(dataManagementModal);
+                    alert('All data has been cleared.');
+                }
+            };
+            
+            // --- INITIALIZATION ---
+            const init = () => {
+                dateInput.value = getTodayString();
+                
+                // Event Listeners setup
+                sessionForm.addEventListener('submit', handleFormSubmit);
+                navTabs.forEach(tab => tab.addEventListener('click', handleTabClick));
+                
+                calPrevBtn.addEventListener('click', () => navigateCalendar('prev'));
+                calNextBtn.addEventListener('click', () => navigateCalendar('next'));
+                
+                calGrid.addEventListener('click', (e) => {
+                    const dateCell = e.target.closest('.calendar-date-cell');
+                    if (dateCell && dateCell.title) {
+                        showDailySchedule(dateCell.title);
                     }
                 });
 
-            } catch (err) {
-                console.error("Firebase Init Error:", err);
-                alert("Could not connect to database. Please check console.");
-                return;
-            }
-            
-            // Event Listeners setup
-            sessionForm.addEventListener('submit', handleFormSubmit);
-            navTabs.forEach(tab => tab.addEventListener('click', handleTabClick));
-            
-            calPrevBtn.addEventListener('click', () => navigateCalendar('prev'));
-            calNextBtn.addEventListener('click', () => navigateCalendar('next'));
-            
-            calGrid.addEventListener('click', (e) => {
-                const dateCell = e.target.closest('.calendar-date-cell');
-                if (dateCell && dateCell.title) {
-                    showDailySchedule(dateCell.title);
-                }
-            });
-
-            dataManagementBtn.addEventListener('click', openDataManagement);
-            exportJsonBtn.addEventListener('click', handleExportData); 
-            importBtn.addEventListener('click', handleImportData);
-            clearDataBtn.addEventListener('click', handleClearData);
-            
-            logTimeBtn.addEventListener('click', handleTimeLog);
-            
-            subjectFilterDropdown.addEventListener('change', renderAllSessions);
-            syllabusSubjectFilter.addEventListener('change', renderSyllabus); // NEW
-            
-            editSessionForm.addEventListener('submit', handleEditFormSubmit);
-            
-            addSyllabusListeners();
-
-            // Global Action Listeners (delegated)
-            document.body.addEventListener('click', (e) => {
-                const closeButton = e.target.closest('.close-btn');
-                if (closeButton && closeButton.dataset.modal) { 
-                    closeModal(document.getElementById(closeButton.dataset.modal)); 
-                    return;
-                }
+                dataManagementBtn.addEventListener('click', openDataManagement);
+                // UPDATED: Export to file
+                exportJsonBtn.addEventListener('click', handleExportData); 
+                // UPDATED: Import from file
+                importBtn.addEventListener('click', handleImportData);
+                clearDataBtn.addEventListener('click', handleClearData);
                 
-                // NEW UNIFIED Details logic
-                const reviewItem = e.target.closest('.review-item[data-session-id]');
-                if (reviewItem) {
-                    // DON'T open modal if we clicked the checkbox or a button
-                    if (e.target.closest('input[type="checkbox"]') || e.target.closest('button')) {
-                        // Let checkbox/button handlers work
-                    } else {
-                        // Clicked the div itself
-                        showModal(detailsModal, reviewItem.dataset.sessionId);
+                logTimeBtn.addEventListener('click', handleTimeLog);
+                
+                // Listeners for filter and edit
+                subjectFilterDropdown.addEventListener('change', renderAllSessions);
+                editSessionForm.addEventListener('submit', handleEditFormSubmit);
+
+                // Global Action Listeners (delegated)
+                document.body.addEventListener('click', (e) => {
+                    const closeButton = e.target.closest('.close-btn');
+                    if (closeButton && closeButton.dataset.modal) { 
+                        closeModal(document.getElementById(closeButton.dataset.modal)); 
+                        return;
                     }
-                    // Stop further logic if we clicked a review item
-                    return;
-                }
+                    
+                    const detailsButton = e.target.closest('.details-btn');
+                    if (detailsButton && detailsButton.dataset.sessionId) {
+                        showModal(detailsModal, parseInt(detailsButton.dataset.sessionId, 10));
+                        return;
+                    }
+                    
+                    const deleteButton = e.target.closest('.delete-btn');
+                    if (deleteButton && deleteButton.dataset.sessionId) {
+                        handleDeleteSession(e);
+                        return;
+                    }
+
+                    const undoButton = e.target.closest('.undo-btn');
+                    if (undoButton && undoButton.dataset.sessionId) {
+                        handleUndoCompletion(e);
+                        return;
+                    }
+                    
+                    // Edit button listener
+                    const editButton = e.target.closest('.edit-btn');
+                    if (editButton && editButton.dataset.sessionId) {
+                        openEditModal(parseInt(editButton.dataset.sessionId, 10));
+                        return;
+                    }
+                });
                 
-                // Keep details button click as a fallback (it's inside the logic above now)
-                const detailsButton = e.target.closest('.details-btn');
-                 if (detailsButton && detailsButton.dataset.sessionId) {
-                    showModal(detailsModal, detailsButton.dataset.sessionId);
-                    return;
-                }
+                document.body.addEventListener('change', (e) => {
+                    if (e.target.type === 'checkbox' && e.target.dataset.sessionId) { 
+                        handleReviewCompletion(e); 
+                    }
+                });
                 
-                const deleteButton = e.target.closest('.delete-btn');
-                if (deleteButton && deleteButton.dataset.sessionId) {
-                    handleDeleteSession(e);
-                    return;
-                }
+                window.addEventListener('click', (e) => {
+                    if (e.target == detailsModal) { closeModal(detailsModal); }
+                    if (e.target == dataManagementModal) { closeModal(dataManagementModal); }
+                    if (e.target == scheduleModal) { closeModal(scheduleModal); }
+                    if (e.target == editModal) { closeModal(editModal); } 
+                });
 
-                const undoButton = e.target.closest('.undo-btn');
-                if (undoButton && undoButton.dataset.sessionId) {
-                    handleUndoCompletion(e);
-                    return;
-                }
-                
-                const editButton = e.target.closest('.edit-btn');
-                if (editButton && editButton.dataset.sessionId) {
-                    openEditModal(editButton.dataset.sessionId);
-                    return;
-                }
-            });
-            
-            document.body.addEventListener('change', (e) => {
-                if (e.target.type === 'checkbox' && e.target.dataset.sessionId) { 
-                    handleReviewCompletion(e); 
-                }
-            });
-            
-            window.addEventListener('click', (e) => {
-                if (e.target == detailsModal) { closeModal(detailsModal); }
-                if (e.target == dataManagementModal) { closeModal(dataManagementModal); }
-                if (e.target == scheduleModal) { closeModal(scheduleModal); }
-                if (e.target == editModal) { closeModal(editModal); } 
-            });
+                // Initial load
+                loadDailyLog();
+                loadStreakState();
+                loadSessions();
+                renderApp(); 
+            };
 
-            // Initial data load
-            populateAddSessionDropdowns();
-            populateSyllabusFilter(); // NEW
-            // renderApp() will be called by onValue listeners
-        };
-
-        init();
-    });
-</script>
-
-</body>
-</html>
-    
+            init();
+        });
+    </script>
 
 </body>
 </html>
