@@ -1390,23 +1390,24 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase services
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, doc, onSnapshot, setDoc, updateDoc, deleteDoc, 
-            collection, query, getDocs, writeBatch, setLogLevel 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Firebase SDK -->
+<script type="module">
+    // Import Firebase services for Realtime Database
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { 
+        getDatabase, ref, onValue, set, update, remove, 
+        push, get, child 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-        // Make Firebase functions globally available to the main script
-        window.fb = {
-            initializeApp,
-            getAuth, signInAnonymously, onAuthStateChanged,
-            getFirestore, doc, onSnapshot, setDoc, updateDoc, deleteDoc, 
-            collection, query, getDocs, writeBatch, setLogLevel
-        };
-    </script>
+    // Make Firebase functions globally available to the main script
+    window.fb = {
+        initializeApp,
+        getAuth, signInAnonymously, onAuthStateChanged,
+        getDatabase, ref, onValue, set, update, remove, 
+        push, get, child
+    };
+</script>
 
 
     <script>
@@ -3158,4 +3159,3 @@
 
 </body>
 </html>
-
