@@ -463,19 +463,15 @@
              overflow: hidden; /* Prevent long text from breaking layout */
              margin-right: 10px;
         }
-        
-        .review-item-info strong {
-            font-size: 1rem;
-            color: var(--primary-accent);
-            display: block;
-            margin-bottom: 5px;
-        }
-        
+
+        /* Updated style for the main topic/description */
         .review-item-info .topic-name {
             font-weight: 600;
             color: var(--primary-text);
             margin-bottom: 5px;
             word-wrap: break-word; /* Wrap long topics */
+            font-size: 1rem; /* Make it prominent */
+            white-space: pre-wrap; /* Preserve line breaks from textarea */
         }
         
         .review-item-info .review-date {
@@ -592,12 +588,17 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
             }
-            #form-group-subject { grid-column: 1 / 3; }
+            /* All form groups now span 2 columns to fill the space */
             #form-group-topic { grid-column: 1 / 3; }
             #form-group-notes { grid-column: 1 / 3; }
             #form-group-file-link { grid-column: 1 / 3; }
+            #form-group-date { grid-column: 1 / 3; }
             #form-group-button { grid-column: 1 / 3; }
             
+            #edit-session-form .form-group { grid-column: 1 / 3; }
+            #edit-session-form #form-group-date-edit { grid-column: 1 / 3; }
+            #edit-session-form #form-group-button-edit { grid-column: 1 / 3; }
+
             .container {
                 padding: 0 20px;
             }
@@ -756,6 +757,7 @@
             margin-bottom: 8px;
             color: var(--primary-dark);
             font-weight: 700;
+            white-space: pre-wrap; /* Preserve line breaks in card header */
         }
         .session-card p {
             font-size: 0.95rem;
@@ -867,27 +869,7 @@
             color: var(--primary-accent);
         }
         
-        .subject-group-header {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
-            margin-top: 25px;
-            margin-bottom: 10px;
-            border-bottom: 2px solid var(--primary-accent);
-            padding-bottom: 5px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .subject-scoreboard {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            background-color: var(--primary-accent-light);
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
+        /* Removed Subject Grouping Styles */
         
         /* --- Clear Data Button --- */
         #clear-data-btn {
@@ -982,30 +964,7 @@
             color: var(--primary-dark);
             font-weight: 700;
         }
-        
-        /* NEW: Subject Filter Dropdown */
-        .filter-container {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .filter-container label {
-            font-weight: 600;
-            color: var(--primary-text);
-            font-size: 0.95rem;
-            flex-shrink: 0;
-        }
-        .filter-container select {
-            padding: 8px 12px;
-            font-size: 0.95rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: white;
-            flex-grow: 1;
-            max-width: 400px;
-        }
-
+        /* Filter dropdown removed */
     </style>
 </head>
 <body>
@@ -1016,7 +975,6 @@
                 <h1>🧠 Study Tracker</h1>
                 <button class="menu-button" id="data-management-btn" title="Data Management">&#8942;</button>
             </div>
-            
             <div class="global-stats-container">
                 <div class="global-stats">
                     <span class="global-stats-text" id="global-stats-text">Total Progress: 0 / 0 Reviews</span>
@@ -1030,33 +988,24 @@
                     <span id="total-time-counter">🕒 Total Study Time: 0.0 Hours</span>
                 </div>
             </div>
-            
         </div>
     </header>
 
     <nav class="app-nav">
-        <button class="nav-tab active" data-tab="today">
-            Today
-            <span class="count-bubble" id="today-count-bubble"></span>
-        </button>
-        <button class="nav-tab" data-tab="backlog">
-            Backlog
-            <span class="count-bubble" id="backlog-count-bubble"></span>
-        </button>
-        <button class="nav-tab" data-tab="attendance">
-            Attendance
-        </button>
+        <button class="nav-tab active" data-tab="today"> Today <span class="count-bubble" id="today-count-bubble"></span> </button>
+        <button class="nav-tab" data-tab="backlog"> Backlog <span class="count-bubble" id="backlog-count-bubble"></span> </button>
+        <button class="nav-tab" data-tab="attendance"> Calendar </button>
         <button class="nav-tab" data-tab="add">Add Session</button>
         <button class="nav-tab" data-tab="all">All Sessions</button>
     </nav>
 
     <main class="container">
-        
+
         <section id="tab-today" class="tab-content active">
             <h2>Today's Reviews</h2>
             <div id="today-reviews-container">
                 </div>
-            
+
             <div class="time-logger-container">
                 <h4>Log Your Study Time</h4>
                 <p>Logged for today (<span id="today-date-log"></span>): <strong id="logged-time-today">0</strong> minutes</p>
@@ -1066,77 +1015,55 @@
                 </div>
             </div>
         </section>
-        
+
         <section id="tab-backlog" class="tab-content">
-            <h2>Backlog (Missed Reviews)</h2>
-            
-            <h3 class="backlog-section-header critical">🚨 Critical Open Loops (Start Here)</h3>
+            <h2>Backlog Reviews</h2>
+            <h3 class="backlog-section-header critical">Critical Backlog (Overdue > 30 Days)</h3>
             <div id="backlog-critical-container">
                 </div>
-            
-            <h3 class="backlog-section-header standard">🟡 Standard Backlog</h3>
+            <h3 class="backlog-section-header standard" style="margin-top: 30px;">Standard Backlog</h3>
             <div id="backlog-standard-container">
                 </div>
         </section>
 
         <section id="tab-attendance" class="tab-content">
-            <h2>My Attendance & Revisions</h2>
-            <p style="margin-bottom: 15px; font-size: 0.95rem; color: var(--secondary-text);">
-                Click any date to see the day's scheduled revisions.
-            </p>
-            <div class="calendar-container" id="calendar-container">
+            <h2>Review Calendar</h2>
+            <div class="calendar-container">
                 <div class="calendar-header">
                     <button id="cal-prev-btn" class="cal-nav-btn">&lt; Prev</button>
-                    <h3 id="cal-month-year">October 2025</h3>
+                    <h3 id="current-month-year"></h3>
                     <button id="cal-next-btn" class="cal-nav-btn">Next &gt;</button>
                 </div>
                 <div class="calendar-grid" id="calendar-grid">
-                    <div class="calendar-day-name">Mon</div>
-                    <div class="calendar-day-name">Tue</div>
-                    <div class="calendar-day-name">Wed</div>
-                    <div class="calendar-day-name">Thu</div>
-                    <div class="calendar-day-name">Fri</div>
-                    <div class="calendar-day-name">Sat</div>
-                    <div class="calendar-day-name">Sun</div>
-                </div>
-                
+                    </div>
                 <div class="calendar-legend">
-                    <div class="legend-item">
-                        <span class="legend-color completed"></span>Completed
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color due"></span>Revision Due
-                    </div>
+                    <div class="legend-item"><span class="legend-color completed"></span>Completed</div>
+                    <div class="legend-item"><span class="legend-color due"></span>Due Revision</div>
+                    <div class="legend-item"><span class="legend-color" style="border: 2px solid var(--primary-accent);"></span>Today</div>
                 </div>
             </div>
         </section>
-
+        
         <section id="tab-add" class="tab-content">
-            <div class="welcome-banner">
-                <p>"Believe you can and you're halfway there."</p>
-            </div>
-            
-            <h2>Start a New Session</h2>
+            <h2>Start New Tracking Session</h2>
+            <p class="welcome-banner">
+                Enter the details for your **unified PDF notes**. List all subjects/topics in the description field below.
+            </p>
             <form id="session-form">
-                <div class="form-group" id="form-group-subject">
-                    <label for="subject">1. Select Subject</label>
-                    <input type="text" id="subject" list="subject-list" placeholder="e.g., 'Math' or 'History'" required>
-                    <datalist id="subject-list"></datalist>
-                </div>
                 <div class="form-group" id="form-group-topic">
-                    <label for="topic">2. Select Topic</label>
-                    <input type="text" id="topic" placeholder="e.g., 'Chapter 3: Neural Networks'" required>
+                    <label for="topic">1. Description (List of Subjects/Topics in the PDF)</label>
+                    <textarea id="topic" placeholder="e.g., History: Mughal Empire, Biology: Cell Division, Math: Calculus Ch 1" rows="4" required></textarea>
                 </div>
                 <div class="form-group" id="form-group-notes">
-                    <label for="notes">3. Notes (Optional)</label>
-                    <textarea id="notes" placeholder="e.g., 'Key concepts: backpropagation, activation functions'"></textarea>
+                    <label for="notes">2. Notes (Optional)</label>
+                    <textarea id="notes" placeholder="e.g., 'Summary: Focus on graphs and key equations for Math section.'" rows="3"></textarea>
                 </div>
                 <div class="form-group" id="form-group-file-link">
-                    <label for="file-link">4. File/PDF Link (Optional)</label>
-                    <input type="text" id="file-link" placeholder="e.g., 'https://.../my-notes.pdf' or 'file:///C:/...'">
+                    <label for="file-link">3. PDF Link (Direct URL to the Unified Notes)</label>
+                    <input type="text" id="file-link" placeholder="e.g., 'https://.../my-unified-notes-11-03.pdf' or 'file:///C:/...'">
                 </div>
                 <div class="form-group" id="form-group-date">
-                    <label for="initial-date">5. Start Date</label>
+                    <label for="initial-date">4. Start Date (Date of creation/upload)</label>
                     <input type="date" id="initial-date" required>
                 </div>
                 <div class="form-group" id="form-group-button">
@@ -1146,21 +1073,13 @@
         </section>
 
         <section id="tab-all" class="tab-content">
-            <h2>All Sessions by Subject</h2>
-            
-            <div class="filter-container">
-                <label for="subject-filter-dropdown">Filter by Subject:</label>
-                <select id="subject-filter-dropdown">
-                    <option value="all">Show All</option>
-                    </select>
-            </div>
-            
+            <h2>All Unified Note Sessions</h2>
             <div id="all-sessions-container">
                 </div>
         </section>
 
     </main>
-    
+
     <div id="details-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1170,64 +1089,13 @@
             <div class="modal-body">
                 <p><strong>Notes:</strong></p>
                 <pre id="modal-notes"></pre>
-                
-                <p style="margin-top: 15px;"><strong>File Link:</strong></p>
+                <p style="margin-top: 15px;"><strong>PDF Link:</strong></p>
                 <div id="modal-file-link"></div>
-                
-                <p style="margin-top: 15px;">
-                    <strong>Started:</strong> 
-                    <span id="modal-start-date"></span>
-                </p>
+                <p style="margin-top: 15px;"> <strong>Started:</strong> <span id="modal-start-date"></span> </p>
             </div>
         </div>
     </div>
-    
-    <div id="data-management-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Data Management</h3>
-                <button class="close-btn" data-modal="data-management-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 0.9rem;">
-                    Use this tool to **back up** your study data (Export) or **restore** it on a new device (Import).
-                </p>
-                
-                <h4>Export Data</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--secondary-text);">
-                    Download your full study data as a JSON file for backup.
-                </p>
-                <button id="export-json-btn">Download Data as JSON</button>
-                
-                <h4 style="margin-top: 30px;">Import Data</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--secondary-text);">
-                    Upload a previously exported JSON file to restore your data.
-                </p>
-                <input type="file" id="import-file-input" accept=".json" style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; width: 100%; margin-bottom: 10px;">
-                <button id="import-data-btn" style="background-color: var(--danger-color);">Import Data (Overwrite)</button>
-                
-                <h4 style="margin-top: 30px;">Clear All Data</h4>
-                <button id="clear-data-btn" style="background-color: var(--danger-color);">Clear All Local Data</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="schedule-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="schedule-modal-date">Daily Schedule</h3>
-                <button class="close-btn" data-modal="schedule-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="schedule-summary-banner" class="schedule-summary-banner"></div>
-                
-                <div id="schedule-modal-content">
-                    </div>
-                <p id="schedule-empty-message" style="margin-top: 15px; color: var(--secondary-text); font-weight: 500;"></p>
-            </div>
-        </div>
-    </div>
-    
+
     <div id="edit-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1237,48 +1105,80 @@
             <div class="modal-body">
                 <form id="edit-session-form">
                     <input type="hidden" id="edit-session-id">
-                    
                     <div class="form-group">
-                        <label for="edit-subject">Subject</label>
-                        <input type="text" id="edit-subject" list="subject-list" required>
+                        <label for="edit-topic">Description (List of Subjects/Topics)</label>
+                        <textarea id="edit-topic" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="edit-topic">Topic</label>
-                        <input type="text" id="edit-topic" required>
+                        <label for="edit-notes">Notes (Optional)</label>
+                        <textarea id="edit-notes" rows="3"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="edit-notes">Notes</label>
-                        <textarea id="edit-notes"></textarea>
+                        <label for="edit-file-link">PDF Link</label>
+                        <input type="text" id="edit-file-link" placeholder="e.g., 'https://.../my-unified-notes-11-03.pdf'">
                     </div>
-                    <div class="form-group">
-                        <label for="edit-file-link">File Link</label>
-                        <input type="text" id="edit-file-link">
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group" id="form-group-date-edit">
                         <label for="edit-initial-date">Start Date</label>
                         <input type="date" id="edit-initial-date" required>
-                        <p style="font-size: 0.8rem; color: var(--danger-color); margin-top: 5px;">
-                            Warning: Changing the start date will recalculate all review dates.
-                        </p>
                     </div>
-                    <button type="submit" id="save-edit-btn">Save Changes</button>
+                    <div class="form-group" id="form-group-button-edit">
+                        <button type="submit" id="save-edit-btn">Save Changes</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <div id="data-management-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Data Management</h3>
+                <button class="close-btn" data-modal="data-management-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem;"> Use this tool to **back up** your study data (Export) or **restore** it on a new device (Import). </p>
 
+                <h4>Export Data</h4>
+                <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--secondary-text);"> Download your full study data as a JSON file for backup. </p>
+                <button id="export-json-btn">Download Data as JSON</button>
+
+                <h4 style="margin-top: 30px;">Import Data</h4>
+                <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--secondary-text);"> Upload a previously exported JSON file to restore your data. </p>
+                <input type="file" id="import-file-input" accept=".json" style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; width: 100%;">
+                <button id="import-data-btn" style="margin-top: 10px;">Import Data & Overwrite</button>
+                
+                <h4 style="margin-top: 30px;">Clear All Data</h4>
+                <button id="clear-data-btn">Clear All Local Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="schedule-modal-date">Scheduled Reviews</h3>
+                <button class="close-btn" data-modal="schedule-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="schedule-summary-banner" id="schedule-summary-banner"></p>
+                <p style="margin-bottom: 10px; color: var(--secondary-text);" id="schedule-empty-message"></p>
+                <div id="schedule-modal-content">
+                    </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
             // --- CONSTANTS & STATE ---
-            const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60, 90]; 
+            const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60, 90];
             const DAILY_GOAL = 3;
-            
             // Storage Keys
             const STORAGE_KEY = 'studySessions';
             const STORAGE_KEY_LOG = 'studyDailyLog';
             const STORAGE_KEY_STREAK = 'studyStreakState';
-            
+
             // State Variables
             let sessions = [];
             let dailyLog = [];
@@ -1288,103 +1188,110 @@
             // --- DOM SELECTORS ---
             const dateInput = document.getElementById('initial-date');
             const sessionForm = document.getElementById('session-form');
-            const subjectInput = document.getElementById('subject');
-            const subjectList = document.getElementById('subject-list');
-            const topicInput = document.getElementById('topic');
+            // Subject inputs are removed
+            const topicInput = document.getElementById('topic'); // Now a TEXTAREA
             const notesInput = document.getElementById('notes');
             const fileLinkInput = document.getElementById('file-link');
-            
+
             const navTabs = document.querySelectorAll('.nav-tab');
             const tabContents = document.querySelectorAll('.tab-content');
             const todayCountBubble = document.getElementById('today-count-bubble');
             const backlogCountBubble = document.getElementById('backlog-count-bubble');
-            
             const todayReviewsContainer = document.getElementById('today-reviews-container');
             const backlogCriticalContainer = document.getElementById('backlog-critical-container');
             const backlogStandardContainer = document.getElementById('backlog-standard-container');
             const allSessionsContainer = document.getElementById('all-sessions-container');
-            
-            // Subject Filter
-            const subjectFilterDropdown = document.getElementById('subject-filter-dropdown');
-            
+
+            // Global Stats
             const globalStatsText = document.getElementById('global-stats-text');
             const globalProgressBarInner = document.getElementById('global-progress-bar-inner');
             const streakCounter = document.getElementById('streak-counter');
             const dailyGoalCounter = document.getElementById('daily-goal-counter');
             const totalTimeCounter = document.getElementById('total-time-counter');
             
+            // Time Logger
             const dailyTimeInput = document.getElementById('daily-time');
             const logTimeBtn = document.getElementById('log-time-btn');
             const loggedTimeToday = document.getElementById('logged-time-today');
             const todayDateLog = document.getElementById('today-date-log');
-            
+
+            // Modals
             const detailsModal = document.getElementById('details-modal');
             const dataManagementModal = document.getElementById('data-management-modal');
-            
-            const modalTopic = document.getElementById('modal-topic');
-            const modalNotes = document.getElementById('modal-notes');
-            const modalFileLink = document.getElementById('modal-file-link');
-            const modalStartDate = document.getElementById('modal-start-date');
-            
-            const dataManagementBtn = document.getElementById('data-management-btn');
-            
-            // UPDATED: Data Management Selectors
-            const exportJsonBtn = document.getElementById('export-json-btn');
-            const importFileInput = document.getElementById('import-file-input');
-            const importBtn = document.getElementById('import-data-btn');
-            const clearDataBtn = document.getElementById('clear-data-btn');
-            
-            const calPrevBtn = document.getElementById('cal-prev-btn');
-            const calNextBtn = document.getElementById('cal-next-btn');
-            const calMonthYear = document.getElementById('cal-month-year');
-            const calGrid = document.getElementById('calendar-grid');
-
+            const editModal = document.getElementById('edit-modal');
             const scheduleModal = document.getElementById('schedule-modal');
             const scheduleModalDate = document.getElementById('schedule-modal-date');
             const scheduleModalContent = document.getElementById('schedule-modal-content');
             const scheduleEmptyMessage = document.getElementById('schedule-empty-message');
             const scheduleSummaryBanner = document.getElementById('schedule-summary-banner');
+
+            // Modal Content Elements
+            const modalTopic = document.getElementById('modal-topic');
+            const modalNotes = document.getElementById('modal-notes');
+            const modalFileLink = document.getElementById('modal-file-link');
+            const modalStartDate = document.getElementById('modal-start-date');
+
+            // Data Management
+            const dataManagementBtn = document.getElementById('data-management-btn');
+            const exportJsonBtn = document.getElementById('export-json-btn');
+            const importFileInput = document.getElementById('import-file-input');
+            const importBtn = document.getElementById('import-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
             
-            // Edit Modal Selectors
-            const editModal = document.getElementById('edit-modal');
-            const editSessionForm = document.getElementById('edit-session-form');
+            // Calendar
+            const calPrevBtn = document.getElementById('cal-prev-btn');
+            const calNextBtn = document.getElementById('cal-next-btn');
+            const calGrid = document.getElementById('calendar-grid');
+            const currentMonthYear = document.getElementById('current-month-year');
+            
+            // Edit Modal Inputs
             const editSessionId = document.getElementById('edit-session-id');
-            const editSubject = document.getElementById('edit-subject');
+            // editSubject is removed
             const editTopic = document.getElementById('edit-topic');
             const editNotes = document.getElementById('edit-notes');
             const editFileLink = document.getElementById('edit-file-link');
             const editInitialDate = document.getElementById('edit-initial-date');
+            const editSessionForm = document.getElementById('edit-session-form');
 
 
-            // --- DATE HELPERS ---
+            // --- UTILITY FUNCTIONS ---
+
             const formatDate = (date) => {
                 const d = new Date(date);
-                const offset = d.getTimezoneOffset();
-                const adjustedDate = new Date(d.getTime() - (offset * 60 * 1000));
-                return adjustedDate.toISOString().split('T')[0];
+                let month = '' + (d.getMonth() + 1);
+                let day = '' + d.getDate();
+                const year = d.getFullYear();
+
+                if (month.length < 2) 
+                    month = '0' + month;
+                if (day.length < 2) 
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
             };
 
             const getTodayString = () => {
                 return formatDate(new Date());
             };
-
-            const calculateReviewDates = (initialDateStr) => {
-                const startDate = new Date(initialDateStr + 'T00:00:00');
+            
+            const calculateReviewDates = (startDate) => {
+                const start = new Date(startDate);
                 return REVIEW_INTERVALS.map(days => {
-                    const reviewDate = new Date(startDate.getTime());
-                    reviewDate.setDate(reviewDate.getDate() + days); 
+                    const reviewDate = new Date(start);
+                    reviewDate.setDate(start.getDate() + days);
                     return formatDate(reviewDate);
                 });
             };
 
             // --- LOCAL STORAGE ---
+
             const loadSessions = () => {
                 try {
                     const sessionsJSON = localStorage.getItem(STORAGE_KEY);
                     sessions = sessionsJSON ? JSON.parse(sessionsJSON) : [];
                     if (!Array.isArray(sessions)) {
-                         sessions = [];
-                         console.error("Loaded data was not an array. Resetting sessions.");
+                        sessions = [];
+                        console.error("Loaded data was not an array. Resetting sessions.");
                     }
                 } catch (error) {
                     console.error("Error loading sessions from localStorage:", error);
@@ -1401,16 +1308,16 @@
                     const logJSON = localStorage.getItem(STORAGE_KEY_LOG);
                     dailyLog = logJSON ? JSON.parse(logJSON) : [];
                     if (!Array.isArray(dailyLog)) dailyLog = [];
-                } catch (e) { 
+                } catch (e) {
                     console.error("Error loading daily log:", e);
-                    dailyLog = []; 
+                    dailyLog = [];
                 }
             };
-            
+
             const saveDailyLog = () => {
                 localStorage.setItem(STORAGE_KEY_LOG, JSON.stringify(dailyLog));
             };
-            
+
             const loadStreakState = () => {
                 try {
                     const streakJSON = localStorage.getItem(STORAGE_KEY_STREAK);
@@ -1423,7 +1330,7 @@
                         lastVisit: loadedState.lastVisit || null,
                         reviewsToday: loadedState.reviewsToday || 0
                     };
-                    
+
                     if (streakState.lastVisit === today) {
                         // Already visited today
                     } else if (streakState.lastVisit === yesterday) {
@@ -1434,11 +1341,11 @@
                             streakState.streakCount = 1; // Reset streak
                         }
                         streakState.lastVisit = today;
-                        streakState.reviewsToday = 0; 
+                        streakState.reviewsToday = 0;
                     } else {
                         // Missed a day or first visit
-                        streakState.streakCount = 1; 
-                        if (!streakState.lastVisit) streakState.streakCount = 0; 
+                        streakState.streakCount = 1;
+                        if (!streakState.lastVisit) streakState.streakCount = 0;
                         streakState.lastVisit = today;
                         streakState.reviewsToday = 0;
                     }
@@ -1449,242 +1356,38 @@
                 }
                 saveStreakState();
             };
-            
+
             const saveStreakState = () => {
                 localStorage.setItem(STORAGE_KEY_STREAK, JSON.stringify(streakState));
             };
             
-            
-            // --- DATA HELPERS (Datalists & Filters) ---
-            const updateSubjectDatalist = () => {
-                const subjects = [...new Set(sessions.map(s => s.subject ? s.subject.trim() : "")
-                                                    .filter(s => s && s !== "Uncategorized"))].sort();
-                subjectList.innerHTML = '';
-                subjects.forEach(subject => {
-                    const option = document.createElement('option');
-                    option.value = subject;
-                    subjectList.appendChild(option);
-                });
-            };
-            
-            // Populate Subject Filter Dropdown
-            const populateSubjectFilter = () => {
-                const currentVal = subjectFilterDropdown.value;
-                const subjects = [...new Set(sessions.map(s => (s.subject || "Uncategorized").trim()))].sort((a, b) => {
-                    if (a === "Uncategorized") return 1;
-                    if (b === "Uncategorized") return -1;
-                    return a.localeCompare(b);
-                });
-                
-                subjectFilterDropdown.innerHTML = '<option value="all">Show All</option>'; // Reset
-                
-                subjects.forEach(subject => {
-                    const option = document.createElement('option');
-                    option.value = subject;
-                    option.textContent = subject;
-                    subjectFilterDropdown.appendChild(option);
-                });
-                
-                // Restore selection if possible
-                if (Array.from(subjectFilterDropdown.options).some(opt => opt.value === currentVal)) {
-                    subjectFilterDropdown.value = currentVal;
-                } else {
-                    subjectFilterDropdown.value = 'all';
-                }
-            };
-            
-            // --- TAB SWITCHING & UI ---
-            const handleTabClick = (e) => {
-                const clickedTab = e.currentTarget;
-                const tabTarget = clickedTab.dataset.tab;
-                
-                navTabs.forEach(tab => tab.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                
-                clickedTab.classList.add('active');
-                document.getElementById(`tab-${tabTarget}`).classList.add('active');
-                
-                if (tabTarget === 'attendance') {
-                    renderCalendar(currentCalendarDate);
-                }
-            };
-            
-            // --- MODAL LOGIC ---
-            const showModal = (modalElement, sessionId = null) => {
-                // This function is now multipurpose.
-                // If it's the details modal, populate it.
-                if (modalElement.id === 'details-modal' && sessionId) {
-                    const session = sessions.find(s => s.id === sessionId);
-                    if (!session) return;
-                    
-                    const subject = session.subject || "Uncategorized";
-                    modalTopic.innerHTML = `<span style="color: var(--primary-text); font-size: 1.1rem; display: block;">${subject}</span>${session.topic}`;
-                    modalNotes.textContent = session.notes || '(No notes added)';
-                    modalStartDate.textContent = session.initialDate;
-                    
-                    if (session.fileLink) {
-                        modalFileLink.innerHTML = `<a href="${session.fileLink}" target="_blank" rel="noopener noreferrer">${session.fileLink}</a>`;
-                    } else {
-                        modalFileLink.innerHTML = `<p>(No file link provided)</p>`;
-                    }
-                }
-                
-                modalElement.style.display = 'block';
-            };
-            
-            const closeModal = (modalElement) => {
-                modalElement.style.display = 'none';
-            };
-            
-            // Open and populate the Edit Modal
-            const openEditModal = (sessionId) => {
-                const session = sessions.find(s => s.id === sessionId);
-                if (!session) return;
-                
-                editSessionId.value = session.id;
-                editSubject.value = session.subject;
-                editTopic.value = session.topic;
-                editNotes.value = session.notes;
-                editFileLink.value = session.fileLink;
-                editInitialDate.value = session.initialDate;
-                
-                showModal(editModal);
-            };
-            
-            // --- CALENDAR LOGIC ---
-            const getReviewsForDate = (dateString) => {
-                let isCompleted = false;
-                let reviewsDueCount = 0;
+            // --- UI RENDERING ---
 
-                sessions.forEach(session => {
-                    if (session.completedReviews.includes(dateString)) {
-                        isCompleted = true;
-                    }
-                    if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
-                        reviewsDueCount++;
-                    }
-                });
-                return { isCompleted, isDue: reviewsDueCount > 0, reviewsDueCount };
-            };
-
-            const renderCalendar = (date) => {
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                
-                const monthName = date.toLocaleString('default', { month: 'long' });
-                calMonthYear.textContent = `${monthName} ${year}`;
-
-                const firstDayOfMonth = new Date(year, month, 1);
-                const lastDayOfMonth = new Date(year, month + 1, 0);
-                const today = getTodayString();
-                const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-                let gridHTML = dayNames.map(name => `<div class="calendar-day-name">${name}</div>`).join('');
-                
-                const startDay = (firstDayOfMonth.getDay() + 6) % 7; // Monday is 0
-
-                for (let i = 0; i < startDay; i++) {
-                    gridHTML += '<div class="calendar-date-cell"></div>';
-                }
-
-                for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
-                    const dateString = formatDate(new Date(year, month, d));
-                    const reviewData = getReviewsForDate(dateString);
-                    
-                    let classes = 'calendar-date-cell';
-                    let attributes = `title="${dateString}"`; 
-                    
-                    if (dateString === today) classes += ' today';
-                    if (reviewData.isCompleted) classes += ' completed';
-                    
-                    if (reviewData.reviewsDueCount > 0) classes += ' due-revision';
-                    if (reviewData.reviewsDueCount > 5) classes += ' due-intensity-high';
-
-                    gridHTML += `<div class="${classes}" ${attributes}>${d}</div>`;
-                }
-                
-                calGrid.innerHTML = gridHTML;
-            };
-
-            const navigateCalendar = (direction) => {
-                if (direction === 'prev') {
-                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-                } else if (direction === 'next') {
-                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-                }
-                renderCalendar(currentCalendarDate);
-            };
-            
-            const showDailySchedule = (dateString) => {
-                const dueTasks = [];
-                const today = getTodayString();
-                
-                scheduleSummaryBanner.style.display = 'none';
-                const logEntry = dailyLog.find(entry => entry.date === dateString);
-                if (logEntry) {
-                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: Logged <strong>${logEntry.minutes}</strong> minutes. <strong>${logEntry.reviewsCompleted}</strong> reviews completed.`;
-                    scheduleSummaryBanner.style.display = 'block';
-                } else if (dateString < today) {
-                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: <strong>0</strong> minutes logged. <strong>0</strong> reviews completed.`;
-                    scheduleSummaryBanner.style.display = 'block';
-                }
-
-                sessions.forEach(session => {
-                    if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
-                        dueTasks.push({
-                            sessionId: session.id,
-                            subject: session.subject || "Uncategorized",
-                            topic: session.topic,
-                            reviewDate: dateString,
-                            isOverdue: dateString < today 
-                        });
-                    }
-                });
-
-                scheduleModalDate.textContent = `Scheduled Reviews for ${dateString}`;
-                
-                if (dueTasks.length > 0) {
-                    scheduleEmptyMessage.textContent = `Total ${dueTasks.length} task(s) found. Check the boxes to complete them.`;
-                    dueTasks.sort((a, b) => a.subject.localeCompare(b.subject));
-                    scheduleModalContent.innerHTML = dueTasks.map(task => 
-                        `<div class="review-item ${task.isOverdue ? 'overdue' : ''}">
-                            ${createReviewItemHTML(task)}
-                        </div>`
-                    ).join('');
-                } else {
-                    scheduleModalContent.innerHTML = '<p class="empty-state" style="padding: 10px; border: 1px dashed var(--border-color);">No scheduled revisions for this date.</p>';
-                    scheduleEmptyMessage.textContent = '';
-                }
-                
-                showModal(scheduleModal);
-            };
-
-            // --- RENDER FUNCTIONS (UI updates) ---
             const updateGlobalUIElements = (todayTasks, backlogTasks) => {
-                let totalReviews = 0;
-                let completedReviews = 0;
-                sessions.forEach(session => {
-                    totalReviews += session.reviewDates.length;
-                    completedReviews += session.completedReviews.length;
-                });
-                const globalProgressPercent = totalReviews > 0 ? (completedReviews / totalReviews) * 100 : 0;
+                const totalReviews = sessions.length * REVIEW_INTERVALS.length;
+                const completedReviews = sessions.reduce((sum, session) => sum + session.completedReviews.length, 0);
+                const progressPercent = totalReviews > 0 ? (completedReviews / totalReviews) * 100 : 0;
                 
                 globalStatsText.textContent = `Total Progress: ${completedReviews} / ${totalReviews} Reviews`;
-                globalProgressBarInner.style.width = `${globalProgressPercent}%`;
-                
-                todayCountBubble.textContent = todayTasks.length;
-                todayCountBubble.style.display = todayTasks.length > 0 ? 'grid' : 'none';
-                
-                backlogCountBubble.textContent = backlogTasks.length;
-                backlogCountBubble.style.display = backlogTasks.length > 0 ? 'grid' : 'none';
-                
-                const totalMinutes = dailyLog.reduce((sum, entry) => sum + (entry.minutes || 0), 0);
+                globalProgressBarInner.style.width = `${progressPercent}%`;
+
+                // Calculate total study time
+                const totalMinutes = dailyLog.reduce((sum, entry) => sum + entry.minutes, 0);
                 const totalHours = (totalMinutes / 60).toFixed(1);
-                
+
+                // Update tab bubbles
+                const todayCount = todayTasks.length;
+                const backlogCount = backlogTasks.length;
+
+                todayCountBubble.textContent = todayCount;
+                todayCountBubble.style.display = todayCount > 0 ? 'grid' : 'none';
+                backlogCountBubble.textContent = backlogCount;
+                backlogCountBubble.style.display = backlogCount > 0 ? 'grid' : 'none';
+
                 streakCounter.textContent = `🔥 Streak: ${streakState.streakCount}`;
                 dailyGoalCounter.textContent = `Reviews Today: ${streakState.reviewsToday} / ${DAILY_GOAL}`;
                 totalTimeCounter.textContent = `🕒 Total Study Time: ${totalHours} Hours`;
-                
+
                 const today = getTodayString();
                 todayDateLog.textContent = today;
                 const todayLogEntry = dailyLog.find(entry => entry.date === today);
@@ -1701,10 +1404,11 @@
                         if (!session.completedReviews.includes(reviewDate)) {
                             const task = {
                                 sessionId: session.id,
-                                subject: session.subject || "Uncategorized",
+                                subject: session.subject || "Unified Notes", // Retain for legacy data/internal use if needed
                                 topic: session.topic,
                                 reviewDate: reviewDate
                             };
+
                             if (reviewDate === today) {
                                 todayTasks.push(task);
                             } else if (reviewDate < today) {
@@ -1716,26 +1420,24 @@
                         }
                     });
                 });
-                
+
                 renderTodayReviews(todayTasks);
                 renderBacklogReviews(backlogTasks);
-                renderAllSessions(); 
+                renderAllSessions(); // Renders without subject filter/grouping
                 updateGlobalUIElements(todayTasks, backlogTasks);
-                updateSubjectDatalist();
-                
+
                 if (document.getElementById('tab-attendance').classList.contains('active')) {
-                     renderCalendar(currentCalendarDate);
+                    renderCalendar(currentCalendarDate);
                 }
             };
             
             const createReviewItemHTML = (task) => {
+                // Modified to show ONLY the topic (which is now the description/list of subjects) prominently
                 return `
                     <div class="review-item-info">
-                        <strong>${task.subject}</strong>
                         <div class="topic-name">${task.topic}</div>
-                        <div class="review-date">
-                            Due: ${task.reviewDate}
-                            ${task.isOverdue ? '<span style="color: var(--overdue-color); font-weight: 600;"> (Overdue)</span>' : ''}
+                        <div class="review-date"> 
+                            Due: ${task.reviewDate} ${task.isOverdue ? '<span style="color: var(--overdue-color); font-weight: 600;"> (Overdue)</span>' : ''} 
                         </div>
                     </div>
                     <div class="review-item-actions">
@@ -1746,162 +1448,128 @@
             };
 
             const renderTodayReviews = (tasks) => {
-                tasks.sort((a, b) => a.subject.localeCompare(b.subject));
+                tasks.sort((a, b) => a.topic.localeCompare(b.topic));
                 todayReviewsContainer.innerHTML = tasks.length === 0 
                     ? '<p class="empty-state">No reviews due today. Great job! 🎉</p>' 
                     : tasks.map(task => `<div class="review-item">${createReviewItemHTML(task)}</div>`).join('');
             };
-            
+
             const renderBacklogReviews = (tasks) => {
                 const criticalTasks = tasks.filter(t => t.isCritical);
                 const standardTasks = tasks.filter(t => !t.isCritical);
-                
-                criticalTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
-                standardTasks.sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate));
-                
+
+                criticalTasks.sort((a, b) => a.topic.localeCompare(b.topic));
+                standardTasks.sort((a, b) => a.topic.localeCompare(b.topic));
+
                 backlogCriticalContainer.innerHTML = criticalTasks.length === 0 
-                    ? '<p class="empty-state" style="padding: 10px; border: none;">No critical items. Phew!</p>' 
-                    : criticalTasks.map(task => `<div class="review-item overdue critical">${createReviewItemHTML(task)}</div>`).join('');
-                
+                    ? '<p class="empty-state">No critical tasks (overdue > 30 days).</p>' 
+                    : criticalTasks.map(task => `<div class="review-item critical overdue">${createReviewItemHTML(task)}</div>`).join('');
+
                 backlogStandardContainer.innerHTML = standardTasks.length === 0 
-                    ? '<p class="empty-state" style="padding: 10px; border: none;">No standard backlog items.</p>' 
+                    ? '<p class="empty-state">No standard tasks (overdue &le; 30 days).</p>' 
                     : standardTasks.map(task => `<div class="review-item overdue">${createReviewItemHTML(task)}</div>`).join('');
             };
             
-            // To handle subject filtering
             const renderAllSessions = () => {
-                // 1. Populate/update the filter dropdown first
-                populateSubjectFilter();
-                
-                // 2. Get the currently selected subject
-                const selectedSubject = subjectFilterDropdown.value;
-                
-                allSessionsContainer.innerHTML = '';
+                allSessionsContainer.innerHTML = ''; // Clear container
+
                 if (sessions.length === 0) {
-                    allSessionsContainer.innerHTML = '<p class="empty-state">No study sessions logged yet. Add one to get started!</p>';
+                    allSessionsContainer.innerHTML = '<p class="empty-state">No sessions added yet. Start a new session in the "Add Session" tab!</p>';
                     return;
                 }
 
-                const subjectGroups = {};
-                sessions.forEach(session => {
-                    const subject = (session.subject || "Uncategorized").trim();
-                    if (!subjectGroups[subject]) { subjectGroups[subject] = []; }
-                    subjectGroups[subject].push(session);
-                });
+                // Simply list all sessions sequentially, no more grouping by subject
+                sessions.sort((a, b) => b.id - a.id).forEach(session => {
+                    const card = document.createElement('div');
+                    card.className = 'session-card';
 
-                const sortedSubjectNames = Object.keys(subjectGroups).sort((a, b) => {
-                    if (a === "Uncategorized") return 1;
-                    if (b === "Uncategorized") return -1;
-                    return a.localeCompare(b);
-                });
-
-                let sessionsFound = false;
-                sortedSubjectNames.forEach(subjectName => {
-                    // 3. Check if this subject should be rendered
-                    if (selectedSubject !== 'all' && subjectName !== selectedSubject) {
-                        return; // Skip this subject
-                    }
-                    sessionsFound = true;
-
-                    const sessionsInSubject = subjectGroups[subjectName];
-                    const totalInSubject = sessionsInSubject.length;
-                    const masteredInSubject = sessionsInSubject.filter(s => 
-                        s.completedReviews.length === s.reviewDates.length && s.reviewDates.length > 0
-                    ).length;
+                    const completedCount = session.completedReviews.length;
+                    const totalCount = session.reviewDates.length;
+                    const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+                    const isMastered = completedCount === REVIEW_INTERVALS.length;
                     
-                    const subjectHeader = document.createElement('h3');
-                    subjectHeader.className = 'subject-group-header';
-                    subjectHeader.innerHTML = `${subjectName} <span class="subject-scoreboard">${masteredInSubject} / ${totalInSubject} Mastered</span>`;
-                    allSessionsContainer.appendChild(subjectHeader);
+                    if (isMastered) {
+                        card.classList.add('mastered');
+                    }
+                    
+                    const sortedCompleted = [...session.completedReviews].sort((a, b) => new Date(a) - new Date(b));
+                    const completedListHTML = sortedCompleted.map(date => {
+                        return `<li> 
+                                    <span>✅ ${date}</span> 
+                                    <button class="undo-btn" data-session-id="${session.id}" data-review-date="${date}">Undo</button>
+                                </li>`;
+                    }).join('');
 
-                    subjectGroups[subjectName].sort((a, b) => b.id - a.id).forEach(session => {
-                        const card = document.createElement('div');
-                        card.className = 'session-card';
-
-                        const completedCount = session.completedReviews.length;
-                        const totalCount = session.reviewDates.length;
-                        const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+                    card.innerHTML = `
+                        <h3>${session.topic}</h3>
+                        <p><strong>Started:</strong> ${session.initialDate}</p>
+                        ${session.notes ? `<p><strong>Notes:</strong>\n${session.notes.substring(0, 100) + (session.notes.length > 100 ? '...' : '')}</p>` : ''}
                         
-                        const isMastered = completedCount === REVIEW_INTERVALS.length;
-                        if (isMastered) {
-                            card.classList.add('mastered');
-                        }
-
-                        const sortedCompleted = [...session.completedReviews].sort((a, b) => new Date(a) - new Date(b));
-
-                        const completedListHTML = sortedCompleted.map(date => {
-                            return `<li>
-                                        <span>✅ ${date}</span>
-                                        <button class="undo-btn" data-session-id="${session.id}" data-review-date="${date}">Undo</button>
-                                    </li>`;
-                        }).join('');
-
-                        card.innerHTML = `
-                            <h3>${session.topic}</h3>
-                            <p><strong>Started:</strong> ${session.initialDate}</p>
-                            ${session.notes ? `<p><strong>Notes:</strong>\n${session.notes.substring(0, 100) + (session.notes.length > 100 ? '...' : '')}</p>` : ''}
-                            
-                            <h4>Mastery Level:</h4> 
-                            <div class="progress-bar">
-                                <div class="progress-bar-inner" style="width: ${progressPercent}%;"></div>
+                        <h4>Mastery Level:</h4>
+                        <div class="progress-bar">
+                            <div class="progress-bar-inner" style="width: ${progressPercent}%;"></div>
+                        </div>
+                        
+                        ${completedListHTML.length > 0 ? '<h5>Completed Reviews:</h5>' : ''}
+                        <ul class="completed-reviews-list">
+                            ${completedListHTML}
+                        </ul>
+                        
+                        <div class="session-footer">
+                            <p style="font-size: 0.85rem; color: ${isMastered ? 'var(--success-color)' : 'var(--secondary-text)'}; font-weight: 600;">
+                                ${isMastered ? 'MASTERED' : `Next Review: ${session.reviewDates.find(d => !session.completedReviews.includes(d)) || 'N/A'}`}
+                            </p>
+                            <div>
+                                <button class="edit-btn" data-session-id="${session.id}">Edit</button>
+                                <button class="delete-btn" data-session-id="${session.id}">Delete</button>
                             </div>
-                            
-                            ${completedListHTML.length > 0 ? '<h5>Completed Reviews:</h5>' : ''}
-                            <ul class="completed-reviews-list">
-                                ${completedListHTML}
-                            </ul>
-                            
-                            <div class="session-footer">
-                                <span class="progress-text">Progress: ${completedCount} / ${totalCount}</span>
-                                <div>
-                                    <button class="edit-btn" data-session-id="${session.id}">Edit</button>
-                                    <button class="delete-btn" data-session-id="${session.id}">Delete</button>
-                                </div>
-                            </div>
-                        `;
-                        
-                        const masteryTitle = card.querySelector('h4');
-                        masteryTitle.textContent = `Mastery: ${completedCount} / ${totalCount} Levels`;
-                        
-                        allSessionsContainer.appendChild(card);
-                    });
+                        </div>
+                    `;
+
+                    allSessionsContainer.appendChild(card);
                 });
-                
-                if (!sessionsFound && selectedSubject !== 'all') {
-                     allSessionsContainer.innerHTML = `<p class="empty-state">No sessions found for the subject "${selectedSubject}".</p>`;
-                }
             };
 
-            // --- CORE EVENT HANDLERS ---
-            const handleFormSubmit = (e) => {
+
+            // --- DATA HANDLERS ---
+            
+            const handleSessionSubmit = (e) => {
                 e.preventDefault();
-                const subject = subjectInput.value.trim();
+                
+                // Subject input is removed, topic is mandatory
                 const topic = topicInput.value.trim();
-                if (!subject || !topic || !dateInput.value) { return; }
+                const notes = notesInput.value.trim();
+                const fileLink = fileLinkInput.value.trim();
+                const initialDate = dateInput.value;
+
+                if (!topic || !initialDate) {
+                    alert('Please fill in the Description and Start Date.');
+                    return;
+                }
                 
                 const newSession = {
-                    id: Date.now(),
-                    subject: subject,
-                    topic: topic,
-                    notes: notesInput.value.trim(),
-                    fileLink: fileLinkInput.value.trim(),
-                    initialDate: dateInput.value,
-                    reviewDates: calculateReviewDates(dateInput.value),
+                    id: Date.now(), // Use timestamp for unique ID
+                    // subject: '', // Subject is removed from model
+                    topic: topic, 
+                    notes: notes,
+                    fileLink: fileLink,
+                    initialDate: initialDate,
+                    reviewDates: calculateReviewDates(initialDate),
                     completedReviews: []
                 };
 
                 sessions.push(newSession);
                 saveSessions();
-                renderApp();
+                
+                // Clear form
                 sessionForm.reset();
-                dateInput.value = getTodayString();
-                document.querySelector('.nav-tab[data-tab="all"]').click();
+                
+                renderApp();
+                alert('New Tracking Session Started!');
             };
             
-            // Handle Edit Form Submit
-            const handleEditFormSubmit = (e) => {
+            const handleEditSubmit = (e) => {
                 e.preventDefault();
-                
                 const sessionId = parseInt(editSessionId.value, 10);
                 const session = sessions.find(s => s.id === sessionId);
                 if (!session) return;
@@ -1909,48 +1577,21 @@
                 const oldInitialDate = session.initialDate;
                 const newInitialDate = editInitialDate.value;
                 
-                // Update session properties
-                session.subject = editSubject.value.trim();
+                // session.subject = editSubject.value.trim(); // Subject update is removed
                 session.topic = editTopic.value.trim();
                 session.notes = editNotes.value.trim();
                 session.fileLink = editFileLink.value.trim();
                 session.initialDate = newInitialDate;
-                
+
                 // Check if start date changed, if so, recalculate reviews
                 if (oldInitialDate !== newInitialDate) {
-                    session.reviewDates = calculateReviewDates(newInitialDate);
+                    session.reviewDates = calculateReviewDates(newInitialDate); 
                     // Completed reviews are kept, which is a reasonable approach for editing
                 }
-                
+
                 saveSessions();
                 renderApp();
                 closeModal(editModal);
-            };
-            
-            const handleTimeLog = () => {
-                const minutes = parseInt(dailyTimeInput.value, 10);
-                if (isNaN(minutes) || minutes <= 0) {
-                    alert('Please enter a valid number of minutes.');
-                    return;
-                }
-                
-                const today = getTodayString();
-                let logEntry = dailyLog.find(entry => entry.date === today);
-                
-                if (logEntry) {
-                    logEntry.minutes += minutes;
-                } else {
-                    logEntry = {
-                        date: today,
-                        minutes: minutes,
-                        reviewsCompleted: streakState.reviewsToday
-                    };
-                    dailyLog.push(logEntry);
-                }
-                
-                dailyTimeInput.value = '';
-                saveDailyLog();
-                renderApp();
             };
 
             const handleReviewCompletion = (e) => {
@@ -1968,89 +1609,282 @@
                     session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
                 }
                 saveSessions();
-                
+
                 const today = getTodayString();
                 if (reviewDate === today) {
                     const oldReviewsToday = streakState.reviewsToday;
-                    
+
                     if (checkbox.checked) {
                         streakState.reviewsToday++;
                     } else {
                         streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
                     }
-                    
+
                     if (oldReviewsToday < DAILY_GOAL && streakState.reviewsToday >= DAILY_GOAL) {
                         if (streakState.streakCount === 0) {
                             streakState.streakCount = 1;
                         }
                     }
                 }
-                
+
                 let logEntry = dailyLog.find(entry => entry.date === today);
                 if (logEntry) {
                     logEntry.reviewsCompleted = streakState.reviewsToday;
                 } else if (reviewDate === today || e.target.closest('#tab-today')) {
-                    dailyLog.push({
-                        date: today,
-                        minutes: 0,
-                        reviewsCompleted: streakState.reviewsToday
-                    });
+                    dailyLog.push({ date: today, minutes: 0, reviewsCompleted: streakState.reviewsToday });
                 }
-                
-                saveStreakState();
+
                 saveDailyLog();
-                
+                saveStreakState();
                 renderApp();
-                
-                if(scheduleModal.style.display === 'block' && scheduleModalDate.textContent.includes(reviewDate)) {
-                    showDailySchedule(reviewDate); 
-                }
             };
             
-            const handleUndoCompletion = (e) => {
-                const sessionId = parseInt(e.target.dataset.sessionId, 10);
-                const reviewDate = e.target.dataset.reviewDate;
-                const session = sessions.find(s => s.id === sessionId);
-                if (!session) return;
-                
-                session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
-                saveSessions();
-                
-                const today = getTodayString();
-                if (reviewDate === today) {
-                    streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
-                    
-                    let logEntry = dailyLog.find(entry => entry.date === today);
-                    if (logEntry) {
-                        logEntry.reviewsCompleted = streakState.reviewsToday;
-                    }
-                    saveStreakState();
-                    saveDailyLog();
+            const handleDeleteSession = (sessionId) => {
+                if (!confirm('Are you sure you want to delete this session and all its review history?')) {
+                    return;
                 }
-                
-                renderApp();
-            };
-
-            const handleDeleteSession = (e) => {
-                const button = e.target.closest('.delete-btn');
-                if (!button) return;
-                
-                if (!confirm('Are you sure you want to delete this entire session? This action cannot be undone.')) return;
-                
-                const sessionId = parseInt(button.dataset.sessionId, 10);
                 sessions = sessions.filter(s => s.id !== sessionId);
                 saveSessions();
                 renderApp();
             };
 
-            // --- Data Management (Export/Import) Handlers ---
+            const handleUndoCompletion = (e) => {
+                const button = e.target;
+                const sessionId = parseInt(button.dataset.sessionId, 10);
+                const reviewDate = button.dataset.reviewDate;
+                
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
 
+                // Remove the date from completedReviews
+                session.completedReviews = session.completedReviews.filter(date => date !== reviewDate);
+                saveSessions();
+                
+                // If it was a 'today' review, update streak/log
+                const today = getTodayString();
+                if (reviewDate === today) {
+                    streakState.reviewsToday = Math.max(0, streakState.reviewsToday - 1);
+                    saveStreakState();
+                    let logEntry = dailyLog.find(entry => entry.date === today);
+                    if (logEntry) {
+                        logEntry.reviewsCompleted = streakState.reviewsToday;
+                        saveDailyLog();
+                    }
+                }
+
+                renderApp();
+            };
+
+            const handleTimeLog = () => {
+                const minutes = parseInt(dailyTimeInput.value, 10);
+                if (isNaN(minutes) || minutes <= 0) {
+                    alert('Please enter a valid number of minutes.');
+                    return;
+                }
+
+                const today = getTodayString();
+                let logEntry = dailyLog.find(entry => entry.date === today);
+
+                if (logEntry) {
+                    logEntry.minutes += minutes;
+                } else {
+                    logEntry = { date: today, minutes: minutes, reviewsCompleted: streakState.reviewsToday };
+                    dailyLog.push(logEntry);
+                }
+
+                dailyTimeInput.value = '';
+                saveDailyLog();
+                renderApp();
+            };
+            
+            // --- TAB SWITCHING & UI ---
+
+            const handleTabClick = (e) => {
+                const clickedTab = e.currentTarget;
+                const tabTarget = clickedTab.dataset.tab;
+
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                clickedTab.classList.add('active');
+                document.getElementById(`tab-${tabTarget}`).classList.add('active');
+
+                if (tabTarget === 'attendance') {
+                    renderCalendar(currentCalendarDate);
+                }
+            };
+            
+            // --- MODAL LOGIC ---
+
+            const showModal = (modalElement, sessionId = null) => {
+                // If it's the details modal, populate it.
+                if (modalElement.id === 'details-modal' && sessionId) {
+                    const session = sessions.find(s => s.id === sessionId);
+                    if (!session) return;
+                    
+                    // Modified to explicitly show "Description" and the topic
+                    modalTopic.innerHTML = `<span style="color: var(--primary-text); font-size: 1.1rem; display: block;">Description:</span>${session.topic}`;
+                    modalNotes.textContent = session.notes || '(No notes added)';
+                    modalStartDate.textContent = session.initialDate;
+                    
+                    if (session.fileLink) {
+                        modalFileLink.innerHTML = `<a href="${session.fileLink}" target="_blank" rel="noopener noreferrer">${session.fileLink}</a>`;
+                    } else {
+                        modalFileLink.innerHTML = `<p>(No file link provided)</p>`;
+                    }
+                }
+                modalElement.style.display = 'block';
+            };
+
+            const closeModal = (modalElement) => {
+                modalElement.style.display = 'none';
+            };
+
+            // Open and populate the Edit Modal
+            const openEditModal = (sessionId) => {
+                const session = sessions.find(s => s.id === sessionId);
+                if (!session) return;
+
+                editSessionId.value = session.id;
+                // editSubject.value = session.subject; // Subject input removed
+                editTopic.value = session.topic;
+                editNotes.value = session.notes;
+                editFileLink.value = session.fileLink;
+                editInitialDate.value = session.initialDate;
+                showModal(editModal);
+            };
+
+            // --- CALENDAR LOGIC ---
+
+            const getReviewsForDate = (dateString) => {
+                let reviewsDueCount = 0;
+                let isCompleted = false;
+                
+                sessions.forEach(session => {
+                    if (session.reviewDates.includes(dateString)) {
+                        if (!session.completedReviews.includes(dateString)) {
+                            reviewsDueCount++;
+                        } else {
+                            isCompleted = true; // Mark day as completed if at least one review was done
+                        }
+                    }
+                });
+                
+                // If there are no due reviews, check if any reviews were logged as completed
+                if (reviewsDueCount === 0 && !isCompleted) {
+                     const completedLog = dailyLog.find(entry => entry.date === dateString);
+                     if (completedLog && completedLog.reviewsCompleted > 0) {
+                         isCompleted = true;
+                     }
+                }
+
+                return { reviewsDueCount, isCompleted };
+            };
+
+            const renderCalendar = (date) => {
+                const today = getTodayString();
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                
+                currentMonthYear.textContent = `${monthNames[month]} ${year}`;
+
+                // Calculate month details
+                const firstDayOfMonth = new Date(year, month, 1);
+                const lastDayOfMonth = new Date(year, month + 1, 0);
+                const startDayIndex = firstDayOfMonth.getDay(); // 0 (Sun) to 6 (Sat)
+                
+                const dayNamesHTML = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                    .map(name => `<div class="calendar-day-name">${name}</div>`).join('');
+                
+                let gridHTML = dayNamesHTML;
+
+                // Add empty cells for padding
+                for (let i = 0; i < startDayIndex; i++) {
+                    gridHTML += '<div class="calendar-date-cell"></div>';
+                }
+
+                for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
+                    const dateString = formatDate(new Date(year, month, d));
+                    const reviewData = getReviewsForDate(dateString);
+                    
+                    let classes = 'calendar-date-cell';
+                    let attributes = `title="${dateString}"`;
+                    
+                    if (dateString === today) classes += ' today';
+                    if (reviewData.isCompleted) classes += ' completed';
+                    if (reviewData.reviewsDueCount > 0) classes += ' due-revision';
+                    if (reviewData.reviewsDueCount > 5) classes += ' due-intensity-high';
+
+                    gridHTML += `<div class="${classes}" ${attributes}>${d}</div>`;
+                }
+
+                calGrid.innerHTML = gridHTML;
+            };
+
+            const navigateCalendar = (direction) => {
+                if (direction === 'prev') {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                } else if (direction === 'next') {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                }
+                renderCalendar(currentCalendarDate);
+            };
+
+            const showDailySchedule = (dateString) => {
+                const dueTasks = [];
+                const today = getTodayString();
+                scheduleSummaryBanner.style.display = 'none';
+
+                const logEntry = dailyLog.find(entry => entry.date === dateString);
+                
+                if (logEntry) {
+                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: Logged <strong>${logEntry.minutes}</strong> minutes. <strong>${logEntry.reviewsCompleted}</strong> reviews completed.`;
+                    scheduleSummaryBanner.style.display = 'block';
+                } else if (dateString < today) {
+                    scheduleSummaryBanner.innerHTML = `Summary for ${dateString}: <strong>0</strong> minutes logged. <strong>0</strong> reviews completed.`;
+                    scheduleSummaryBanner.style.display = 'block';
+                }
+
+                sessions.forEach(session => {
+                    if (session.reviewDates.includes(dateString) && !session.completedReviews.includes(dateString)) {
+                        dueTasks.push({
+                            sessionId: session.id,
+                            // subject: session.subject || "Unified Notes", // Subject removed
+                            topic: session.topic,
+                            reviewDate: dateString,
+                            isOverdue: dateString < today
+                        });
+                    }
+                });
+
+                scheduleModalDate.textContent = `Scheduled Reviews for ${dateString}`;
+
+                if (dueTasks.length > 0) {
+                    scheduleEmptyMessage.textContent = `Total ${dueTasks.length} task(s) found. Check the boxes to complete them.`;
+                    // Sort by topic/description
+                    dueTasks.sort((a, b) => a.topic.localeCompare(b.topic)); 
+                    scheduleModalContent.innerHTML = dueTasks.map(task => 
+                        `<div class="review-item ${task.isOverdue ? 'overdue' : ''}"> ${createReviewItemHTML(task)} </div>`
+                    ).join('');
+                } else {
+                    scheduleEmptyMessage.textContent = `No scheduled reviews found for ${dateString}.`;
+                    scheduleModalContent.innerHTML = '';
+                }
+
+                showModal(scheduleModal);
+            };
+
+            // --- Data Management (Export/Import) Handlers ---
+            
             // Helper to download JSON file
             const downloadJSON = (data, filename) => {
                 const jsonString = JSON.stringify(data, null, 2);
                 const blob = new Blob([jsonString], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
-                
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
@@ -2073,14 +1907,13 @@
 
             const openDataManagement = () => {
                 // Reset file input when opening modal
-                importFileInput.value = '';
+                importFileInput.value = ''; 
                 showModal(dataManagementModal);
             };
 
             // Import logic
             const handleImportData = () => {
                 const file = importFileInput.files[0];
-                
                 if (!file) {
                     alert('Please select a JSON file to import first.');
                     return;
@@ -2095,7 +1928,7 @@
                     const dataString = event.target.result;
                     try {
                         const importedData = JSON.parse(dataString);
-                        
+
                         if (Array.isArray(importedData)) {
                             // Old format compatibility
                             sessions = importedData;
@@ -2103,63 +1936,60 @@
                             streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
                             alert('Old data format imported successfully! Logs and streaks have been reset.');
                         } else if (importedData.sessions && importedData.dailyLog && importedData.streakState) {
-                            // New format import
                             sessions = importedData.sessions;
                             dailyLog = importedData.dailyLog;
                             streakState = importedData.streakState;
                             alert('Data imported successfully!');
                         } else {
-                            throw new Error('File structure is invalid or corrupted.');
+                            throw new Error('Invalid file structure.');
                         }
-
+                        
                         saveSessions();
                         saveDailyLog();
                         saveStreakState();
-                        
-                        loadStreakState(); 
                         renderApp();
                         closeModal(dataManagementModal);
-                        
                     } catch (error) {
-                        console.error("Import Error:", error);
-                        alert(`Import failed. The file is not a valid JSON file. Error: ${error.message}`);
+                        console.error("Error during data import:", error);
+                        alert(`Error importing data. Please ensure the file is a valid JSON backup. Error: ${error.message}`);
                     }
                 };
-                
-                reader.onerror = () => {
-                    alert('Error reading file. Please try again.');
-                };
-
                 reader.readAsText(file);
             };
             
             const handleClearData = () => {
-                if (confirm('DANGER! This will delete ALL study data, logs, and streaks permanently. Are you absolutely sure?')) {
-                    sessions = [];
-                    dailyLog = [];
-                    streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
-                    
-                    localStorage.removeItem(STORAGE_KEY);
-                    localStorage.removeItem(STORAGE_KEY_LOG);
-                    localStorage.removeItem(STORAGE_KEY_STREAK);
-                    
-                    renderApp();
-                    closeModal(dataManagementModal);
-                    alert('All data has been cleared.');
+                 if (!confirm('WARNING: This will permanently delete ALL study data, logs, and streak history. Are you absolutely sure?')) {
+                    return;
                 }
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(STORAGE_KEY_LOG);
+                localStorage.removeItem(STORAGE_KEY_STREAK);
+                
+                sessions = [];
+                dailyLog = [];
+                streakState = { streakCount: 0, lastVisit: getTodayString(), reviewsToday: 0 };
+                
+                renderApp();
+                closeModal(dataManagementModal);
+                alert('All data has been cleared.');
             };
-            
-            // --- INITIALIZATION ---
+
+            // --- EVENT LISTENERS ---
+
             const init = () => {
-                dateInput.value = getTodayString();
+                // Set today's date as default for new session
+                dateInput.value = getTodayString(); 
                 
-                // Event Listeners setup
-                sessionForm.addEventListener('submit', handleFormSubmit);
+                // Form submission
+                sessionForm.addEventListener('submit', handleSessionSubmit);
+                editSessionForm.addEventListener('submit', handleEditSubmit);
+
+                // Tab navigation
                 navTabs.forEach(tab => tab.addEventListener('click', handleTabClick));
-                
+
+                // Calendar navigation
                 calPrevBtn.addEventListener('click', () => navigateCalendar('prev'));
                 calNextBtn.addEventListener('click', () => navigateCalendar('next'));
-                
                 calGrid.addEventListener('click', (e) => {
                     const dateCell = e.target.closest('.calendar-date-cell');
                     if (dateCell && dateCell.title) {
@@ -2167,39 +1997,32 @@
                     }
                 });
 
+                // Data management
                 dataManagementBtn.addEventListener('click', openDataManagement);
-                // UPDATED: Export to file
-                exportJsonBtn.addEventListener('click', handleExportData); 
-                // UPDATED: Import from file
+                exportJsonBtn.addEventListener('click', handleExportData);
                 importBtn.addEventListener('click', handleImportData);
                 clearDataBtn.addEventListener('click', handleClearData);
-                
-                logTimeBtn.addEventListener('click', handleTimeLog);
-                
-                // Listeners for filter and edit
-                subjectFilterDropdown.addEventListener('change', renderAllSessions);
-                editSessionForm.addEventListener('submit', handleEditFormSubmit);
 
-                // Global Action Listeners (delegated)
+                // Time logger
+                logTimeBtn.addEventListener('click', handleTimeLog);
+
+                // Dynamic content listeners (delegation)
                 document.body.addEventListener('click', (e) => {
-                    const closeButton = e.target.closest('.close-btn');
-                    if (closeButton && closeButton.dataset.modal) { 
-                        closeModal(document.getElementById(closeButton.dataset.modal)); 
-                        return;
-                    }
-                    
+                    // Details button listener
                     const detailsButton = e.target.closest('.details-btn');
                     if (detailsButton && detailsButton.dataset.sessionId) {
                         showModal(detailsModal, parseInt(detailsButton.dataset.sessionId, 10));
                         return;
                     }
                     
+                    // Delete button listener
                     const deleteButton = e.target.closest('.delete-btn');
                     if (deleteButton && deleteButton.dataset.sessionId) {
-                        handleDeleteSession(e);
+                        handleDeleteSession(parseInt(deleteButton.dataset.sessionId, 10));
                         return;
                     }
 
+                    // Undo button listener
                     const undoButton = e.target.closest('.undo-btn');
                     if (undoButton && undoButton.dataset.sessionId) {
                         handleUndoCompletion(e);
